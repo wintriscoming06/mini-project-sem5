@@ -41,7 +41,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import UserManagement from './pages/admin/UserManagement';
 import CorrectionQueue from './pages/admin/CorrectionQueue';
 import AuditLogView from './pages/admin/AuditLogView';
-import GPIConfig from './pages/admin/GpiConfig';
+import GPIConfig from './pages/admin/GPIConfig';
 
 // Misc
 import NotFound from './pages/NotFound';
