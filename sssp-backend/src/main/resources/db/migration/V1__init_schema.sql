@@ -1,0 +1,1 @@
+-- SSSP Initial Schema Migration (Hibernate ddl-auto: update manages runtime schema)

@@ -1,0 +1,2 @@
+# Maven Start Up Batch script
+exec mvn "$@"
