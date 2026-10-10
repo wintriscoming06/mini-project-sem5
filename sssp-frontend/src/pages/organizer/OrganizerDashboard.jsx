@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { tournamentService, matchService } from '../../services/api';
-import { Trophy, Calendar, Users, CheckCircle, Plus, ArrowRight, BarChart3, Activity } from 'lucide-react';
-import StatsCard from '../../components/common/StatsCard';
-import Card from '../../components/common/Card';
-import StatusBadge from '../../components/common/StatusBadge';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
-import Alert from '../../components/common/Alert';
-import Button from '../../components/common/Button';
+import { 
+  Trophy, Calendar, Users, CheckCircle, Plus, ArrowRight, 
+  BarChart3, Activity, Shield, MapPin, ChevronRight, Clock 
+} from 'lucide-react';
+import { 
+  StatsCard, Card, StatusBadge, LoadingSpinner, Alert, 
+  Button, TrophyIcon, WhistleIcon, StadiumIcon, ClassicSoccerBall, PitchHero 
+} from '../../components/common';
 
 const OrganizerDashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [tournaments, setTournaments] = useState([]);
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,20 +23,15 @@ const OrganizerDashboard = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // Assuming getAll can be filtered by organizer id if needed, 
-        // or backend returns organizer's tournaments for this role.
         const [tournamentsRes, matchesRes] = await Promise.all([
-          tournamentService.getAll(), 
-          matchService.getAll()
+          tournamentService.getAll().catch(() => ({ data: [] })), 
+          matchService.getAll().catch(() => ({ data: [] }))
         ]);
         
-        // Filter if needed. Assuming API returns everything and we filter, or API is already scoped.
-        // We will just use the responses for now.
         setTournaments(tournamentsRes.data || []);
         setMatches(matchesRes.data || []);
       } catch (err) {
-        console.error("Dashboard error:", err);
-        setError('Failed to load dashboard data. Please try again later.');
+        setError('Failed to load tournament operations data.');
       } finally {
         setLoading(false);
       }
@@ -43,187 +40,216 @@ const OrganizerDashboard = () => {
     fetchData();
   }, []);
 
-  if (loading) return <LoadingSpinner fullScreen text="Loading dashboard..." />;
+  if (loading) return <div className="p-20 flex justify-center"><LoadingSpinner size="lg" text="Loading matchday stadium operations..." /></div>;
 
-  // Calculate stats
   const activeMatches = matches.filter(m => m.status === 'LIVE' || m.status === 'SCHEDULED');
   const confirmedMatches = matches.filter(m => m.status === 'COMPLETED' && m.confirmed);
-  // Assuming tournament applications count is sum of pending applications across tournaments
-  // Mock pending count for now or calculate if available in tournament data
+  
   let pendingApplicationsCount = 0;
   tournaments.forEach(t => {
     if (t.applications) {
-        pendingApplicationsCount += t.applications.filter(a => a.status === 'PENDING').length;
+      pendingApplicationsCount += t.applications.filter(a => a.status === 'PENDING').length;
     }
   });
 
   const recentTournaments = [...tournaments]
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
     .slice(0, 3);
     
   const upcomingMatches = [...matches]
-    .filter(m => m.status === 'SCHEDULED')
-    .sort((a, b) => new Date(a.date) - new Date(b.date))
-    .slice(0, 3);
+    .filter(m => m.status === 'SCHEDULED' || m.status === 'LIVE')
+    .sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0))
+    .slice(0, 4);
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Welcome back, {user?.name || 'Organizer'}!</h1>
-          <p className="text-gray-500">Here's what's happening with your tournaments today.</p>
+      
+      {/* 1. MATCHDAY STADIUM PITCH HERO */}
+      <PitchHero
+        title="Matchday Operations Console"
+        subtitle="Tournament lifecycles, team roster verification, live pitch scoring, and official result certification"
+        badgeText="STADIUM OPERATIONS HQ • LEAGUE DESK"
+        stats={[
+          { label: "TOURNAMENTS", value: tournaments.length },
+          { label: "FIXTURES", value: matches.length },
+          { label: "PENDING APPS", value: pendingApplicationsCount },
+          { label: "CERTIFIED", value: confirmedMatches.length }
+        ]}
+        actionButtons={
+          <>
+            <Button 
+              variant="secondary" 
+              onClick={() => navigate('/matches')}
+              className="bg-emerald-950/80 text-emerald-200 border-emerald-500/50 hover:bg-emerald-900"
+              icon={<WhistleIcon className="w-4 h-4" />}
+            >
+              Match Score Desks
+            </Button>
+            <Button 
+              variant="primary" 
+              onClick={() => navigate('/tournaments/create')}
+              icon={<Plus className="w-4 h-4" />}
+            >
+              Create Tournament
+            </Button>
+          </>
+        }
+      >
+        <div className="flex flex-wrap items-center gap-3 text-xs text-emerald-200/90 font-semibold mt-3">
+          <span className="px-2.5 py-1 rounded-md bg-emerald-950/80 border border-emerald-500/40 text-emerald-300">
+            {user?.organization || 'Licensed League Director'}
+          </span>
+          <span>•</span>
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[11px] font-black">
+            <TrophyIcon className="w-3.5 h-3.5 text-amber-400" />
+            CHAMPIONSHIP TOURNAMENT STADIUM ARENA
+          </span>
         </div>
-        <div className="flex gap-3">
-          <Link to="/organizer/tournaments/create">
-            <Button icon={<Plus size={18} />}>Create Tournament</Button>
-          </Link>
-        </div>
-      </div>
+      </PitchHero>
 
-      {error && <Alert type="error" message={error} onClose={() => setError(null)} />}
+      {error && <Alert type="error" message={error} />}
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* 2. STATS ROW */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatsCard 
-          title="My Tournaments" 
+          title="Active Competitions" 
           value={tournaments.length} 
-          icon={<Trophy size={24} className="text-blue-500" />} 
-          trend="+1 this month"
-          trendUp={true}
+          icon={<TrophyIcon className="w-6 h-6 text-amber-400" />} 
+          color="amber"
         />
         <StatsCard 
-          title="Active Matches" 
+          title="Scheduled Fixtures" 
           value={activeMatches.length} 
-          icon={<Activity size={24} className="text-green-500" />} 
+          icon={<StadiumIcon className="w-6 h-6 text-sky-400" />} 
+          color="blue"
         />
         <StatsCard 
-          title="Pending Applications" 
+          title="Pending Player Entries" 
           value={pendingApplicationsCount} 
-          icon={<Users size={24} className="text-yellow-500" />} 
-          onClick={() => {}} // Could link to a unified applications view
+          icon={<Users className="w-6 h-6 text-purple-400" />} 
+          color="purple"
         />
         <StatsCard 
-          title="Confirmed Matches" 
+          title="Official Certified Matches" 
           value={confirmedMatches.length} 
-          icon={<CheckCircle size={24} className="text-indigo-500" />} 
+          icon={<WhistleIcon className="w-6 h-6 text-emerald-400" />} 
+          color="emerald"
         />
       </div>
 
+      {/* 3. MAIN PITCH GRID */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Tournaments */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-              <Trophy size={20} className="text-gray-500" />
-              Recent Tournaments
-            </h2>
-            <Link to="/organizer/tournaments" className="text-sm font-medium text-blue-600 hover:text-blue-800 flex items-center">
-              View All <ArrowRight size={16} className="ml-1" />
-            </Link>
-          </div>
-          
-          {recentTournaments.length === 0 ? (
-            <Card className="p-8 text-center text-gray-500">
-              No tournaments created yet. Click "Create Tournament" to get started.
-            </Card>
-          ) : (
-            <div className="grid gap-4">
-              {recentTournaments.map(tournament => (
-                <Card key={tournament.id} className="p-4 hover:shadow-md transition-shadow">
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900">{tournament.name}</h3>
-                      <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
-                        <span className="flex items-center gap-1"><Calendar size={14} /> {new Date(tournament.startDate).toLocaleDateString()}</span>
-                        <span>{tournament.ageGroup} • {tournament.genderCategory}</span>
+        
+        {/* Competitions Board */}
+        <div className="lg:col-span-2 space-y-6">
+          <Card 
+            title="Active Football Tournaments" 
+            subtitle="Current tournaments under your management"
+            showMatchBall={true}
+            headerAction={
+              <Button variant="ghost" size="sm" onClick={() => navigate('/my-tournaments')} className="text-emerald-600 dark:text-emerald-400">
+                View All <ArrowRight className="w-3.5 h-3.5 ml-1" />
+              </Button>
+            }
+          >
+            {recentTournaments.length > 0 ? (
+              <div className="divide-y divide-emerald-100 dark:divide-emerald-950/60">
+                {recentTournaments.map(t => (
+                  <div key={t.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-emerald-500/10 dark:hover:bg-[#082216]/60 px-3 rounded-2xl transition-colors">
+                    <div className="flex items-start space-x-3.5">
+                      <div className="p-3 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-500 border border-amber-500/30 flex-shrink-0">
+                        <TrophyIcon className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <div className="flex items-center space-x-2">
+                          <h4 className="font-bold text-slate-900 dark:text-white text-base">{t.name}</h4>
+                          <StatusBadge status={t.status} size="sm" />
+                        </div>
+                        <p className="text-xs text-slate-500 dark:text-emerald-200/60 mt-1 flex items-center gap-2">
+                          <span>{t.format || '11v11'}</span>
+                          <span>•</span>
+                          <span>{t.ageGroup || 'Open'}</span>
+                          <span>•</span>
+                          <span className="flex items-center text-slate-400"><MapPin className="w-3 h-3 mr-0.5" />{t.venue || t.location || 'Central Arena'}</span>
+                        </p>
                       </div>
                     </div>
-                    <div className="flex flex-col sm:items-end gap-2">
-                      <StatusBadge status={tournament.status} />
-                      <Link to={`/organizer/tournaments/${tournament.id}`}>
-                        <Button variant="outline" size="sm">Manage</Button>
+                    
+                    <div className="flex items-center space-x-2 flex-shrink-0 self-end sm:self-center">
+                      <Link to={`/organizer/tournaments/${t.id}/manage`}>
+                        <Button size="sm" variant="outline" className="border-emerald-500/40 text-emerald-600 dark:text-emerald-400">
+                          Manage Console
+                        </Button>
                       </Link>
                     </div>
                   </div>
-                </Card>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Upcoming Matches */}
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-              <Calendar size={20} className="text-gray-500" />
-              Upcoming Matches
-            </h2>
-            <Link to="/organizer/matches" className="text-sm font-medium text-blue-600 hover:text-blue-800">
-              View All
-            </Link>
-          </div>
-
-          <Card className="divide-y">
-            {upcomingMatches.length === 0 ? (
-              <div className="p-6 text-center text-gray-500 text-sm">
-                No upcoming matches scheduled.
+                ))}
               </div>
             ) : (
-              upcomingMatches.map(match => (
-                <div key={match.id} className="p-4 hover:bg-gray-50 transition-colors">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-xs font-semibold text-gray-500 uppercase">{match.tournament?.name || 'Tournament'}</span>
-                    <StatusBadge status={match.status} size="sm" />
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium text-sm truncate max-w-[40%]">{match.homeTeam?.name || 'TBD'}</span>
-                    <span className="text-xs text-gray-400 font-bold px-2">VS</span>
-                    <span className="font-medium text-sm truncate max-w-[40%] text-right">{match.awayTeam?.name || 'TBD'}</span>
-                  </div>
-                  <div className="mt-3 flex justify-between items-center">
-                    <span className="text-xs text-gray-500 flex items-center gap-1">
-                      <Calendar size={12} /> {new Date(match.date).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'})}
-                    </span>
-                    <Link to={`/organizer/matches/${match.id}/scoring`}>
-                      <span className="text-xs font-medium text-blue-600 hover:text-blue-800">Score Match</span>
-                    </Link>
-                  </div>
+              <div className="text-center py-12">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mx-auto mb-3">
+                  <TrophyIcon className="w-10 h-10 text-amber-500" />
                 </div>
-              ))
+                <p className="text-base font-bold text-slate-800 dark:text-white">No active tournaments</p>
+                <p className="text-xs text-slate-500 dark:text-emerald-200/60 mt-1 max-w-sm mx-auto">
+                  Create your first football competition to schedule matches and receive squad entries.
+                </p>
+                <Button variant="primary" size="sm" onClick={() => navigate('/tournaments/create')} className="mt-5">
+                  Create First Competition
+                </Button>
+              </div>
             )}
           </Card>
         </div>
-      </div>
-      
-      {/* Quick Actions Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t">
-        <Link to="/organizer/tournaments/create">
-          <Card className="p-4 flex items-center gap-4 hover:bg-gray-50 cursor-pointer transition-colors border-l-4 border-l-blue-500">
-            <div className="bg-blue-100 p-3 rounded-full text-blue-600"><Plus size={20} /></div>
-            <div>
-              <h4 className="font-semibold text-gray-900">Create Tournament</h4>
-              <p className="text-xs text-gray-500">Start a new competition</p>
-            </div>
+
+        {/* Upcoming Fixtures & Scoring Shortcuts */}
+        <div className="space-y-6">
+          <Card 
+            title="Fixture Match Desk" 
+            subtitle="Immediate matches scheduled for scoring"
+            showMatchBall={true}
+            headerAction={
+              <Link to="/matches" className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
+                All Fixtures
+              </Link>
+            }
+          >
+            {upcomingMatches.length > 0 ? (
+              <div className="divide-y divide-emerald-100 dark:divide-emerald-950/60">
+                {upcomingMatches.map(match => (
+                  <div key={match.id} className="py-3.5 text-xs hover:bg-emerald-500/5 rounded-xl px-2 transition-colors">
+                    <div className="flex justify-between items-center mb-1.5">
+                      <span className="text-[10px] text-slate-400 flex items-center">
+                        <Clock className="w-3 h-3 mr-1" />
+                        {new Date(match.date).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                      <StatusBadge status={match.status} size="sm" />
+                    </div>
+                    <div className="font-bold text-slate-900 dark:text-white flex items-center justify-between my-1">
+                      <span className="text-emerald-600 dark:text-emerald-400">{match.homeTeam?.name || 'TBD'}</span>
+                      <span className="text-slate-400 font-normal px-2">vs</span>
+                      <span className="text-blue-600 dark:text-blue-400">{match.awayTeam?.name || 'TBD'}</span>
+                    </div>
+                    <div className="mt-2 text-right">
+                      <Link to={`/organizer/matches/${match.id}/scoring`}>
+                        <Button size="sm" variant="outline" className="text-[11px] py-1 px-2.5 border-emerald-500/40 text-emerald-600 dark:text-emerald-400">
+                          Open Match Desk ⚽
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-slate-400">
+                <ClassicSoccerBall className="w-8 h-8 mx-auto text-emerald-500/50 mb-2" />
+                <p className="text-xs font-semibold">No pending fixtures</p>
+                <p className="text-[10px] text-slate-500 mt-1">Fixtures scheduled in your tournaments will appear here.</p>
+              </div>
+            )}
           </Card>
-        </Link>
-        <Link to="/organizer/matches">
-          <Card className="p-4 flex items-center gap-4 hover:bg-gray-50 cursor-pointer transition-colors border-l-4 border-l-green-500">
-            <div className="bg-green-100 p-3 rounded-full text-green-600"><Calendar size={20} /></div>
-            <div>
-              <h4 className="font-semibold text-gray-900">View Matches</h4>
-              <p className="text-xs text-gray-500">Manage schedule & scores</p>
-            </div>
-          </Card>
-        </Link>
-        <Link to="/organizer/tournaments">
-          <Card className="p-4 flex items-center gap-4 hover:bg-gray-50 cursor-pointer transition-colors border-l-4 border-l-purple-500">
-            <div className="bg-purple-100 p-3 rounded-full text-purple-600"><Users size={20} /></div>
-            <div>
-              <h4 className="font-semibold text-gray-900">Manage Applications</h4>
-              <p className="text-xs text-gray-500">Review team requests</p>
-            </div>
-          </Card>
-        </Link>
+        </div>
+
       </div>
     </div>
   );

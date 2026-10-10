@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { matchService } from '../../services/api';
-import { ArrowLeft, Clock, MapPin, AlertCircle } from 'lucide-react';
-import Card from '../../components/common/Card';
-import StatusBadge from '../../components/common/StatusBadge';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
-import Alert from '../../components/common/Alert';
-import Button from '../../components/common/Button';
+import { ArrowLeft, Clock, MapPin, AlertCircle, Edit3, Shield, CheckCircle } from 'lucide-react';
+import { Card, StatusBadge, LoadingSpinner, Alert, Button, WhistleIcon, FootballIcon } from '../../components/common';
+import { ClassicSoccerBall, PitchMarkings, GrassBladesTrim } from '../../components/common/FootballIcons';
 
 const MatchDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [match, setMatch] = useState(null);
   const [participations, setParticipations] = useState([]);
   const [events, setEvents] = useState([]);
@@ -36,11 +34,10 @@ const MatchDetail = () => {
       ]);
       
       setParticipations(partRes.data || []);
-      setEvents(eventRes.data || []);
+      setEvents((eventRes.data || []).sort((a, b) => b.minute - a.minute));
       setStats(statRes.data || []);
       
     } catch (err) {
-      console.error(err);
       setError("Failed to load match details.");
     } finally {
       setLoading(false);
@@ -49,9 +46,9 @@ const MatchDetail = () => {
 
   const tabs = [
     { id: 'events', label: 'Match Events' },
-    { id: 'participations', label: 'Lineups' },
-    { id: 'stats', label: 'Statistics' },
-    ...(match?.confirmed ? [{ id: 'corrections', label: 'Corrections' }] : [])
+    { id: 'participations', label: 'Official Lineups' },
+    { id: 'stats', label: 'Player Statistics' },
+    ...(match?.confirmed ? [{ id: 'corrections', label: 'Score Corrections' }] : [])
   ];
 
   const getEventIcon = (type) => {
@@ -66,76 +63,117 @@ const MatchDetail = () => {
     }
   };
 
-  if (loading && !match) return <LoadingSpinner fullScreen text="Loading match..." />;
-  if (!match) return <Alert type="error" message="Match not found." />;
+  if (loading && !match) return <div className="p-20 flex justify-center"><LoadingSpinner size="lg" text="Loading match dossier..." /></div>;
+  if (!match) return <div className="p-6"><Alert type="error" message="Match fixture not found." /></div>;
 
   return (
     <div className="space-y-6">
+      
       {/* Header */}
-      <div className="flex items-center gap-4 mb-6">
-        <Link to="/organizer/matches" className="p-2 hover:bg-gray-100 rounded-full">
-          <ArrowLeft size={20} className="text-gray-600" />
-        </Link>
-        <div className="flex-grow">
-          <h1 className="text-xl font-bold text-gray-500 uppercase text-sm tracking-wider">
-            {match.tournament?.name || 'Tournament Match'}
-          </h1>
+      <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
+        <button 
+          onClick={() => navigate('/matches')} 
+          className="inline-flex items-center text-xs font-semibold text-slate-400 hover:text-emerald-500 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 mr-1" /> Back to Fixtures
+        </button>
+
+        <div className="flex items-center space-x-2">
+          {!match.confirmed && (
+            <Button 
+              variant="primary" 
+              size="sm"
+              onClick={() => navigate(`/matches/${match.id}/score`)}
+              icon={Edit3}
+            >
+              Enter Match Scores
+            </Button>
+
+          )}
         </div>
-        {!match.confirmed && (
-          <Link to={`/organizer/matches/${match.id}/scoring`}>
-            <Button variant="primary">Score Match</Button>
-          </Link>
-        )}
       </div>
 
       {error && <Alert type="error" message={error} onClose={() => setError(null)} />}
 
-      {/* Scoreboard Card */}
-      <Card className="p-8 text-center bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-xl">
-        <div className="flex justify-between items-center mb-6">
-          <StatusBadge status={match.status} />
-          <div className="flex gap-4 text-sm text-gray-300">
-            <span className="flex items-center gap-1"><Clock size={16} /> {new Date(match.date).toLocaleString()}</span>
-            {match.venue && <span className="flex items-center gap-1"><MapPin size={16} /> {match.venue}</span>}
-          </div>
-        </div>
-        
-        <div className="flex justify-center items-center gap-8 md:gap-16">
-          <div className="flex flex-col items-center flex-1">
-            <h2 className="text-2xl md:text-4xl font-bold truncate w-full">{match.homeTeam?.name || 'Home'}</h2>
-          </div>
-          
-          <div className="flex flex-col items-center px-4">
-            {(match.status === 'COMPLETED' || match.status === 'LIVE') ? (
-              <div className="text-5xl md:text-7xl font-black tabular-nums tracking-tighter">
-                {match.homeScore} - {match.awayScore}
-              </div>
-            ) : (
-              <div className="text-4xl font-bold text-gray-500">VS</div>
-            )}
-            {match.confirmed && (
-              <span className="mt-4 text-xs font-bold uppercase tracking-widest text-green-400 bg-green-400/10 px-3 py-1 rounded-full">
-                Final (Confirmed)
+      {/* Stadium Match Scoreboard Arena */}
+      <div className="relative overflow-hidden rounded-3xl border-2 border-emerald-500/50 pitch-turf-stripes text-white shadow-2xl p-6 sm:p-10">
+        {/* Stadium Floodlights Glow */}
+        <div className="absolute -top-24 inset-x-0 h-48 pointer-events-none opacity-60 stadium-glow" />
+        {/* Goal Net Background Texture */}
+        <div className="absolute inset-0 goal-net-texture opacity-30 pointer-events-none" />
+        {/* White Chalk Pitch Lines Overlay */}
+        <PitchMarkings className="absolute inset-0 opacity-40 pointer-events-none" />
+
+        <div className="relative z-10">
+          <div className="flex justify-between items-center mb-6 text-xs">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-400/50 backdrop-blur-md font-bold text-emerald-300">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span>{match.status}</span>
+            </div>
+            
+            <div className="flex items-center gap-4 text-emerald-100/90 font-medium bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-500/30">
+              <span className="flex items-center gap-1">
+                <Clock className="w-3.5 h-3.5 text-teal-300" /> 
+                {new Date(match.date).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
               </span>
-            )}
+              {match.venue && (
+                <span className="flex items-center gap-1">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-300" /> {match.venue}
+                </span>
+              )}
+            </div>
           </div>
           
-          <div className="flex flex-col items-center flex-1">
-            <h2 className="text-2xl md:text-4xl font-bold truncate w-full">{match.awayTeam?.name || 'Away'}</h2>
+          <div className="flex items-center justify-between max-w-2xl mx-auto my-6">
+            {/* Home Club */}
+            <div className="text-center w-2/5 space-y-2">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-950/90 border-2 border-emerald-400/50 mx-auto flex items-center justify-center font-black text-2xl text-emerald-300 shadow-xl backdrop-blur-md">
+                {match.homeTeam?.name?.charAt(0) || 'H'}
+              </div>
+              <h2 className="text-base sm:text-xl font-extrabold tracking-tight truncate text-white drop-shadow-md">{match.homeTeam?.name || 'Home Club'}</h2>
+            </div>
+            
+            {/* Score & Center Match Ball */}
+            <div className="text-center w-1/5 flex flex-col items-center">
+              <div className="group mb-2 cursor-pointer" title="Matchday Match Ball">
+                <ClassicSoccerBall className="w-9 h-9 drop-shadow-lg group-hover:rotate-180 transition-transform duration-500" />
+              </div>
+              
+              {(match.status === 'COMPLETED' || match.status === 'LIVE') ? (
+                <div className="text-4xl sm:text-6xl font-black tabular-nums tracking-tighter text-amber-300 stat-number drop-shadow-lg">
+                  {match.homeScore ?? 0} : {match.awayScore ?? 0}
+                </div>
+              ) : (
+                <div className="text-2xl sm:text-4xl font-extrabold text-white/80 drop-shadow">VS</div>
+              )}
+              {match.confirmed && (
+                <span className="mt-2 text-[10px] font-black uppercase tracking-widest text-emerald-300 bg-emerald-900/60 px-3 py-0.5 rounded-full inline-block border border-emerald-400/50">
+                  Certified Final
+                </span>
+              )}
+            </div>
+            
+            {/* Away Club */}
+            <div className="text-center w-2/5 space-y-2">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-950/90 border-2 border-teal-400/50 mx-auto flex items-center justify-center font-black text-2xl text-teal-300 shadow-xl backdrop-blur-md">
+                {match.awayTeam?.name?.charAt(0) || 'A'}
+              </div>
+              <h2 className="text-base sm:text-xl font-extrabold tracking-tight truncate text-white drop-shadow-md">{match.awayTeam?.name || 'Away Club'}</h2>
+            </div>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-gray-200 overflow-x-auto hide-scrollbar">
+      <div className="flex border-b border-slate-200 dark:border-slate-800 overflow-x-auto hide-scrollbar gap-2">
         {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`py-3 px-6 font-medium text-sm border-b-2 transition-colors whitespace-nowrap ${
+            className={`py-3 px-5 font-bold text-xs rounded-t-lg border-b-2 transition-colors whitespace-nowrap ${
               activeTab === tab.id 
-                ? 'border-blue-500 text-blue-600' 
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-emerald-50/40 dark:bg-emerald-950/20' 
+                : 'border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             {tab.label}
@@ -144,28 +182,22 @@ const MatchDetail = () => {
       </div>
 
       {/* Tab Content */}
-      <div className="py-4">
+      <div className="space-y-4">
         
         {activeTab === 'events' && (
-          <div className="space-y-4">
+          <div className="bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 overflow-hidden">
             {events.length === 0 ? (
-              <Card className="p-8 text-center text-gray-500">No events recorded for this match yet.</Card>
+              <div className="p-12 text-center text-xs text-slate-400">No events recorded for this match yet.</div>
             ) : (
-              <div className="relative border-l-2 border-gray-200 ml-4 pl-6 space-y-6">
+              <div className="divide-y divide-slate-100 dark:divide-slate-800">
                 {events.map((event, idx) => (
-                  <div key={idx} className="relative">
-                    <span className="absolute -left-[35px] bg-white border-2 border-gray-200 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold">
-                      {event.minute}'
-                    </span>
-                    <Card className="p-4 shadow-sm inline-block min-w-[250px]">
-                      <div className="flex items-center gap-3">
-                        <span className="text-2xl">{getEventIcon(event.type)}</span>
-                        <div>
-                          <p className="font-bold text-gray-900">{event.player?.name}</p>
-                          <p className="text-xs text-gray-500">{event.type.replace('_', ' ')}</p>
-                        </div>
-                      </div>
-                    </Card>
+                  <div key={idx} className="p-4 flex items-center space-x-4 hover:bg-slate-50/50 dark:hover:bg-slate-800/40 text-xs">
+                    <span className="font-mono font-bold text-slate-400 w-10 text-right stat-number">{event.minute}′</span>
+                    <span className="text-xl">{getEventIcon(event.type)}</span>
+                    <div className="flex-1">
+                      <span className="font-bold text-slate-900 dark:text-white block text-sm">{event.player?.name}</span>
+                      <span className="text-slate-400 text-[11px]">{event.type.replace('_', ' ')}</span>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -175,80 +207,87 @@ const MatchDetail = () => {
 
         {activeTab === 'participations' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="p-4">
-              <h3 className="font-bold text-lg mb-4 text-center border-b pb-2">{match.homeTeam?.name} Lineup</h3>
-              <ul className="space-y-2">
+            <div className="bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 p-5 space-y-3">
+              <h3 className="font-extrabold text-sm text-slate-900 dark:text-white pb-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <span>{match.homeTeam?.name} Lineup</span>
+                <span className="text-xs font-semibold text-slate-400">Home Roster</span>
+              </h3>
+              <ul className="space-y-2 text-xs">
                 {participations.filter(p => p.teamId === match.homeTeam?.id).map((p, idx) => (
-                  <li key={idx} className="flex justify-between items-center text-sm py-1 border-b border-gray-50 last:border-0">
-                    <span>{p.player?.name}</span>
-                    <span className="text-xs text-gray-500">{p.isStarting ? 'Starter' : 'Sub'}</span>
+                  <li key={idx} className="flex justify-between items-center py-1.5 px-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+                    <span className="font-semibold text-slate-800 dark:text-slate-200">{p.player?.name}</span>
+                    <span className="text-[10px] font-bold uppercase text-slate-400">{p.isStarting ? 'Starter' : 'Substitute'}</span>
                   </li>
                 ))}
                 {participations.filter(p => p.teamId === match.homeTeam?.id).length === 0 && (
-                  <li className="text-gray-500 text-sm text-center py-4">No lineup recorded</li>
+                  <li className="text-slate-400 text-center py-4">No team lineup submitted</li>
                 )}
               </ul>
-            </Card>
-            <Card className="p-4">
-              <h3 className="font-bold text-lg mb-4 text-center border-b pb-2">{match.awayTeam?.name} Lineup</h3>
-              <ul className="space-y-2">
+            </div>
+
+            <div className="bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 p-5 space-y-3">
+              <h3 className="font-extrabold text-sm text-slate-900 dark:text-white pb-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <span>{match.awayTeam?.name} Lineup</span>
+                <span className="text-xs font-semibold text-slate-400">Away Roster</span>
+              </h3>
+              <ul className="space-y-2 text-xs">
                 {participations.filter(p => p.teamId === match.awayTeam?.id).map((p, idx) => (
-                  <li key={idx} className="flex justify-between items-center text-sm py-1 border-b border-gray-50 last:border-0">
-                    <span>{p.player?.name}</span>
-                    <span className="text-xs text-gray-500">{p.isStarting ? 'Starter' : 'Sub'}</span>
+                  <li key={idx} className="flex justify-between items-center py-1.5 px-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+                    <span className="font-semibold text-slate-800 dark:text-slate-200">{p.player?.name}</span>
+                    <span className="text-[10px] font-bold uppercase text-slate-400">{p.isStarting ? 'Starter' : 'Substitute'}</span>
                   </li>
                 ))}
                 {participations.filter(p => p.teamId === match.awayTeam?.id).length === 0 && (
-                  <li className="text-gray-500 text-sm text-center py-4">No lineup recorded</li>
+                  <li className="text-slate-400 text-center py-4">No team lineup submitted</li>
                 )}
               </ul>
-            </Card>
+            </div>
           </div>
         )}
 
         {activeTab === 'stats' && (
-          <Card className="overflow-hidden">
+          <div className="bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-gray-500">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-b">
+              <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-xs">
+                <thead className="bg-slate-50 dark:bg-[#071622] text-slate-500 dark:text-slate-400 uppercase font-semibold">
                   <tr>
-                    <th className="px-6 py-3">Player</th>
-                    <th className="px-6 py-3 text-center">⚽ Goals</th>
-                    <th className="px-6 py-3 text-center">🅰️ Assists</th>
-                    <th className="px-6 py-3 text-center">🟨 Yellows</th>
-                    <th className="px-6 py-3 text-center">🟥 Reds</th>
+                    <th className="px-5 py-3 text-left">Player Athlete</th>
+                    <th className="px-5 py-3 text-center">Goals</th>
+                    <th className="px-5 py-3 text-center">Assists</th>
+                    <th className="px-5 py-3 text-center">Yellows</th>
+                    <th className="px-5 py-3 text-center">Reds</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {stats.length === 0 ? (
-                    <tr><td colSpan="5" className="px-6 py-8 text-center">No statistics available yet.</td></tr>
+                    <tr><td colSpan="5" className="px-5 py-8 text-center text-slate-400">No match statistics calibrated yet.</td></tr>
                   ) : (
                     stats.map((stat, idx) => (
-                      <tr key={idx} className="border-b hover:bg-gray-50">
-                        <td className="px-6 py-4 font-medium text-gray-900">{stat.player?.name}</td>
-                        <td className="px-6 py-4 text-center font-bold">{stat.goals || 0}</td>
-                        <td className="px-6 py-4 text-center">{stat.assists || 0}</td>
-                        <td className="px-6 py-4 text-center">{stat.yellowCards || 0}</td>
-                        <td className="px-6 py-4 text-center">{stat.redCards || 0}</td>
+                      <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
+                        <td className="px-5 py-3.5 font-bold text-slate-900 dark:text-white">{stat.player?.name}</td>
+                        <td className="px-5 py-3.5 text-center font-extrabold text-emerald-600 dark:text-emerald-400 stat-number">{stat.goals || 0}</td>
+                        <td className="px-5 py-3.5 text-center font-extrabold text-teal-600 dark:text-teal-400 stat-number">{stat.assists || 0}</td>
+                        <td className="px-5 py-3.5 text-center font-semibold text-amber-500 stat-number">{stat.yellowCards || 0}</td>
+                        <td className="px-5 py-3.5 text-center font-semibold text-rose-500 stat-number">{stat.redCards || 0}</td>
                       </tr>
                     ))
                   )}
                 </tbody>
               </table>
             </div>
-          </Card>
+          </div>
         )}
 
         {activeTab === 'corrections' && match.confirmed && (
-          <div className="space-y-4">
-            <Alert type="info" message="Corrections can be submitted for confirmed matches if an error is found." />
-            <Card className="p-6">
-              <h3 className="font-bold text-lg mb-4">Submit Correction</h3>
-              <p className="text-sm text-gray-500 mb-4">Feature coming soon. Contact admin for manual corrections.</p>
-            </Card>
+          <div className="bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 p-6 space-y-3">
+            <h3 className="font-extrabold text-base text-slate-900 dark:text-white">Official Result Correction Process</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Once certified, match score sheets feed directly into the GPI analytical engine. For official post-match appeals or score corrections, contact SSSP League Administration.
+            </p>
           </div>
         )}
       </div>
+
     </div>
   );
 };

@@ -340,8 +340,20 @@ export default function PlayerShowcase({ onPlayerChange }) {
           </div>
         </div>
 
+        {/* Scouting Combine Rating Ribbon */}
+        <div className="relative z-10 mx-5 mb-1 py-1.5 px-3 rounded-xl bg-emerald-950/80 border border-emerald-500/30 flex items-center justify-between text-[10px]">
+          <div className="flex items-center gap-2 text-emerald-300 font-black uppercase tracking-wider">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <span>Scouting Combine Index</span>
+          </div>
+          <span className="text-amber-400 font-mono font-bold">
+            PAC {player.attributes.PAC} • DRI {player.attributes.DRI}
+          </span>
+        </div>
+
+
         {/* Bottom Match Statistics Bar */}
-        <div className="relative z-10 mt-3 pt-3 pb-3.5 px-6 border-t border-white/10 bg-slate-950/60">
+        <div className="relative z-10 mt-2 pt-2.5 pb-3 px-6 border-t border-white/10 bg-slate-950/60">
           <div className="grid grid-cols-3 text-center divide-x divide-white/10">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Matches</p>

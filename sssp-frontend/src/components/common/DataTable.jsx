@@ -1,10 +1,11 @@
 import React from 'react';
 import LoadingSpinner from './LoadingSpinner';
+import EmptyState from './EmptyState';
 
 const DataTable = ({ columns, data, loading, emptyMessage = 'No data available' }) => {
   if (loading) {
     return (
-      <div className="flex justify-center p-8">
+      <div className="flex justify-center p-8 bg-white dark:bg-[#0b1e2d] rounded-xl border border-slate-200 dark:border-emerald-900/30">
         <LoadingSpinner />
       </div>
     );
@@ -12,33 +13,31 @@ const DataTable = ({ columns, data, loading, emptyMessage = 'No data available' 
 
   if (!data || data.length === 0) {
     return (
-      <div className="text-center p-8 text-gray-500 bg-white rounded-lg shadow-sm border border-gray-100">
-        {emptyMessage}
-      </div>
+      <EmptyState title="No Records" description={emptyMessage} />
     );
   }
 
   return (
-    <div className="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-200">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
+    <div className="overflow-x-auto bg-white dark:bg-[#0b1e2d] rounded-xl shadow-sm border border-slate-200 dark:border-emerald-900/30">
+      <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
+        <thead className="bg-slate-50 dark:bg-[#071622]">
           <tr>
             {columns.map((col, idx) => (
               <th
                 key={idx}
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-6 py-3.5 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
               >
                 {col.header}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="bg-white dark:bg-[#0b1e2d] divide-y divide-slate-100 dark:divide-slate-800/70">
           {data.map((row, rowIndex) => (
-            <tr key={rowIndex} className="hover:bg-gray-50">
+            <tr key={rowIndex} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
               {columns.map((col, colIndex) => (
-                <td key={colIndex} className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <td key={colIndex} className="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">
                   {col.render ? col.render(row) : row[col.accessor]}
                 </td>
               ))}

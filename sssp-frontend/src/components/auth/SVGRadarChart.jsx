@@ -33,10 +33,23 @@ export default function SVGRadarChart({ attributes, size = 145, themeColor = '#1
       .join(' ');
   });
 
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    const isReduced = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isReduced) {
+      setMounted(true);
+      return;
+    }
+    const t = setTimeout(() => setMounted(true), 50);
+    return () => clearTimeout(t);
+  }, []);
+
   // Data polygon points
   const dataPoints = keys.map((_, i) => {
     const val = Math.max(10, Math.min(99, values[i]));
-    const ratio = val / 100;
+    const targetRatio = val / 100;
+    const ratio = mounted ? targetRatio : 0.12;
     return getCoordinates(i, ratio);
   });
   const dataPolygonString = dataPoints.map((p) => `${p.x},${p.y}`).join(' ');

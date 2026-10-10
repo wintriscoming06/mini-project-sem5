@@ -10,22 +10,22 @@ const FormInput = ({
   error, 
   placeholder, 
   options = [], 
-  required = false,
-  disabled = false,
-  icon,
-  className = ''
+  required = false, 
+  disabled = false, 
+  icon, 
+  className = '' 
 }) => {
-  const baseClasses = `mt-1 block w-full rounded-md shadow-sm sm:text-sm ${
+  const baseClasses = `mt-1 block w-full rounded-lg text-sm transition-colors border shadow-sm ${
     error 
-      ? 'border-red-300 text-red-900 focus:ring-red-500 focus:border-red-500' 
-      : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
-  } ${icon ? 'pl-10' : ''} ${disabled ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''} ${className}`;
+      ? 'border-rose-400 dark:border-rose-600 text-rose-900 dark:text-rose-200 focus:ring-rose-500 focus:border-rose-500 bg-rose-50/20' 
+      : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500'
+  } ${icon ? 'pl-10' : 'px-3 py-2'} ${disabled ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 cursor-not-allowed' : ''} ${className}`;
 
   return (
     <div className="mb-4">
       {label && (
-        <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
-          {label} {required && <span className="text-red-500">*</span>}
+        <label htmlFor={name} className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1">
+          {label} {required && <span className="text-emerald-500 dark:text-emerald-400">*</span>}
         </label>
       )}
       
@@ -36,11 +36,11 @@ const FormInput = ({
           value={value}
           onChange={onChange}
           disabled={disabled}
-          className={baseClasses}
+          className={`${baseClasses} px-3 py-2`}
         >
           <option value="">Select...</option>
           {options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
+            <option key={opt.value} value={opt.value} className="dark:bg-[#081b29]">
               {opt.label}
             </option>
           ))}
@@ -54,13 +54,13 @@ const FormInput = ({
           onChange={onChange}
           placeholder={placeholder}
           disabled={disabled}
-          className={baseClasses}
+          className={`${baseClasses} px-3 py-2`}
         />
       ) : (
         <div className="relative">
           {icon && (
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              {renderIcon(icon, 'h-5 w-5 text-gray-400')}
+              {renderIcon(icon, 'h-4 w-4 text-slate-400 dark:text-slate-500')}
             </div>
           )}
           <input
@@ -76,7 +76,7 @@ const FormInput = ({
         </div>
       )}
       
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-1.5 text-xs text-rose-600 dark:text-rose-400">{error}</p>}
     </div>
   );
 };

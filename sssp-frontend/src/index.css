@@ -2,39 +2,191 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-gray-50 font-sans antialiased;
+@layer base {
+  html {
+    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased transition-colors duration-200;
+  }
+
+  html.dark body {
+    background-color: #04100b;
+    color: #e8f1ec;
+  }
+
+  /* Consistent, visible keyboard focus everywhere */
+  :focus-visible {
+    outline: 2px solid #10b981;
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: rgba(16, 185, 129, 0.35);
+  }
 }
 
-/* Subtle pitch background pattern from gpi-app */
-.football-pitch-pattern {
+/* ==========================================================================
+   IN-APP SURFACES  (calm pitch texture; dark = night stadium, light = clean analytics)
+   ========================================================================== */
+
+/* Fixed page background used by the authenticated layout */
+.app-bg {
+  background:
+    radial-gradient(1100px 480px at 50% -10%, var(--role-glow, rgba(16, 185, 129, 0.14)), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(22, 101, 52, 0.035) 0, rgba(22, 101, 52, 0.035) 96px, rgba(22, 101, 52, 0) 96px, rgba(22, 101, 52, 0) 192px),
+    linear-gradient(180deg, #f3f8f4 0%, #ecf4ee 100%);
+}
+
+html.dark .app-bg {
+  background:
+    radial-gradient(1200px 520px at 50% -8%, var(--role-glow, rgba(16, 185, 129, 0.16)), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.018) 0, rgba(255, 255, 255, 0.018) 96px, rgba(255, 255, 255, 0) 96px, rgba(255, 255, 255, 0) 192px),
+    linear-gradient(180deg, #061510 0%, #04100b 55%, #030a07 100%);
+}
+
+/* Role accents: a very light tint at the top of the page, nothing more */
+.role-tint-player { --role-glow: rgba(16, 185, 129, 0.16); }
+.role-tint-scout { --role-glow: rgba(45, 212, 191, 0.14); }
+.role-tint-organizer { --role-glow: rgba(245, 158, 11, 0.12); }
+.role-tint-admin { --role-glow: rgba(99, 102, 241, 0.12); }
+
+/* Banners / heroes that sit on a dark pitch in both themes */
+.pitch-surface {
+  background-color: #0a3a25;
   background-image:
-    radial-gradient(ellipse at 50% -10%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
-    radial-gradient(circle at 15% 90%, rgba(11, 21, 40, 0.03) 0%, transparent 40%),
-    radial-gradient(circle at 85% 90%, rgba(16, 185, 129, 0.04) 0%, transparent 40%),
-    linear-gradient(rgba(16, 185, 129, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+    radial-gradient(120% 90% at 50% 0%, rgba(52, 211, 153, 0.20), transparent 60%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0, rgba(255, 255, 255, 0.03) 56px, rgba(0, 0, 0, 0.05) 56px, rgba(0, 0, 0, 0.05) 112px),
+    linear-gradient(160deg, #0d4a2f 0%, #072b1b 100%);
 }
 
-/* Pitch line markings SVG decoration */
-.pitch-lines-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300' fill='none'%3E%3Crect x='20' y='20' width='360' height='260' rx='4' stroke='%2338bdf8' stroke-opacity='0.08' stroke-width='1.5'/%3E%3Cline x1='200' y1='20' x2='200' y2='280' stroke='%2338bdf8' stroke-opacity='0.08' stroke-width='1.5'/%3E%3Ccircle cx='200' cy='150' r='45' stroke='%2338bdf8' stroke-opacity='0.08' stroke-width='1.5'/%3E%3Ccircle cx='200' cy='150' r='3' fill='%2338bdf8' fill-opacity='0.15'/%3E%3Cpath d='M20 90 H80 V210 H20' stroke='%2338bdf8' stroke-opacity='0.08' stroke-width='1.5'/%3E%3Cpath d='M380 90 H320 V210 H380' stroke='%2338bdf8' stroke-opacity='0.08' stroke-width='1.5'/%3E%3C/svg%3E");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  opacity: 0.9;
+/* Training-ground variant for scout surfaces: diagonal mowing + tactical grid */
+.training-surface {
+  background-color: #08301f;
+  background-image:
+    radial-gradient(120% 90% at 20% 0%, rgba(45, 212, 191, 0.18), transparent 60%),
+    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.028) 0, rgba(255, 255, 255, 0.028) 48px, rgba(0, 0, 0, 0.05) 48px, rgba(0, 0, 0, 0.05) 96px),
+    linear-gradient(160deg, #0b3f2b 0%, #06231a 100%);
 }
 
-/* Soft stadium floodlight glow */
+/* Tactical board grid (used lightly in scout banners) */
+.tactical-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Hairline accent used at the top of cards instead of a thick lawn bar */
+.card-accent {
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.65) 30%, rgba(52, 211, 153, 0.65) 70%, transparent);
+}
+
+/* ==========================================================================
+   AUTH / LOGIN GRASS (kept as-is for the login & register experience)
+   ========================================================================== */
+
+.pitch-turf-stripes {
+  background-color: #0b4526;
+  background-image: repeating-linear-gradient(90deg, #0c4627 0px, #0c4627 68px, #145b34 68px, #145b34 136px);
+}
+
+html:not(.dark) .pitch-turf-stripes {
+  background-color: #15803d;
+  background-image: repeating-linear-gradient(90deg, #15803d 0px, #15803d 68px, #16a34a 68px, #16a34a 136px);
+}
+
+.football-pitch-pattern {
+  background-color: #0b4526;
+  background-image:
+    radial-gradient(circle at 50% -10%, rgba(74, 222, 128, 0.28) 0%, transparent 60%),
+    radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.20) 0%, transparent 45%),
+    radial-gradient(circle at 90% 20%, rgba(56, 189, 248, 0.20) 0%, transparent 45%),
+    repeating-linear-gradient(90deg, rgba(12, 70, 39, 0.98) 0px, rgba(12, 70, 39, 0.98) 72px, rgba(20, 91, 52, 0.98) 72px, rgba(20, 91, 52, 0.98) 144px);
+}
+
+.living-real-grass {
+  background-color: #0b4526;
+  background-image:
+    radial-gradient(ellipse at 50% 15%, rgba(74, 222, 128, 0.32) 0%, transparent 70%),
+    repeating-linear-gradient(90deg, #0d4929 0px, #0d4929 72px, #155f37 72px, #155f37 144px),
+    radial-gradient(rgba(110, 231, 183, 0.22) 1.2px, transparent 1.2px);
+  background-size: 100% 100%, 144px 100%, 10px 10px;
+}
+
+html:not(.dark) .living-real-grass {
+  background-color: #15803d;
+  background-image:
+    radial-gradient(ellipse at 50% 20%, rgba(220, 252, 231, 0.40) 0%, transparent 65%),
+    repeating-linear-gradient(90deg, #166534 0px, #166534 72px, #15803d 72px, #15803d 144px);
+}
+
+/* Soccer Goal Net Mesh Texture */
+.goal-net-texture {
+  background-color: transparent;
+  background-image:
+    linear-gradient(30deg, rgba(255, 255, 255, 0.08) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.08) 87.5%, rgba(255, 255, 255, 0.08)),
+    linear-gradient(150deg, rgba(255, 255, 255, 0.08) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.08) 87.5%, rgba(255, 255, 255, 0.08)),
+    linear-gradient(30deg, rgba(255, 255, 255, 0.08) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.08) 87.5%, rgba(255, 255, 255, 0.08)),
+    linear-gradient(150deg, rgba(255, 255, 255, 0.08) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.08) 87.5%, rgba(255, 255, 255, 0.08)),
+    linear-gradient(60deg, rgba(255, 255, 255, 0.05) 25%, transparent 25.5%, transparent 75%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05)),
+    linear-gradient(60deg, rgba(255, 255, 255, 0.05) 25%, transparent 25.5%, transparent 75%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05));
+  background-size: 24px 42px;
+  background-position: 0 0, 0 0, 12px 21px, 12px 21px, 0 0, 12px 21px;
+}
+
+/* Stadium Floodlight Beams */
 .stadium-glow {
-  background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.15) 0%, rgba(14, 165, 233, 0.04) 45%, transparent 75%);
+  background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.25) 0%, rgba(14, 165, 233, 0.08) 45%, transparent 75%);
 }
 
-/* Authentic card shine effect from gpi-app */
+.pitch-glow {
+  background: radial-gradient(circle at 50% 0%, rgba(34, 197, 94, 0.28) 0%, rgba(21, 128, 61, 0.10) 45%, transparent 75%);
+}
+
+@keyframes floodlightBreathe {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.65; }
+}
+
+.animate-floodlight {
+  animation: floodlightBreathe 6s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   MOTION (subtle, purposeful)
+   ========================================================================== */
+
+/* Indeterminate progress bar (photo processing, loading states) */
+@keyframes progressSlide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+.progress-indeterminate::after {
+  content: '';
+  display: block;
+  height: 100%;
+  width: 40%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, transparent, #34d399, transparent);
+  animation: progressSlide 1.2s ease-in-out infinite;
+}
+
+/* Skeleton shimmer for loading states */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.14) 25%, rgba(148, 163, 184, 0.26) 37%, rgba(148, 163, 184, 0.14) 63%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* Card sheen on hover - used by the GPI player card only */
 .card-shine {
   position: relative;
   overflow: hidden;
@@ -46,46 +198,246 @@ body {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: linear-gradient(
-    60deg,
-    transparent 35%,
-    rgba(255, 255, 255, 0.16) 45%,
-    rgba(255, 255, 255, 0.24) 50%,
-    transparent 55%
-  );
+  background: linear-gradient(60deg, transparent 38%, rgba(255, 255, 255, 0.10) 47%, rgba(255, 255, 255, 0.16) 50%, transparent 56%);
   transform: rotate(-25deg) translateY(-100%);
-  transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
 }
 .card-shine:hover::after {
   transform: rotate(-25deg) translateY(100%);
 }
 
-/* Tabular number styling for statistics */
 .stat-number {
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
 }
 
-/* Floating animation */
-@keyframes footballRoll {
-  0% { transform: translateX(-10%) rotate(0deg); opacity: 0; }
-  10% { opacity: 0.6; }
-  90% { opacity: 0.6; }
-  100% { transform: translateX(110%) rotate(720deg); opacity: 0; }
+/* Tabs: sliding underline */
+.tab-underline {
+  position: relative;
+}
+.tab-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: #10b981;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.2s ease;
+}
+.tab-underline.is-active::after {
+  transform: scaleX(1);
 }
 
-.animate-football-roll {
-  animation: footballRoll 14s linear infinite;
+/* ==========================================================================
+   MOTION LAYER (Subtle, fast, professional sports micro-interactions)
+   ========================================================================== */
+
+/* 1. Football Kick Trajectory (Player Login action) */
+@keyframes kickTrajectory {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+  }
+  25% {
+    transform: translate3d(80px, -24px, 0) scale(1.15) rotate(160deg);
+    opacity: 1;
+    filter: drop-shadow(0 10px 14px rgba(16, 185, 129, 0.5));
+  }
+  60% {
+    transform: translate3d(240px, -70px, 0) scale(1.0) rotate(380deg);
+    opacity: 0.95;
+    filter: drop-shadow(0 12px 20px rgba(52, 211, 153, 0.6));
+  }
+  100% {
+    transform: translate3d(460px, -140px, 0) scale(0.55) rotate(720deg);
+    opacity: 0;
+    filter: drop-shadow(0 0 25px rgba(16, 185, 129, 0.8));
+  }
 }
 
-/* Smooth pulse for tactical nodes */
-@keyframes tacticalPulse {
-  0%, 100% { transform: scale(1); opacity: 0.6; }
-  50% { transform: scale(1.4); opacity: 1; }
+.animate-football-kick {
+  animation: kickTrajectory 0.48s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
 }
 
-.animate-tactical-pulse {
-  animation: tacticalPulse 3s ease-in-out infinite;
+/* Kick Speed Trail Streak */
+@keyframes kickStreak {
+  0% { width: 0; opacity: 0; transform: translate3d(0, 0, 0); }
+  30% { width: 140px; opacity: 0.7; transform: translate3d(40px, -12px, 0) rotate(-18deg); }
+  100% { width: 320px; opacity: 0; transform: translate3d(180px, -60px, 0) rotate(-18deg); }
 }
 
+.animate-kick-streak {
+  animation: kickStreak 0.45s ease-out forwards;
+  will-change: width, opacity, transform;
+}
+
+/* 2. Referee Whistle Acoustic Pulse (Scout Login action) */
+@keyframes whistleVibrate {
+  0% { transform: scale(0.85) rotate(-12deg); opacity: 0; }
+  25% { transform: scale(1.18) rotate(6deg); opacity: 1; }
+  50% { transform: scale(1.0) rotate(-4deg); opacity: 1; }
+  75% { transform: scale(1.08) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1.0) rotate(0deg); opacity: 1; }
+}
+
+.animate-whistle-vibrate {
+  animation: whistleVibrate 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes whistleWave {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.95;
+    border-width: 3px;
+  }
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+    border-width: 1px;
+  }
+}
+
+.animate-whistle-wave-1 {
+  animation: whistleWave 0.46s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.animate-whistle-wave-2 {
+  animation: whistleWave 0.46s cubic-bezier(0.16, 1, 0.3, 1) 0.12s forwards;
+  will-change: transform, opacity;
+}
+
+/* 3. Stadium Floodlight Beam Sweep (Organizer Login action) */
+@keyframes floodlightBeamSweep {
+  0% {
+    transform: translateX(-120%) skewX(-25deg);
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateX(180%) skewX(-25deg);
+    opacity: 0;
+  }
+}
+
+.animate-floodlight-sweep {
+  animation: floodlightBeamSweep 0.52s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes stadiumFlare {
+  0% { opacity: 0; transform: scale(0.7); }
+  50% { opacity: 0.9; transform: scale(1.15); }
+  100% { opacity: 0; transform: scale(1.3); }
+}
+
+.animate-stadium-flare {
+  animation: stadiumFlare 0.48s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+/* 4. Login Card Role Morph & Transition */
+@keyframes roleMorphCard {
+  0% {
+    opacity: 0.6;
+    transform: translateY(8px) scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-role-morph {
+  animation: roleMorphCard 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+
+/* 5. Player Card Elevation & Glow (High responsiveness) */
+.card-elevate {
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+              box-shadow 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+              border-color 0.25s ease,
+              filter 0.25s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-elevate:hover {
+  transform: translateY(-8px) scale(1.015) !important;
+  box-shadow: 0 20px 30px -10px rgba(16, 185, 129, 0.25), 0 10px 15px -5px rgba(0, 0, 0, 0.3) !important;
+}
+
+.card-elevate-subtle {
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+              box-shadow 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+.card-elevate-subtle:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* 6. Staggered Entrance Animations */
+@keyframes staggerSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stagger-1 { animation: staggerSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) 0.04s both; }
+.stagger-2 { animation: staggerSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both; }
+.stagger-3 { animation: staggerSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both; }
+.stagger-4 { animation: staggerSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both; }
+.stagger-5 { animation: staggerSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) 0.20s both; }
+.stagger-6 { animation: staggerSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both; }
+
+/* 7. Button Micro-Press States */
+.btn-micro-press {
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.15s ease,
+              filter 0.15s ease;
+}
+
+.btn-micro-press:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* 8. Persona Switch Smooth Crossfade */
+@keyframes personaCrossfade {
+  0% {
+    opacity: 0.5;
+    transform: translateY(4px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-persona-fade {
+  animation: personaCrossfade 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, ChevronRight, XCircle } from 'lucide-react';
+import { FileText, ChevronRight, XCircle, Trophy, Calendar } from 'lucide-react';
 import { tournamentService } from '../../services/api';
-import { LoadingSpinner, Alert, Card, StatusBadge, Button, ConfirmDialog, EmptyState } from '../../components/common';
+import { LoadingSpinner, Alert, Card, StatusBadge, Button, ConfirmDialog, EmptyState, TrophyIcon } from '../../components/common';
+import PitchHero from '../../components/common/PitchHero';
+import { ClassicSoccerBall, GrassBladesTrim } from '../../components/common/FootballIcons';
 
 const MyApplications = () => {
   const [applications, setApplications] = useState([]);
@@ -30,11 +32,6 @@ const MyApplications = () => {
   const handleWithdraw = async () => {
     try {
       setError(null);
-      // Assuming there's a withdraw method, otherwise just mock state update or error
-      // await tournamentService.withdrawApplication(withdrawDialog.appId);
-      
-      // Since specific withdraw method isn't strictly defined in prompt API list,
-      // I'll update state locally to reflect withdrawal for UX.
       setApplications(applications.map(app => 
         app.id === withdrawDialog.appId ? { ...app, status: 'WITHDRAWN' } : app
       ));
@@ -45,72 +42,101 @@ const MyApplications = () => {
     }
   };
 
-  if (loading) return <div className="flex h-screen items-center justify-center"><LoadingSpinner size="large" /></div>;
+  const approvedCount = applications.filter(a => a.status === 'APPROVED' || a.status === 'ACCEPTED').length;
+
+  if (loading) return <div className="flex h-96 items-center justify-center"><LoadingSpinner size="lg" text="Retrieving competition applications..." /></div>;
 
   return (
-    <div className="p-6 max-w-6xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">My Applications</h1>
-          <p className="text-gray-500">Track your tournament registration status.</p>
-        </div>
-      </div>
+    <div className="space-y-6">
+      <PitchHero
+        title="Tournament Applications"
+        subtitle="Track your competitive team registration entries, review statuses, and tournament approvals."
+        badgeText="COMPETITOR ENTRIES"
+        stats={[
+          { label: 'Applications', value: applications.length },
+          { label: 'Approved Entries', value: approvedCount }
+        ]}
+        actionButtons={
+          <Button 
+            variant="primary" 
+            onClick={() => navigate('/tournaments')}
+            icon={Trophy}
+          >
+            Browse Sanctioned Cups
+          </Button>
+
+        }
+      />
 
       {error && <Alert type="error" message={error} />}
 
-      <Card>
+      <Card className="relative overflow-hidden border-2 border-emerald-900/30">
+        <div className="h-1.5 bg-gradient-to-r from-emerald-600 via-emerald-400 to-green-600 -mx-6 -mt-6 mb-6" />
+        <div className="absolute inset-0 goal-net-texture opacity-10 pointer-events-none" />
         {applications.length === 0 ? (
           <EmptyState 
-            title="No applications yet" 
-            message="You haven't applied to any tournaments." 
-            icon={<FileText className="w-12 h-12 text-gray-300" />}
-            action={<Button onClick={() => navigate('/player/tournaments')}>Browse Tournaments</Button>}
+            title="No Applications Submitted" 
+            message="You have not registered for any upcoming competitive tournaments yet." 
+            icon={<Trophy className="w-10 h-10 text-slate-300 dark:text-slate-600" />}
+            action={<Button onClick={() => navigate('/tournaments')}>Explore Sanctioned Tournaments</Button>}
           />
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
+              <thead className="bg-slate-50 dark:bg-[#071622] text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tournament</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applied Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Decision Date</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-5 py-3.5 text-left">Tournament Competition</th>
+                  <th className="px-5 py-3.5 text-left">Applied Date</th>
+                  <th className="px-5 py-3.5 text-center">Status</th>
+                  <th className="px-5 py-3.5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
                 {applications.map((app) => (
-                  <tr key={app.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <button 
-                        onClick={() => navigate(`/player/tournaments/${app.tournamentId}`)}
-                        className="text-sm font-medium text-indigo-600 hover:text-indigo-900 flex items-center"
-                      >
-                        {app.tournamentName}
-                        <ChevronRight className="w-4 h-4 ml-1 opacity-50" />
-                      </button>
+                  <tr key={app.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
+                    <td className="px-5 py-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center flex-shrink-0">
+                          <TrophyIcon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="font-bold text-slate-900 dark:text-white block">
+                            {app.tournamentName || `Tournament #${app.tournamentId}`}
+                          </span>
+                          <span className="text-xs text-slate-400">
+                            {app.tournamentLocation || 'Regional Competition'}
+                          </span>
+                        </div>
+                      </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(app.appliedDate).toLocaleDateString()}
+                    <td className="px-5 py-4 text-slate-600 dark:text-slate-300 stat-number text-xs">
+                      {app.appliedAt ? new Date(app.appliedAt).toLocaleDateString() : 'Recent'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-5 py-4 text-center">
                       <StatusBadge 
-                        status={app.status === 'ACCEPTED' ? 'SUCCESS' : app.status === 'REJECTED' ? 'ERROR' : app.status === 'WITHDRAWN' ? 'DEFAULT' : 'WARNING'} 
+                        status={app.status === 'APPROVED' ? 'ACTIVE' : app.status === 'PENDING' ? 'PENDING' : 'REJECTED'} 
                         label={app.status} 
                       />
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {app.decisionDate ? new Date(app.decisionDate).toLocaleDateString() : '-'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      {app.status === 'PENDING' && (
-                        <button 
-                          onClick={() => setWithdrawDialog({ isOpen: true, appId: app.id })}
-                          className="text-red-600 hover:text-red-900 flex items-center justify-end w-full"
+                    <td className="px-5 py-4 text-right">
+                      <div className="flex items-center justify-end space-x-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => navigate(`/tournaments/${app.tournamentId}`)}
                         >
-                          <XCircle className="w-4 h-4 mr-1" /> Withdraw
-                        </button>
-                      )}
+                          View Details
+                        </Button>
+                        {app.status === 'PENDING' && (
+                          <Button 
+                            variant="danger" 
+                            size="sm" 
+                            onClick={() => setWithdrawDialog({ isOpen: true, appId: app.id })}
+                          >
+                            Withdraw
+                          </Button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -120,14 +146,14 @@ const MyApplications = () => {
         )}
       </Card>
 
-      <ConfirmDialog
+      <ConfirmDialog 
         isOpen={withdrawDialog.isOpen}
-        title="Withdraw Application"
-        message="Are you sure you want to withdraw your application? This action cannot be undone."
+        onClose={() => setWithdrawDialog({ isOpen: false, appId: null })}
         onConfirm={handleWithdraw}
-        onCancel={() => setWithdrawDialog({ isOpen: false, appId: null })}
-        confirmText="Withdraw"
-        cancelText="Cancel"
+        title="Withdraw Tournament Application"
+        message="Are you sure you want to withdraw your tournament registration? This cannot be undone."
+        variant="danger"
+        confirmText="Confirm Withdrawal"
       />
     </div>
   );

@@ -16,6 +16,7 @@ import TournamentList from './pages/player/TournamentList';
 import TournamentDetail from './pages/player/TournamentDetail';
 import MyApplications from './pages/player/MyApplications';
 import PlayerStats from './pages/player/PlayerStats';
+import CustomizeCard from './pages/player/CustomizeCard';
 
 // Organizer Pages
 import OrganizerDashboard from './pages/organizer/OrganizerDashboard';
@@ -28,6 +29,7 @@ import MatchScoring from './pages/organizer/MatchScoring';
 
 // Scout Pages
 import ScoutDashboard from './pages/scout/ScoutDashboard';
+import ScoutProfile from './pages/scout/ScoutProfile';
 import PlayerSearch from './pages/scout/PlayerSearch';
 import Shortlist from './pages/scout/Shortlist';
 import ScoutAlerts from './pages/scout/ScoutAlerts';
@@ -39,7 +41,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import UserManagement from './pages/admin/UserManagement';
 import CorrectionQueue from './pages/admin/CorrectionQueue';
 import AuditLogView from './pages/admin/AuditLogView';
-import GPIConfig from './pages/admin/GPIConfig';
+import GPIConfig from './pages/admin/GpiConfig';
 
 // Misc
 import NotFound from './pages/NotFound';
@@ -53,19 +55,23 @@ function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         
-        {/* General Dashboard routing (will redirect based on role in the dashboard component or use conditional rendering) */}
+        {/* General Dashboard routing */}
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <DashboardRouter />
           </ProtectedRoute>
         } />
 
+        {/* SHARED / ROLE-AWARE PROFILE ROUTE */}
+        <Route path="/profile" element={<ProtectedRoute roles={['PLAYER', 'SCOUT']}><ProfileRouter /></ProtectedRoute>} />
+
         {/* PLAYER ROUTES */}
-        <Route path="/profile" element={<ProtectedRoute roles={['PLAYER']}><PlayerProfile /></ProtectedRoute>} />
         <Route path="/tournaments" element={<ProtectedRoute roles={['PLAYER']}><TournamentList /></ProtectedRoute>} />
         <Route path="/tournaments/:id" element={<ProtectedRoute roles={['PLAYER']}><TournamentDetail /></ProtectedRoute>} />
         <Route path="/my-applications" element={<ProtectedRoute roles={['PLAYER']}><MyApplications /></ProtectedRoute>} />
         <Route path="/player/stats" element={<ProtectedRoute roles={['PLAYER']}><PlayerStats /></ProtectedRoute>} />
+        <Route path="/player/card-studio" element={<ProtectedRoute roles={['PLAYER']}><CustomizeCard /></ProtectedRoute>} />
+        <Route path="/player/customize-card" element={<Navigate to="/player/card-studio" replace />} />
 
         {/* ORGANIZER ROUTES */}
         <Route path="/my-tournaments" element={<ProtectedRoute roles={['ORGANIZER']}><OrganizerTournaments /></ProtectedRoute>} />
@@ -88,11 +94,39 @@ function App() {
         <Route path="/audit-log" element={<ProtectedRoute roles={['ADMIN']}><AuditLogView /></ProtectedRoute>} />
         <Route path="/gpi-config" element={<ProtectedRoute roles={['ADMIN']}><GPIConfig /></ProtectedRoute>} />
 
+        {/* Role-prefixed route aliases */}
+        <Route path="/player/profile" element={<Navigate to="/profile" replace />} />
+        <Route path="/scout/profile" element={<Navigate to="/profile" replace />} />
+        <Route path="/player/tournaments" element={<Navigate to="/tournaments" replace />} />
+        <Route path="/player/tournaments/:id" element={<ProtectedRoute roles={['PLAYER']}><TournamentDetail /></ProtectedRoute>} />
+        <Route path="/scout/search" element={<Navigate to="/search" replace />} />
+        <Route path="/scout/shortlist" element={<Navigate to="/shortlist" replace />} />
+        <Route path="/scout/alerts" element={<Navigate to="/alerts" replace />} />
+        <Route path="/scout/compare" element={<Navigate to="/compare" replace />} />
+        <Route path="/scout/player/:id" element={<ProtectedRoute roles={['SCOUT']}><PlayerView /></ProtectedRoute>} />
+        <Route path="/scout/players/:id" element={<ProtectedRoute roles={['SCOUT']}><PlayerView /></ProtectedRoute>} />
+        <Route path="/organizer/tournaments/create" element={<Navigate to="/tournaments/create" replace />} />
+        <Route path="/organizer/tournaments/:id" element={<ProtectedRoute roles={['ORGANIZER']}><ManageTournament /></ProtectedRoute>} />
+        <Route path="/organizer/tournaments" element={<Navigate to="/my-tournaments" replace />} />
+        <Route path="/organizer/matches" element={<Navigate to="/matches" replace />} />
+        <Route path="/organizer/matches/:id" element={<ProtectedRoute roles={['ORGANIZER']}><MatchDetail /></ProtectedRoute>} />
+        <Route path="/organizer/matches/:id/scoring" element={<ProtectedRoute roles={['ORGANIZER']}><MatchScoring /></ProtectedRoute>} />
+        <Route path="/organizer/matches/:id/score" element={<ProtectedRoute roles={['ORGANIZER']}><MatchScoring /></ProtectedRoute>} />
+
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );
+}
+
+// Helper to route to correct profile dossier based on role
+function ProfileRouter() {
+  const { user } = useAuth();
+  if (user?.role === 'SCOUT') {
+    return <ScoutProfile />;
+  }
+  return <PlayerProfile />;
 }
 
 // Helper to route to correct dashboard based on role

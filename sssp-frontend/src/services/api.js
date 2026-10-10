@@ -50,15 +50,20 @@ export const authService = {
 
 // Player endpoints. Called with no argument they target the authenticated player (/players/me, identity
 // taken from the JWT on the server); called with an id (scouts viewing/comparing players) they target that user.
-const playerPath = (id) => (id === undefined || id === null ? '/players/me' : `/players/${id}`);
+const playerPath = (id) => (!id || id === 'undefined' || id === 'null' ? '/players/me' : `/players/${id}`);
 
 export const playerService = {
   getProfile: (id) => api.get(playerPath(id)),
   updateProfile: (data, id) => api.put(playerPath(id), data),
+  updateCard: (data, id) => api.put(`${playerPath(id)}/card`, data),
+  updateAttributes: (data, id) => api.put(`${playerPath(id)}/attributes`, data),
   getPerformance: (id) => api.get(`${playerPath(id)}/performance`),
   getGPI: (id) => api.get(`${playerPath(id)}/gpi`),
   getRanking: (id) => api.get(`${playerPath(id)}/ranking`),
-  getMatchStats: (id) => api.get(`${playerPath(id)}/match-stats`)
+  getMatchStats: (id) => api.get(`${playerPath(id)}/match-stats`),
+  getMatches: (id) => api.get(`${playerPath(id)}/matches`),
+  logMatch: (data, id) => id ? api.post(`/matches/player/${id}`, data) : api.post('/matches', data),
+  deleteMatch: (matchId) => api.delete(`/matches/${matchId}`),
 };
 
 export const tournamentService = {

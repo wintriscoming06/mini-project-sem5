@@ -4,6 +4,9 @@ import { AlertCircle, CheckCircle, XCircle, Clock, Search } from 'lucide-react';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import Alert from '../../components/common/Alert';
 import Modal from '../../components/common/Modal';
+import Card from '../../components/common/Card';
+import Button from '../../components/common/Button';
+import { FootballIcon } from '../../components/common/FootballIcons';
 
 export default function CorrectionQueue() {
   const [corrections, setCorrections] = useState([]);
@@ -46,63 +49,77 @@ export default function CorrectionQueue() {
 
   const getStatusIcon = (status) => {
     switch(status) {
-      case 'APPROVED': return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case 'REJECTED': return <XCircle className="w-5 h-5 text-red-500" />;
-      default: return <Clock className="w-5 h-5 text-yellow-500" />;
+      case 'APPROVED': return <CheckCircle className="w-4 h-4 text-emerald-500" />;
+      case 'REJECTED': return <XCircle className="w-4 h-4 text-rose-500" />;
+      default: return <Clock className="w-4 h-4 text-amber-500" />;
     }
   };
 
   const getStatusBadge = (status) => {
     switch(status) {
-      case 'APPROVED': return <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">APPROVED</span>;
-      case 'REJECTED': return <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold">REJECTED</span>;
-      default: return <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">PENDING</span>;
+      case 'APPROVED': return <span className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-xs font-bold">APPROVED</span>;
+      case 'REJECTED': return <span className="bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 px-2 py-0.5 rounded text-xs font-bold">REJECTED</span>;
+      default: return <span className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded text-xs font-bold">PENDING</span>;
     }
   };
 
   if (loading) return <div className="p-10 flex justify-center"><LoadingSpinner /></div>;
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-          <AlertCircle className="w-6 h-6 mr-2 text-yellow-500" /> Correction Queue
-        </h1>
-        <p className="text-gray-500 mt-1">Review and approve data correction requests submitted by players.</p>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-6 bg-white dark:bg-[#0b1e2d] rounded-2xl border border-slate-200 dark:border-emerald-950/40 shadow-sm">
+        <div>
+          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center">
+            <AlertCircle className="w-7 h-7 mr-3 text-amber-500" /> Match Data Correction Queue
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">
+            Review player disputes on match logs, goals, assists, and disciplinary events before GPI recalculation.
+          </p>
+        </div>
       </div>
 
-      {error && <Alert type="error" message={error} />}
+      {error && <Alert type="error" message={error} onClose={() => setError(null)} />}
 
-      <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
-        <div className="border-b border-gray-200 p-4 flex gap-4">
+      <Card className="overflow-hidden">
+        {/* Filter Bar */}
+        <div className="border-b border-slate-200 dark:border-slate-800 p-4 flex gap-2 overflow-x-auto">
           {['ALL', 'PENDING', 'APPROVED', 'REJECTED'].map(f => (
             <button 
               key={f}
               onClick={() => setFilter(f)} 
-              className={`text-sm font-medium px-4 py-2 rounded-md transition-colors ${filter === f ? 'bg-gray-800 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+              className={`text-xs font-bold px-4 py-2 rounded-xl transition-all ${
+                filter === f 
+                  ? 'bg-emerald-600 text-white shadow-md' 
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
             >
-              {f.charAt(0) + f.slice(1).toLowerCase()}
+              {f.charAt(0) + f.slice(1).toLowerCase()} ({corrections.filter(c => f === 'ALL' || c.status === f).length})
             </button>
           ))}
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-sm">
+            <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 text-xs uppercase">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Match Details</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Change Request</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Submitted By</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>
+                <th className="px-6 py-3 text-left font-bold tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left font-bold tracking-wider">Match Details</th>
+                <th className="px-6 py-3 text-left font-bold tracking-wider">Requested Change</th>
+                <th className="px-6 py-3 text-left font-bold tracking-wider">Submitted By</th>
+                <th className="px-6 py-3 text-right font-bold tracking-wider">Action</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {filteredCorrections.length === 0 ? (
-                <tr><td colSpan="5" className="px-6 py-12 text-center text-gray-500">No {filter.toLowerCase()} corrections found.</td></tr>
+                <tr>
+                  <td colSpan="5" className="px-6 py-12 text-center text-slate-400">
+                    <CheckCircle className="w-8 h-8 mx-auto text-emerald-500 mb-2" />
+                    No {filter.toLowerCase()} corrections found.
+                  </td>
+                </tr>
               ) : (
                 filteredCorrections.map(c => (
-                  <tr key={c.id} className="hover:bg-gray-50">
+                  <tr key={c.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
                         {getStatusIcon(c.status)}
@@ -110,27 +127,27 @@ export default function CorrectionQueue() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">{c.matchTitle || 'Unknown Match'}</div>
-                      <div className="text-sm text-gray-500">Player: {c.player}</div>
+                      <div className="font-bold text-slate-900 dark:text-white">{c.matchTitle || 'Official Match Record'}</div>
+                      <div className="text-xs text-slate-400">Player: <span className="font-semibold text-slate-700 dark:text-slate-300">{c.player}</span></div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm">
-                        <span className="font-semibold text-gray-700">{c.targetField}</span>
+                      <div className="text-xs">
+                        <span className="font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{c.targetField}</span>
                         <div className="flex items-center space-x-2 mt-1">
-                          <span className="line-through text-red-500">{c.oldValue || '0'}</span>
-                          <span className="text-gray-400">→</span>
-                          <span className="font-bold text-green-600">{c.newValue}</span>
+                          <span className="line-through text-rose-500 font-bold">{c.oldValue || '0'}</span>
+                          <span className="text-slate-400">→</span>
+                          <span className="font-bold text-emerald-600 dark:text-emerald-400 text-sm">{c.newValue}</span>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{c.submittedBy}</div>
-                      <div className="text-xs text-gray-500">{c.createdAt ? new Date(c.createdAt).toLocaleDateString() : '-'}</div>
+                      <div className="text-xs font-semibold text-slate-900 dark:text-white">{c.submittedBy}</div>
+                      <div className="text-xs text-slate-400">{c.createdAt ? new Date(c.createdAt).toLocaleDateString() : '-'}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap text-right">
                       <button 
                         onClick={() => setSelectedCorrection(c)}
-                        className="px-3 py-1.5 bg-white border border-gray-300 rounded text-gray-700 hover:bg-gray-50 font-medium"
+                        className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-700 transition-colors"
                       >
                         Review
                       </button>
@@ -141,63 +158,66 @@ export default function CorrectionQueue() {
             </tbody>
           </table>
         </div>
-      </div>
+      </Card>
 
+      {/* Decision Modal */}
       {selectedCorrection && (
-        <Modal title="Review Correction Request" onClose={() => { setSelectedCorrection(null); setAdminNote(''); }}>
-          <div className="p-6 space-y-6">
-            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-              <h4 className="font-medium text-gray-900 mb-2">Request Details</h4>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div><span className="text-gray-500 block">Match</span> <span className="font-medium">{selectedCorrection.matchTitle}</span></div>
-                <div><span className="text-gray-500 block">Player</span> <span className="font-medium">{selectedCorrection.player}</span></div>
-                <div><span className="text-gray-500 block">Target Field</span> <span className="font-medium capitalize">{selectedCorrection.targetField}</span></div>
-                <div><span className="text-gray-500 block">Date Submitted</span> <span>{selectedCorrection.createdAt ? new Date(selectedCorrection.createdAt).toLocaleString() : '-'}</span></div>
+        <Modal 
+          isOpen={!!selectedCorrection} 
+          title="Review Match Stat Correction Request" 
+          onClose={() => { setSelectedCorrection(null); setAdminNote(''); }}
+        >
+          <div className="space-y-4 py-2">
+            <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+              <h4 className="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Request Context</h4>
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div><span className="text-slate-400 block">Match</span> <span className="font-semibold text-slate-900 dark:text-white">{selectedCorrection.matchTitle}</span></div>
+                <div><span className="text-slate-400 block">Player</span> <span className="font-semibold text-slate-900 dark:text-white">{selectedCorrection.player}</span></div>
+                <div><span className="text-slate-400 block">Target Metric</span> <span className="font-semibold text-emerald-600 dark:text-emerald-400 uppercase">{selectedCorrection.targetField}</span></div>
+                <div><span className="text-slate-400 block">Submitted</span> <span className="text-slate-700 dark:text-slate-300">{selectedCorrection.createdAt ? new Date(selectedCorrection.createdAt).toLocaleString() : '-'}</span></div>
               </div>
             </div>
 
-            <div className="flex justify-center items-center space-x-8 p-4 border border-gray-200 rounded-lg">
+            <div className="flex justify-center items-center space-x-8 p-4 bg-white dark:bg-[#06131b] border border-slate-200 dark:border-slate-800 rounded-xl">
               <div className="text-center">
-                <span className="block text-sm text-gray-500 mb-1">Current Value</span>
-                <span className="text-2xl font-bold text-red-500 line-through">{selectedCorrection.oldValue || '0'}</span>
+                <span className="block text-xs uppercase tracking-wider text-slate-400 mb-1">Current Logged</span>
+                <span className="text-2xl font-black text-rose-500 line-through">{selectedCorrection.oldValue || '0'}</span>
               </div>
-              <div className="text-gray-400 font-bold text-xl">→</div>
+              <div className="text-slate-400 font-bold text-xl">→</div>
               <div className="text-center">
-                <span className="block text-sm text-gray-500 mb-1">Requested Value</span>
-                <span className="text-2xl font-bold text-green-600">{selectedCorrection.newValue}</span>
+                <span className="block text-xs uppercase tracking-wider text-slate-400 mb-1">Claimed Stat</span>
+                <span className="text-2xl font-black text-emerald-500">{selectedCorrection.newValue}</span>
               </div>
             </div>
 
             <div>
-              <h4 className="font-medium text-gray-900 mb-1 text-sm">Player's Reason</h4>
-              <p className="bg-gray-50 p-3 rounded text-gray-700 text-sm border border-gray-200">
-                {selectedCorrection.reason || 'No reason provided.'}
+              <h4 className="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Player Statement / Evidence</h4>
+              <p className="bg-slate-50 dark:bg-slate-800/40 p-3 rounded-xl text-slate-700 dark:text-slate-300 text-xs border border-slate-200 dark:border-slate-700 italic">
+                "{selectedCorrection.reason || 'No additional evidence statement provided.'}"
               </p>
             </div>
 
-            {selectedCorrection.status === 'PENDING' && (
+            {selectedCorrection.status === 'PENDING' ? (
               <>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Admin Note (Optional)</label>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1">Admin Verification Note</label>
                   <textarea 
                     value={adminNote}
                     onChange={(e) => setAdminNote(e.target.value)}
-                    className="w-full border border-gray-300 rounded p-2 text-sm focus:ring-blue-500"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-white focus:ring-emerald-500"
                     rows="2"
-                    placeholder="Provide a reason for rejection or approval note..."
-                  ></textarea>
+                    placeholder="State justification for approval or rejection..."
+                  />
                 </div>
-                <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
-                  <button onClick={() => setSelectedCorrection(null)} className="px-4 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50">Cancel</button>
-                  <button onClick={() => handleDecision('REJECTED')} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Reject</button>
-                  <button onClick={() => handleDecision('APPROVED')} className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Approve</button>
+                <div className="flex justify-end space-x-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                  <Button variant="secondary" onClick={() => setSelectedCorrection(null)}>Cancel</Button>
+                  <Button variant="danger" onClick={() => handleDecision('REJECTED')}>Reject Claim</Button>
+                  <Button variant="primary" onClick={() => handleDecision('APPROVED')}>Verify & Approve</Button>
                 </div>
               </>
-            )}
-            
-            {selectedCorrection.status !== 'PENDING' && (
-              <div className="pt-4 border-t border-gray-200 flex justify-end">
-                <button onClick={() => setSelectedCorrection(null)} className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900">Close</button>
+            ) : (
+              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+                <Button variant="secondary" onClick={() => setSelectedCorrection(null)}>Close</Button>
               </div>
             )}
           </div>

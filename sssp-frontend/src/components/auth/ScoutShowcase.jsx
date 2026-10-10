@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 export const COACHES = [
+
   {
     id: 'mourinho',
     name: 'José Mourinho',
@@ -120,6 +121,7 @@ export default function ScoutShowcase({ onCoachChange }) {
   const [isPaused, setIsPaused] = useState(false);
 
   const coach = COACHES[coachIndex];
+
 
   // Preload all coach images on mount
   useEffect(() => {
@@ -281,6 +283,7 @@ export default function ScoutShowcase({ onCoachChange }) {
         </div>
 
         {/* Live Scouting Pipeline Simulation */}
+
         <div className="relative z-10 px-5 pb-3">
           <div className="bg-slate-950/70 rounded-xl p-3 border border-white/10">
             <div className="flex items-center justify-between mb-1.5">

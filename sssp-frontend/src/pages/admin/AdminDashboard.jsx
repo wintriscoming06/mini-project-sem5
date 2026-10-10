@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, AlertTriangle, FileText, Settings, Activity, ChevronRight, ShieldCheck } from 'lucide-react';
+import { Users, AlertTriangle, FileText, Settings, Activity, ChevronRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { adminService } from '../../services/api';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import Alert from '../../components/common/Alert';
+import Card from '../../components/common/Card';
+import { FootballIcon, WhistleIcon, StadiumIcon, ClassicSoccerBall } from '../../components/common/FootballIcons';
+import PitchHero from '../../components/common/PitchHero';
 
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
@@ -50,140 +53,167 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-            <ShieldCheck className="w-6 h-6 mr-2 text-indigo-600" /> Platform Administration
-          </h1>
-          <p className="text-gray-500 mt-1">Manage users, review data corrections, and configure system rules.</p>
-        </div>
-      </div>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <PitchHero
+        title="SSSP System Administration"
+        subtitle="Platform governance, verified match data certification, and GPI algorithm weights tuning."
+        badgeText="FEDERATION GOVERNANCE"
+        stats={[
+          { label: 'Total Accounts', value: data.users.length },
+          { label: 'Registered Players', value: userCounts.PLAYER }
+        ]}
+      />
 
       {error && <Alert type="error" message={error} />}
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex items-center space-x-4">
-          <div className="p-3 rounded-full bg-blue-100 text-blue-600"><Users className="w-6 h-6" /></div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="p-5 flex items-center space-x-4">
+          <div className="p-3 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400"><Users className="w-6 h-6" /></div>
           <div>
-            <p className="text-sm font-medium text-gray-500">Total Users</p>
-            <h3 className="text-2xl font-bold text-gray-900">{data.users.length}</h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Accounts</p>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{data.users.length}</h3>
           </div>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex items-center space-x-4">
-          <div className="p-3 rounded-full bg-green-100 text-green-600"><Activity className="w-6 h-6" /></div>
+        </Card>
+        
+        <Card className="p-5 flex items-center space-x-4">
+          <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"><FootballIcon className="w-6 h-6" /></div>
           <div>
-            <p className="text-sm font-medium text-gray-500">Active Players</p>
-            <h3 className="text-2xl font-bold text-gray-900">{userCounts.PLAYER}</h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Registered Players</p>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{userCounts.PLAYER}</h3>
           </div>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex items-center space-x-4">
-          <div className="p-3 rounded-full bg-yellow-100 text-yellow-600"><AlertTriangle className="w-6 h-6" /></div>
+        </Card>
+
+        <Card className="p-5 flex items-center space-x-4">
+          <div className="p-3 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400"><AlertTriangle className="w-6 h-6" /></div>
           <div>
-            <p className="text-sm font-medium text-gray-500">Pending Corrections</p>
-            <h3 className="text-2xl font-bold text-gray-900">{pendingCorrections.length}</h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Pending Corrections</p>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{pendingCorrections.length}</h3>
           </div>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex items-center space-x-4">
-          <div className="p-3 rounded-full bg-purple-100 text-purple-600"><FileText className="w-6 h-6" /></div>
+        </Card>
+
+        <Card className="p-5 flex items-center space-x-4">
+          <div className="p-3 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400"><FileText className="w-6 h-6" /></div>
           <div>
-            <p className="text-sm font-medium text-gray-500">Audit Logs</p>
-            <h3 className="text-2xl font-bold text-gray-900">{data.auditLogs.length}</h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Audit Events</p>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{data.auditLogs.length}</h3>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Role Breakdown Bar */}
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">User Demographics</h3>
-        <div className="flex gap-2">
+      <Card className="p-5">
+        <h3 className="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-3">User Distribution by Role</h3>
+        <div className="flex gap-2 h-7 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800">
           {['PLAYER', 'ORGANIZER', 'SCOUT', 'ADMIN'].map((role, i) => {
             const count = userCounts[role];
             if (count === 0) return null;
-            const colors = ['bg-blue-500', 'bg-green-500', 'bg-orange-500', 'bg-purple-500'];
+            const colors = ['bg-emerald-600', 'bg-blue-600', 'bg-amber-600', 'bg-purple-600'];
+            const pct = Math.round((count / (data.users.length || 1)) * 100);
             return (
-              <div key={role} className={`${colors[i]} h-8 flex items-center justify-center text-white text-xs font-medium rounded px-2`} style={{width: `${(count/data.users.length)*100}%`}}>
+              <div 
+                key={role} 
+                className={`${colors[i]} h-full flex items-center justify-center text-white text-xs font-bold px-2 truncate`} 
+                style={{ width: `${Math.max(pct, 12)}%` }}
+                title={`${role}: ${count} (${pct}%)`}
+              >
                 {role} ({count})
               </div>
             );
           })}
         </div>
-      </div>
+      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* Quick Actions & Recent Logs */}
         <div className="space-y-6">
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <Link to="/admin/users" className="p-4 border border-gray-200 rounded-lg flex flex-col items-center justify-center text-gray-700 hover:bg-gray-50 hover:border-blue-300 transition-colors">
-                <Users className="w-6 h-6 mb-2 text-blue-500" />
-                <span className="font-medium text-sm">Manage Users</span>
+          <Card className="p-5">
+            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-4">Administration Modules</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <Link to="/admin/users" className="p-4 border border-slate-200 dark:border-slate-800 rounded-xl flex flex-col items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:border-emerald-500/50 transition-all group">
+                <Users className="w-6 h-6 mb-2 text-emerald-500 group-hover:scale-110 transition-transform" />
+                <span className="font-semibold text-xs">User Accounts</span>
               </Link>
-              <Link to="/admin/corrections" className="p-4 border border-gray-200 rounded-lg flex flex-col items-center justify-center text-gray-700 hover:bg-gray-50 hover:border-yellow-300 transition-colors relative">
-                {pendingCorrections.length > 0 && <span className="absolute top-2 right-2 flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span></span>}
-                <AlertTriangle className="w-6 h-6 mb-2 text-yellow-500" />
-                <span className="font-medium text-sm">Review Corrections</span>
+              <Link to="/admin/corrections" className="p-4 border border-slate-200 dark:border-slate-800 rounded-xl flex flex-col items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:border-amber-500/50 transition-all relative group">
+                {pendingCorrections.length > 0 && (
+                  <span className="absolute top-2 right-2 flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                  </span>
+                )}
+                <AlertTriangle className="w-6 h-6 mb-2 text-amber-500 group-hover:scale-110 transition-transform" />
+                <span className="font-semibold text-xs">Data Corrections</span>
               </Link>
-              <Link to="/admin/audit" className="p-4 border border-gray-200 rounded-lg flex flex-col items-center justify-center text-gray-700 hover:bg-gray-50 hover:border-purple-300 transition-colors">
-                <FileText className="w-6 h-6 mb-2 text-purple-500" />
-                <span className="font-medium text-sm">Audit Log</span>
+              <Link to="/admin/audit" className="p-4 border border-slate-200 dark:border-slate-800 rounded-xl flex flex-col items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:border-purple-500/50 transition-all group">
+                <FileText className="w-6 h-6 mb-2 text-purple-500 group-hover:scale-110 transition-transform" />
+                <span className="font-semibold text-xs">Audit Trails</span>
               </Link>
-              <Link to="/admin/gpi-config" className="p-4 border border-gray-200 rounded-lg flex flex-col items-center justify-center text-gray-700 hover:bg-gray-50 hover:border-indigo-300 transition-colors">
-                <Settings className="w-6 h-6 mb-2 text-indigo-500" />
-                <span className="font-medium text-sm">GPI Config</span>
+              <Link to="/admin/gpi-config" className="p-4 border border-slate-200 dark:border-slate-800 rounded-xl flex flex-col items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:border-blue-500/50 transition-all group">
+                <Settings className="w-6 h-6 mb-2 text-blue-500 group-hover:scale-110 transition-transform" />
+                <span className="font-semibold text-xs">GPI Weight Engine</span>
               </Link>
             </div>
-          </div>
+          </Card>
 
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-              <h3 className="text-lg font-semibold text-gray-900">Recent Audit Activity</h3>
-              <Link to="/admin/audit" className="text-sm text-blue-600 flex items-center">View All <ChevronRight className="w-4 h-4" /></Link>
+          <Card className="overflow-hidden">
+            <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white">Recent Audit Events</h3>
+              <Link to="/admin/audit" className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center hover:underline">
+                View All <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+              </Link>
             </div>
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-slate-100 dark:divide-slate-800">
               {data.auditLogs.slice(0, 5).map(log => (
-                <div key={log.id} className="p-4 text-sm">
-                  <div className="flex justify-between text-gray-500 mb-1 text-xs">
+                <div key={log.id} className="p-3 text-xs hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                  <div className="flex justify-between text-slate-400 mb-1">
                     <span>{new Date(log.createdAt).toLocaleString()}</span>
-                    <span className="font-medium text-gray-700">{log.entityType}</span>
+                    <span className="font-semibold text-slate-700 dark:text-slate-300 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">{log.entityType}</span>
                   </div>
-                  <p className="text-gray-900"><span className="font-medium">{log.changedBy}</span> changed {log.entityType} (ID: {log.entityId})</p>
+                  <p className="text-slate-800 dark:text-slate-200 font-medium">
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold">{log.changedBy}</span> modified {log.entityType}
+                  </p>
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
         </div>
 
         {/* Pending Corrections */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-            <h3 className="text-lg font-semibold text-gray-900">Pending Corrections</h3>
-            <Link to="/admin/corrections" className="text-sm text-blue-600 flex items-center">View Queue <ChevronRight className="w-4 h-4" /></Link>
+        <Card className="overflow-hidden">
+          <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white">Pending Corrections</h3>
+            <Link to="/admin/corrections" className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center hover:underline">
+              Full Queue <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+            </Link>
           </div>
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
             {pendingCorrections.length === 0 ? (
-              <div className="p-8 text-center text-gray-500">
-                <CheckCircle2 className="w-8 h-8 mx-auto text-green-400 mb-2" />
-                <p>No pending corrections.</p>
+              <div className="p-12 text-center text-slate-400">
+                <CheckCircle2 className="w-10 h-10 mx-auto text-emerald-500 mb-2" />
+                <p className="font-semibold">All match records verified.</p>
+                <p className="text-xs text-slate-400 mt-0.5">No pending player data correction disputes.</p>
               </div>
             ) : (
               pendingCorrections.slice(0, 5).map(correction => (
-                <div key={correction.id} className="p-4 flex justify-between items-center hover:bg-gray-50">
+                <div key={correction.id} className="p-4 flex justify-between items-center hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                   <div>
-                    <p className="text-sm font-medium text-gray-900">{correction.player} - {correction.matchTitle}</p>
-                    <p className="text-xs text-gray-500 mt-1">Field: <span className="font-medium">{correction.targetField}</span> | By: {correction.submittedBy}</p>
+                    <p className="text-sm font-bold text-slate-900 dark:text-white">{correction.player} - {correction.matchTitle}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                      Stat: <span className="font-bold text-emerald-600 dark:text-emerald-400">{correction.targetField}</span> | Submitted by: {correction.submittedBy}
+                    </p>
                   </div>
-                  <Link to="/admin/corrections" className="px-3 py-1 bg-white border border-gray-300 text-sm font-medium rounded hover:bg-gray-50">
+                  <Link 
+                    to="/admin/corrections" 
+                    className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 transition-colors"
+                  >
                     Review
                   </Link>
                 </div>
               ))
             )}
           </div>
-        </div>
+        </Card>
 
       </div>
     </div>

@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import PlayerShowcase from './PlayerShowcase';
 import ScoutShowcase from './ScoutShowcase';
 import OrganizerShowcase from './OrganizerShowcase';
+import { 
+  ClassicSoccerBall, PitchMarkings, TournamentStadiumBackdrop
+} from '../common';
 
 const ROLES = [
   { id: 'PLAYER', label: 'Player', icon: '⚽' },
@@ -18,18 +21,30 @@ export default function AuthLayout({
   const [activeCoachId, setActiveCoachId] = useState('mourinho');
   const [activeTournamentId, setActiveTournamentId] = useState('world_cup');
 
+
   return (
-    <div className="min-h-screen w-full bg-[#070e1b] text-white flex flex-col lg:flex-row overflow-x-hidden selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen w-full bg-[#03130d] text-white flex flex-col lg:flex-row overflow-x-hidden selection:bg-emerald-500 selection:text-white">
       {/* ======================================================== */}
       {/* LEFT SIDE: FOOTBALL & SCOUTING EXPERIENCE (55-60%) */}
       {/* ======================================================== */}
-      <div className="w-full lg:w-[58%] xl:w-[60%] relative flex flex-col justify-between p-4 sm:p-6 lg:p-8 xl:p-10 border-b lg:border-b-0 lg:border-r border-slate-800/80 bg-gradient-to-br from-[#070e1b] via-[#0b172a] to-[#040914] overflow-hidden transition-colors duration-1000">
+      <div className="w-full lg:w-[58%] xl:w-[60%] relative flex flex-col justify-between p-4 sm:p-6 lg:p-8 xl:p-10 border-b lg:border-b-0 lg:border-r border-emerald-900/50 pitch-turf-stripes overflow-y-auto lg:overflow-hidden transition-colors duration-700">
         
+        {/* Living Real Grass Lawn Mower Texture */}
+        <div className="absolute inset-0 living-real-grass opacity-90 pointer-events-none" />
+
+        {/* White Chalk Pitch Markings across the left showcase */}
+        <div className="absolute inset-0 opacity-25 pointer-events-none">
+          <PitchMarkings />
+        </div>
+
+        {/* Top Stadium Floodlight Canopy */}
+        <div className="absolute -top-32 inset-x-0 h-96 pointer-events-none opacity-65 stadium-glow animate-floodlight" />
+
         {/* ======================================================== */}
         {/* DYNAMIC PLAYER ATMOSPHERIC BACKGROUNDS */}
         {/* ======================================================== */}
         {activeRole === 'PLAYER' && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-screen opacity-50">
             {/* 1. CRISTIANO RONALDO: Portugal / United / Real Madrid */}
             <div
               className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
@@ -174,7 +189,7 @@ export default function AuthLayout({
         {/* DYNAMIC COACH ATMOSPHERIC BACKGROUNDS */}
         {/* ======================================================== */}
         {activeRole === 'SCOUT' && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-screen opacity-50">
             {/* 1. MOURINHO: Chelsea / Inter / Real Madrid Tactical Steel */}
             <div
               className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
@@ -296,7 +311,7 @@ export default function AuthLayout({
         {/* DYNAMIC ORGANIZER ATMOSPHERIC BACKGROUNDS */}
         {/* ======================================================== */}
         {activeRole === 'ORGANIZER' && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-screen opacity-50">
             {/* 1. FIFA WORLD CUP: Global Golden Prestige */}
             <div
               className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
@@ -427,11 +442,62 @@ export default function AuthLayout({
         </div>
 
         {/* Center: Dynamic Role-Based Showcase */}
-        <div className="relative z-20 flex-1 flex items-center justify-center py-2 sm:py-3 transition-all duration-500">
+        <div className="relative z-20 flex-1 flex flex-col items-center justify-center py-2 sm:py-3 transition-all duration-500">
           {activeRole === 'PLAYER' && <PlayerShowcase onPlayerChange={setActivePlayerId} />}
           {activeRole === 'SCOUT' && <ScoutShowcase onCoachChange={setActiveCoachId} />}
           {activeRole === 'ORGANIZER' && <OrganizerShowcase onTournamentChange={setActiveTournamentId} />}
+
+          {/* Role Status Footers */}
+          {activeRole === 'PLAYER' && (
+            <div className="w-full max-w-[480px] mt-2.5 flex items-center justify-between bg-emerald-950/90 border border-emerald-500/40 rounded-2xl p-2 px-3.5 shadow-xl backdrop-blur-md">
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[11px] font-black uppercase tracking-wider text-emerald-300">
+                  Scouting Combine • Live GPI Engine
+                </span>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/40">
+                GPI 0–100 SCALE
+              </span>
+            </div>
+          )}
+
+          {activeRole === 'SCOUT' && (
+            <div className="w-full max-w-[480px] mt-3 flex items-center justify-between bg-emerald-950/95 border border-emerald-400/40 rounded-2xl p-2.5 px-4 shadow-xl backdrop-blur-md">
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+                <span className="text-xs font-black uppercase tracking-wider text-emerald-300">
+                  Tactical Command • Verified Dossiers
+                </span>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/40">
+                4-PILLAR RATING
+              </span>
+            </div>
+          )}
+
+          {activeRole === 'ORGANIZER' && (
+            <div className="w-full max-w-[480px] mt-3 flex items-center justify-between bg-emerald-950/95 border border-amber-500/40 rounded-2xl p-2.5 px-4 shadow-xl backdrop-blur-md">
+              <div className="flex items-center space-x-2">
+                <span className="text-lg">🏟️</span>
+                <span className="text-xs font-black uppercase tracking-wider text-amber-300">
+                  Championship Stadium Arena
+                </span>
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-amber-300 bg-amber-500/20 px-2.5 py-1 rounded-lg border border-amber-500/40">
+                OFFICIAL SANCTIONED
+              </span>
+            </div>
+          )}
         </div>
+
+
+        {/* Organizer Stadium Backdrop Overlay */}
+        {activeRole === 'ORGANIZER' && (
+          <div className="absolute inset-0 pointer-events-none opacity-40">
+            <TournamentStadiumBackdrop />
+          </div>
+        )}
 
         {/* Bottom Banner & Rolling Football Animation */}
         <div className="relative z-20 pt-3 border-t border-slate-800/60 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 gap-2">
@@ -460,12 +526,23 @@ export default function AuthLayout({
       </div>
 
       {/* ======================================================== */}
-      {/* RIGHT SIDE: AUTHENTICATION FORM (40-45%) - UNCHANGED THEME */}
+      {/* RIGHT SIDE: AUTHENTICATION FORM (40-45%) - FOOTBALL GRASS PITCH */}
       {/* ======================================================== */}
-      <div className="w-full lg:w-[42%] xl:w-[40%] flex items-center justify-center p-4 sm:p-8 lg:p-10 bg-[#091222] relative">
-        {/* Fixed subtle ambient background glow for stable login panel */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-600/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="w-full lg:w-[42%] xl:w-[40%] flex items-center justify-center p-4 sm:p-8 lg:p-10 relative overflow-hidden pitch-turf-stripes border-t lg:border-t-0 lg:border-l border-emerald-900/40">
+        {/* Living grass turf texture overlay */}
+        <div className="absolute inset-0 living-real-grass opacity-90 pointer-events-none" />
+
+        {/* Stadium Floodlight Overhead Canopy */}
+        <div className="absolute -top-32 inset-x-0 h-96 pointer-events-none opacity-60 stadium-glow" />
+
+        {/* White chalk pitch sideline & penalty touchline */}
+        <div className="absolute inset-y-0 left-0 w-1 bg-white/30 pointer-events-none" />
+        <div className="absolute top-1/2 left-0 w-28 h-56 -translate-y-1/2 border-2 border-l-0 border-white/20 rounded-r-full pointer-events-none" />
+
+        {/* Subtle ambient goal net mesh background */}
+        <div className="absolute inset-0 goal-net-texture opacity-20 pointer-events-none" />
+
+
 
         {/* Clean, spacious form wrapper (400-480px width) */}
         <div className="w-full max-w-[440px] sm:max-w-[460px] relative z-10">
@@ -475,3 +552,4 @@ export default function AuthLayout({
     </div>
   );
 }
+

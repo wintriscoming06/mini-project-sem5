@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { scoutService } from '../../services/api';
-import { Star, Trash2, Edit3, Eye, Search, Plus } from 'lucide-react';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
-import Alert from '../../components/common/Alert';
-import ConfirmDialog from '../../components/common/ConfirmDialog';
-import Modal from '../../components/common/Modal';
+import { Star, Trash2, Edit3, Eye, Search, Plus, GitCompare, FileText } from 'lucide-react';
+import { LoadingSpinner, Alert, ConfirmDialog, Modal, Button, StatusBadge, EmptyState, FootballIcon, ScoutTargetIcon } from '../../components/common';
+import PitchHero from '../../components/common/PitchHero';
+import { ClassicSoccerBall, GrassBladesTrim } from '../../components/common/FootballIcons';
 
 export default function Shortlist() {
+  const navigate = useNavigate();
   const [shortlist, setShortlist] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,7 +22,7 @@ export default function Shortlist() {
       const res = await scoutService.getShortlist();
       setShortlist(res.data || []);
     } catch (err) {
-      setError('Failed to load shortlist');
+      setError('Failed to load scouting shortlist');
     } finally {
       setLoading(false);
     }
@@ -39,7 +39,7 @@ export default function Shortlist() {
       setShortlist(shortlist.filter(item => item.id !== deleteId));
       setDeleteId(null);
     } catch (err) {
-      setError('Failed to remove player from shortlist');
+      setError('Failed to remove prospect from shortlist');
       setDeleteId(null);
     }
   };
@@ -52,104 +52,135 @@ export default function Shortlist() {
       ));
       setNoteModal({ isOpen: false, playerId: null, currentNote: '' });
     } catch (err) {
-      setError('Failed to save note');
+      setError('Failed to save scouting note');
     }
   };
 
   const handlePriorityChange = async (id, newPriority) => {
-    // Optimistic update
     setShortlist(shortlist.map(item => item.id === id ? { ...item, priority: Number(newPriority) } : item).sort((a,b) => a.priority - b.priority));
-    // In a real app, you'd trigger an API call to save priority here
   };
 
-  if (loading) return <div className="p-10 flex justify-center"><LoadingSpinner /></div>;
+  const highPriorityCount = shortlist.filter(i => i.priority === 1).length;
+
+  if (loading) return <div className="p-16 flex justify-center"><LoadingSpinner size="lg" text="Loading prioritized shortlist..." /></div>;
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-            <Star className="w-6 h-6 mr-2 text-yellow-500" /> My Shortlist
-          </h1>
-          <p className="text-gray-500 mt-1">Manage and track players you're observing.</p>
-        </div>
-        <Link to="/scout/search" className="btn-primary flex items-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-          <Plus className="w-4 h-4 mr-2" /> Add Players
-        </Link>
-      </div>
+    <div className="space-y-6">
+      
+      {/* Stadium Pitch Hero Banner */}
+      <PitchHero
+        title="Scouting Shortlist"
+        subtitle="Prioritize high-value talent prospects, log private tactical notes, and evaluate comparative performance."
+        badgeText="SCOUT TARGET RADAR"
+        stats={[
+          { label: 'Watched Prospects', value: shortlist.length },
+          { label: 'High Priority', value: highPriorityCount }
+        ]}
+        actionButtons={
+          <Button 
+            variant="primary" 
+            onClick={() => navigate('/search')}
+            icon={Search}
+          >
+            Discover Prospects
+          </Button>
+
+        }
+      />
 
       {error && <Alert type="error" message={error} />}
 
       {shortlist.length === 0 ? (
-        <div className="bg-white p-12 text-center rounded-lg shadow-sm border border-gray-200">
-          <Star className="w-12 h-12 mx-auto text-gray-300 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900">Your shortlist is empty</h3>
-          <p className="text-gray-500 mt-2 mb-6">Start searching for players to add them to your shortlist.</p>
-          <Link to="/scout/search" className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-            <Search className="w-4 h-4 mr-2" /> Go to Player Search
-          </Link>
-        </div>
+        <EmptyState 
+          title="Shortlist is Empty" 
+          message="You have not starred or prioritized any prospect dossiers yet." 
+          icon={<Star className="w-10 h-10 text-slate-300 dark:text-slate-600" />}
+          action={<Button onClick={() => navigate('/search')}>Search Player Directory</Button>}
+        />
       ) : (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+        <div className="relative bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/40 overflow-hidden">
+          {/* Pitch Grass Top Trim */}
+          <div className="h-1.5 bg-gradient-to-r from-emerald-600 via-emerald-400 to-green-600" />
+          {/* Goal Net Texture */}
+          <div className="absolute inset-0 goal-net-texture opacity-10 pointer-events-none" />
+          
+          <div className="overflow-x-auto relative z-10">
+            <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
+              <thead className="bg-slate-50 dark:bg-[#071622] text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Player</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stats</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Note</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-5 py-3.5 text-center w-20">Priority</th>
+                  <th className="px-5 py-3.5 text-left">Prospect</th>
+                  <th className="px-5 py-3.5 text-center">GPI Rating</th>
+                  <th className="px-5 py-3.5 text-left">Private Scout Observation Note</th>
+                  <th className="px-5 py-3.5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
                 {shortlist.map((item) => (
-                  <tr key={item.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
+                  <tr key={item.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
+                    <td className="px-5 py-4 text-center">
                       <input 
                         type="number" 
                         min="1" 
                         max="99" 
-                        value={item.priority || 99} 
+                        value={item.priority || 1} 
                         onChange={(e) => handlePriorityChange(item.id, e.target.value)}
-                        className="w-16 p-1 text-center border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        className="w-14 px-2 py-1 text-center font-bold text-slate-900 dark:text-white bg-slate-50 dark:bg-[#081b29] border border-slate-300 dark:border-slate-700 rounded-lg text-xs"
                       />
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold">
-                          {item.playerName ? item.playerName.charAt(0) : '?'}
+                    <td className="px-5 py-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center font-black border border-teal-500/30">
+                          {item.playerName ? item.playerName.charAt(0) : 'P'}
                         </div>
-                        <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{item.playerName}</div>
-                          <div className="text-sm text-gray-500">{item.position}</div>
+                        <div>
+                          <Link 
+                            to={`/players/${item.playerId}`} 
+                            className="font-bold text-slate-900 dark:text-white hover:text-teal-500 transition-colors block"
+                          >
+                            {item.playerName}
+                          </Link>
+                          <span className="text-xs text-slate-400">{item.position || 'FWD'}</span>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 font-medium">GPI: {item.gpi || 'N/A'}</div>
-                      <div className="text-xs text-gray-500">{item.verifiedMatches || 0} Matches</div>
+                    <td className="px-5 py-4 text-center">
+                      <span className="font-extrabold text-slate-900 dark:text-white text-base stat-number block">
+                        {item.gpi ? Number(item.gpi).toFixed(1) : '—'}
+                      </span>
+                      <span className="text-[10px] text-slate-400 block">{item.verifiedMatches || 0} Matches</span>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-500 max-w-xs truncate">
-                        {item.note || <span className="text-gray-400 italic">No notes added</span>}
+                    <td className="px-5 py-4">
+                      <div className="text-xs text-slate-600 dark:text-slate-300 max-w-sm truncate">
+                        {item.note || <span className="text-slate-400 italic">No notes recorded</span>}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end space-x-2">
-                        <Link to={`/scout/player/${item.playerId}`} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors" title="View Profile">
-                          <Eye className="w-5 h-5" />
-                        </Link>
-                        <button 
-                          onClick={() => setNoteModal({ isOpen: true, playerId: item.playerId, currentNote: item.note || '' })} 
-                          className="p-2 text-green-600 hover:bg-green-50 rounded transition-colors" title="Edit Note">
-                          <Edit3 className="w-5 h-5" />
-                        </button>
-                        <button 
-                          onClick={() => setDeleteId(item.id)} 
-                          className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors" title="Remove">
-                          <Trash2 className="w-5 h-5" />
-                        </button>
+                    <td className="px-5 py-4 text-right">
+                      <div className="flex items-center justify-end space-x-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => navigate(`/players/${item.playerId}`)}
+                          title="View Player Dossier"
+                        >
+                          <Eye className="w-4 h-4 text-teal-500" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => setNoteModal({ isOpen: true, playerId: item.playerId, currentNote: item.note || '' })}
+                          title="Edit Observation Note"
+                        >
+                          <Edit3 className="w-4 h-4 text-emerald-500" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => setDeleteId(item.id)}
+                          title="Remove Prospect"
+                        >
+                          <Trash2 className="w-4 h-4 text-rose-500" />
+                        </Button>
                       </div>
                     </td>
                   </tr>
@@ -164,31 +195,37 @@ export default function Shortlist() {
         <ConfirmDialog
           isOpen={true}
           title="Remove from Shortlist"
-          message="Are you sure you want to remove this player from your shortlist?"
+          message="Are you sure you want to remove this prospect from your scouting pipeline?"
           onConfirm={handleRemove}
-          onCancel={() => setDeleteId(null)}
+          onClose={() => setDeleteId(null)}
           confirmText="Remove"
-          type="danger"
+          variant="danger"
         />
       )}
 
       {noteModal.isOpen && (
-        <Modal title="Edit Scout Note" onClose={() => setNoteModal({ isOpen: false, playerId: null, currentNote: '' })}>
-          <div className="p-4 space-y-4">
-            <textarea
-              rows="4"
-              value={noteModal.currentNote}
-              onChange={(e) => setNoteModal({...noteModal, currentNote: e.target.value})}
-              placeholder="Enter your private observation notes here..."
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-            ></textarea>
-            <div className="flex justify-end space-x-2">
-              <button onClick={() => setNoteModal({ isOpen: false, playerId: null, currentNote: '' })} className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Cancel</button>
-              <button onClick={handleSaveNote} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Save Note</button>
+        <Modal title="Scout Observation Note" onClose={() => setNoteModal({ isOpen: false, playerId: null, currentNote: '' })}>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-300 mb-1">
+                Field Observation Notes
+              </label>
+              <textarea
+                rows={4}
+                value={noteModal.currentNote}
+                onChange={(e) => setNoteModal({...noteModal, currentNote: e.target.value})}
+                placeholder="Record technical evaluation, tactical discipline, positioning notes..."
+                className="w-full p-3 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-white"
+              />
+            </div>
+            <div className="flex justify-end space-x-2 pt-2">
+              <Button variant="secondary" onClick={() => setNoteModal({ isOpen: false, playerId: null, currentNote: '' })}>Cancel</Button>
+              <Button variant="primary" onClick={handleSaveNote}>Save Note</Button>
             </div>
           </div>
         </Modal>
       )}
+
     </div>
   );
 }
