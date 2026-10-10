@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#06131b"/><stop offset=".45" stop-color="#0b2924"/><stop offset="1" stop-color="#031016"/></linearGradient>
+<radialGradient id="light"><stop stop-color="#d9fff0" stop-opacity=".22"/><stop offset="1" stop-color="#d9fff0" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="1600" height="900" fill="url(#bg)"/>
+<ellipse cx="310" cy="80" rx="470" ry="260" fill="url(#light)"/><ellipse cx="1290" cy="80" rx="470" ry="260" fill="url(#light)"/>
+<g fill="none" stroke="#d9fff0" stroke-opacity=".11" stroke-width="4">
+<rect x="70" y="250" width="1460" height="580"/><line x1="800" y1="250" x2="800" y2="830"/>
+<circle cx="800" cy="540" r="105"/><circle cx="800" cy="540" r="6"/>
+<rect x="70" y="395" width="230" height="290"/><rect x="1300" y="395" width="230" height="290"/>
+<path d="M300 455h70v170h-70M1300 455h-70v170h70"/>
+</g>
+<g stroke="#fff" stroke-opacity=".045" stroke-width="2"><path d="M0 165H1600"/><path d="M0 195H1600"/><path d="M0 225H1600"/></g>
+</svg>
