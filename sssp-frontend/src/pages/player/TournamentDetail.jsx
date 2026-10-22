@@ -56,7 +56,7 @@ const TournamentDetail = () => {
     <div className="space-y-6">
       <button 
         onClick={() => navigate('/tournaments')} 
-        className="inline-flex items-center text-sm font-semibold text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+        className="inline-flex items-center text-sm font-semibold text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
       >
         <ChevronLeft className="w-4 h-4 mr-1" /> Back to Competitions
       </button>
@@ -64,17 +64,13 @@ const TournamentDetail = () => {
       {error && <Alert type="error" message={error} />}
 
       {/* Matchday Stadium Header Arena Banner */}
-      <div className="relative overflow-hidden rounded-3xl border-2 border-emerald-500/50 pitch-turf-stripes shadow-2xl text-white">
-        {/* Stadium Floodlights Glow */}
-        <div className="absolute -top-24 inset-x-0 h-48 pointer-events-none opacity-60 stadium-glow" />
-        {/* Goal Net Background Texture */}
-        <div className="absolute inset-0 goal-net-texture opacity-30 pointer-events-none" />
-        {/* White Chalk Pitch Lines */}
-        <PitchMarkings className="absolute inset-0 opacity-40 pointer-events-none" />
+      <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950 shadow-xl text-white">
+        {/* Subtle Blueprint Lines */}
+        <PitchMarkings className="absolute inset-0 opacity-10 pointer-events-none text-blue-400" />
 
         <div className="relative z-10 p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-center space-x-5">
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-emerald-950/80 border-2 border-emerald-400/50 p-3 flex items-center justify-center text-amber-400 shadow-xl flex-shrink-0 backdrop-blur-md">
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/10 border border-white/10 p-3 flex items-center justify-center text-amber-400 shadow-xl flex-shrink-0 backdrop-blur-md">
               <TrophyIcon className="w-10 h-10" />
             </div>
             <div>
@@ -83,19 +79,19 @@ const TournamentDetail = () => {
                   status={tournament.status === 'OPEN' ? 'ACTIVE' : tournament.status === 'ONGOING' ? 'LIVE' : 'COMPLETED'} 
                   label={tournament.status} 
                 />
-                <span className="text-xs text-emerald-100/90 bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
+                <span className="text-xs text-slate-300 bg-black/40 px-2.5 py-0.5 rounded-full border border-white/10">
                   Organizer: <strong className="text-white">{tournament.organizerName || 'Certified SSSP Organizer'}</strong>
                 </span>
               </div>
-              <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white drop-shadow-md">{tournament.name}</h1>
+              <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white drop-shadow-sm">{tournament.name}</h1>
             </div>
           </div>
 
           <div className="flex items-center">
             {applicationStatus ? (
-              <div className="flex items-center space-x-2 bg-emerald-950/80 border border-emerald-400/50 px-4 py-2.5 rounded-xl shadow-lg">
-                <CheckCircle className="w-5 h-5 text-emerald-400" />
-                <span className="text-sm font-bold text-emerald-300">Application {applicationStatus}</span>
+              <div className="flex items-center space-x-2 bg-white/10 border border-white/10 px-4 py-2.5 rounded-xl shadow-lg">
+                <CheckCircle className="w-5 h-5 text-blue-400" />
+                <span className="text-sm font-bold text-slate-200">Application {applicationStatus}</span>
               </div>
             ) : tournament.status === 'OPEN' ? (
               <Button 
@@ -109,15 +105,15 @@ const TournamentDetail = () => {
               </Button>
 
             ) : (
-              <span className="text-sm text-slate-300 bg-emerald-950/80 border border-emerald-500/30 px-4 py-2 rounded-xl">Registrations Closed</span>
+              <span className="text-sm text-slate-300 bg-black/40 border border-white/10 px-4 py-2 rounded-xl">Registrations Closed</span>
             )}
           </div>
         </div>
 
         {/* Fixture Key Details Row */}
-        <div className="relative z-10 bg-emerald-950/85 backdrop-blur-md border-t border-emerald-800/80 px-6 py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+        <div className="relative z-10 bg-slate-950/80 backdrop-blur-md border-t border-white/10 px-6 py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
           <div className="flex items-center text-slate-300">
-            <Calendar className="w-4 h-4 text-teal-400 mr-2.5 flex-shrink-0" />
+            <Calendar className="w-4 h-4 text-cyan-400 mr-2.5 flex-shrink-0" />
             <div>
               <p className="text-slate-400 text-[10px] uppercase font-semibold">Tournament Window</p>
               <p className="font-bold text-white stat-number">
@@ -127,7 +123,7 @@ const TournamentDetail = () => {
           </div>
 
           <div className="flex items-center text-slate-300">
-            <MapPin className="w-4 h-4 text-emerald-400 mr-2.5 flex-shrink-0" />
+            <MapPin className="w-4 h-4 text-blue-400 mr-2.5 flex-shrink-0" />
             <div>
               <p className="text-slate-400 text-[10px] uppercase font-semibold">Host Stadium / Venue</p>
               <p className="font-bold text-white truncate">{tournament.location || tournament.venue || 'TBA'}</p>
@@ -167,7 +163,7 @@ const TournamentDetail = () => {
             <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300">
               <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800">
                 <span>Sanctioned Status</span>
-                <span className="font-bold text-emerald-500">Official SSSP Fixture</span>
+                <span className="font-bold text-blue-500">Official SSSP Fixture</span>
               </div>
               <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800">
                 <span>Scout Access</span>

@@ -99,10 +99,10 @@ const OrganizerTournaments = () => {
           {filteredTournaments.map(tournament => (
             <div 
               key={tournament.id} 
-              className="group relative bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/40 overflow-hidden flex flex-col justify-between hover:border-emerald-500/60 hover:shadow-xl transition-all"
+              className="group relative bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-blue-900/40 overflow-hidden flex flex-col justify-between hover:border-blue-500/60 hover:shadow-xl transition-all"
             >
               {/* Pitch Grass Top Trim */}
-              <div className="h-1.5 bg-gradient-to-r from-emerald-600 via-emerald-400 to-green-600" />
+              <div className="h-1.5 bg-blue-600" />
               
               {/* Subtle Goal Net Mesh in Background */}
               <div className="absolute inset-0 goal-net-texture opacity-10 pointer-events-none" />
@@ -110,10 +110,10 @@ const OrganizerTournaments = () => {
               <div className="p-6 space-y-4 relative z-10">
                 <div className="flex justify-between items-start gap-2">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-amber-500 p-2 flex items-center justify-center flex-shrink-0 border border-emerald-500/30 group-hover:scale-105 transition-transform">
+                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-amber-500 p-2 flex items-center justify-center flex-shrink-0 border border-blue-500/30 group-hover:scale-105 transition-transform">
                       <TrophyIcon className="w-6 h-6" />
                     </div>
-                    <h3 className="text-base font-extrabold text-slate-900 dark:text-white line-clamp-1 group-hover:text-emerald-500 transition-colors">
+                    <h3 className="text-base font-extrabold text-slate-900 dark:text-white line-clamp-1 group-hover:text-blue-500 transition-colors">
                       {tournament.name}
                     </h3>
                   </div>
@@ -121,7 +121,7 @@ const OrganizerTournaments = () => {
                 </div>
 
                 <div className="flex flex-wrap gap-1.5 text-xs">
-                  <span className="bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-500/20 text-emerald-800 dark:text-emerald-300 px-2 py-0.5 rounded font-semibold">
+                  <span className="bg-blue-50 dark:bg-blue-950/60 border border-blue-500/20 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded font-semibold">
                     {tournament.ageGroup || 'Open'}
                   </span>
                   <span className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded font-semibold">
@@ -134,19 +134,19 @@ const OrganizerTournaments = () => {
 
                 <div className="space-y-2 text-xs text-slate-600 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800/80">
                   <div className="flex items-center">
-                    <Calendar className="w-3.5 h-3.5 mr-2 text-teal-500" />
+                    <Calendar className="w-3.5 h-3.5 mr-2 text-cyan-500" />
                     <span>
                       {new Date(tournament.startDate).toLocaleDateString()} — {new Date(tournament.endDate).toLocaleDateString()}
                     </span>
                   </div>
                   <div className="flex items-center">
-                    <MapPin className="w-3.5 h-3.5 mr-2 text-emerald-500" />
+                    <MapPin className="w-3.5 h-3.5 mr-2 text-blue-500" />
                     <span className="truncate">{tournament.venue || tournament.location || 'Stadium TBA'}</span>
                   </div>
                 </div>
               </div>
               
-              <div className="px-6 py-3.5 bg-slate-50 dark:bg-[#071622] border-t border-slate-100 dark:border-slate-800/80 relative z-10 flex items-center justify-between">
+              <div className="px-6 py-3.5 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800/80 relative z-10 flex items-center justify-between">
                 <Button 
                   variant="outline" 
                   fullWidth 

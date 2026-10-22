@@ -395,7 +395,7 @@ const PlayerProfile = () => {
                 />
               ) : (
                 <div className="h-full w-full flex items-end justify-center pb-2">
-                  <PlayerSilhouette className="h-full w-48 text-emerald-400 drop-shadow-[0_12px_24px_rgba(0,0,0,0.6)]" />
+                  <PlayerSilhouette className="h-full w-48 text-blue-400 drop-shadow-[0_12px_24px_rgba(0,0,0,0.6)]" />
                 </div>
               )}
             </div>
@@ -415,8 +415,8 @@ const PlayerProfile = () => {
             {/* Cutout Processing Indicator */}
             {isRemovingBg && (
               <div className="absolute inset-0 bg-black/70 rounded-2xl flex flex-col items-center justify-center p-3 z-30 backdrop-blur-sm">
-                <RefreshCw className="w-8 h-8 text-emerald-400 animate-spin mb-2" />
-                <span className="text-xs font-black text-emerald-300 uppercase tracking-wider text-center">
+                <RefreshCw className="w-8 h-8 text-blue-400 animate-spin mb-2" />
+                <span className="text-xs font-black text-blue-300 uppercase tracking-wider text-center">
                   Extracting Cutout... {bgRemovalProgress ? `${bgRemovalProgress}%` : ''}
                 </span>
               </div>
@@ -448,7 +448,7 @@ const PlayerProfile = () => {
                 <span>•</span>
                 <span>{physicals.country || formData.location || 'Location Unset'}</span>
                 <span>•</span>
-                <span className="text-emerald-300 font-bold">{primaryPos}</span>
+                <span className="text-blue-300 font-bold">{primaryPos}</span>
                 {physicals.jerseyNumber && (
                   <>
                     <span>•</span>
@@ -463,7 +463,7 @@ const PlayerProfile = () => {
               
               {/* Height */}
               <div className="flex items-center space-x-2">
-                <div className="p-1.5 rounded-lg bg-white/10 text-emerald-300">
+                <div className="p-1.5 rounded-lg bg-white/10 text-blue-300">
                   <Ruler className="w-3.5 h-3.5" />
                 </div>
                 <div>
@@ -476,7 +476,7 @@ const PlayerProfile = () => {
 
               {/* Weight */}
               <div className="flex items-center space-x-2">
-                <div className="p-1.5 rounded-lg bg-white/10 text-emerald-300">
+                <div className="p-1.5 rounded-lg bg-white/10 text-blue-300">
                   <Scale className="w-3.5 h-3.5" />
                 </div>
                 <div>
@@ -502,7 +502,7 @@ const PlayerProfile = () => {
 
               {/* Preferred Foot */}
               <div className="flex items-center space-x-2">
-                <div className="p-1.5 rounded-lg bg-white/10 text-emerald-300">
+                <div className="p-1.5 rounded-lg bg-white/10 text-blue-300">
                   <Footprints className="w-3.5 h-3.5" />
                 </div>
                 <div>
@@ -528,7 +528,7 @@ const PlayerProfile = () => {
 
               {/* Secondary Position */}
               <div className="flex items-center space-x-2">
-                <div className="p-1.5 rounded-lg bg-white/10 text-teal-300">
+                <div className="p-1.5 rounded-lg bg-white/10 text-cyan-300">
                   <Activity className="w-3.5 h-3.5" />
                 </div>
                 <div>
@@ -552,14 +552,14 @@ const PlayerProfile = () => {
               <span>•</span>
               <div className="flex items-center space-x-1.5">
                 <span className="text-slate-400 uppercase text-[10px] font-bold">Goals:</span>
-                <span className="font-black text-emerald-400 stat-number">
+                <span className="font-black text-blue-400 stat-number">
                   <AnimatedStat value={extras.totals?.goals ?? 0} />
                 </span>
               </div>
               <span>•</span>
               <div className="flex items-center space-x-1.5">
                 <span className="text-slate-400 uppercase text-[10px] font-bold">Assists:</span>
-                <span className="font-black text-teal-400 stat-number">
+                <span className="font-black text-cyan-400 stat-number">
                   <AnimatedStat value={extras.totals?.assists ?? 0} />
                 </span>
               </div>
@@ -633,12 +633,12 @@ const PlayerProfile = () => {
                 icon={Camera}
               >
                 <div className="space-y-4">
-                  <div className="flex flex-col sm:flex-row items-center gap-4 bg-slate-50 dark:bg-[#071622] p-4 rounded-xl border border-slate-200 dark:border-slate-800">
-                    <div className="w-20 h-24 rounded-xl bg-slate-900 border-2 border-emerald-500 overflow-hidden flex items-end justify-center flex-shrink-0">
+                  <div className="flex flex-col sm:flex-row items-center gap-4 bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <div className="w-20 h-24 rounded-xl bg-slate-900 border-2 border-blue-500 overflow-hidden flex items-end justify-center flex-shrink-0">
                       {formData.photoUrl ? (
                         <img src={formData.photoUrl} alt="Preview" className="h-full w-full object-contain object-bottom" />
                       ) : (
-                        <PlayerSilhouette className="w-16 h-20 text-emerald-400" />
+                        <PlayerSilhouette className="w-16 h-20 text-blue-400" />
                       )}
                     </div>
 
@@ -699,13 +699,13 @@ const PlayerProfile = () => {
                   />
 
                   {/* Player Cutout Size / Scale Adjuster */}
-                  <div className="bg-slate-50 dark:bg-[#071622] p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
                     <div className="flex items-center justify-between">
                       <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                        <Scale className="w-3.5 h-3.5 text-emerald-500" />
+                        <Scale className="w-3.5 h-3.5 text-blue-500" />
                         <span>Player Cutout Size</span>
                       </label>
-                      <span className="text-xs font-black px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 stat-number">
+                      <span className="text-xs font-black px-2 py-0.5 rounded-md bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-500/30 stat-number">
                         {visualSizes.playerSize}%
                       </span>
                     </div>
@@ -718,13 +718,13 @@ const PlayerProfile = () => {
                         step="2"
                         value={visualSizes.playerSize}
                         onChange={(e) => setVisualSizes(prev => ({ ...prev, playerSize: Number(e.target.value) }))}
-                        className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                        className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
                       />
                       <span className="text-[10px] font-bold text-slate-400">150%</span>
                       <button
                         type="button"
                         onClick={() => setVisualSizes(prev => ({ ...prev, playerSize: 100 }))}
-                        className="text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-emerald-500 px-1.5 py-0.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+                        className="text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-blue-500 px-1.5 py-0.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
                         title="Reset to 100%"
                       >
                         Reset
@@ -758,7 +758,7 @@ const PlayerProfile = () => {
                     value={physicals.jerseyNumber}
                     onChange={handlePhysicalChange}
                     disabled={!isEditing}
-                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
+                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
                   />
                 </div>
 
@@ -773,7 +773,7 @@ const PlayerProfile = () => {
                     value={physicals.height}
                     onChange={handlePhysicalChange}
                     disabled={!isEditing}
-                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
+                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
                   />
                 </div>
 
@@ -788,7 +788,7 @@ const PlayerProfile = () => {
                     value={physicals.weight}
                     onChange={handlePhysicalChange}
                     disabled={!isEditing}
-                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
+                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
                   />
                 </div>
 
@@ -803,7 +803,7 @@ const PlayerProfile = () => {
                     value={physicals.country}
                     onChange={handlePhysicalChange}
                     disabled={!isEditing}
-                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
+                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
                   />
                 </div>
               </div>
@@ -817,7 +817,7 @@ const PlayerProfile = () => {
             >
               <div className="space-y-4">
                 {/* Active Club Preview */}
-                <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 dark:bg-[#071622] border border-slate-200 dark:border-slate-800">
+                <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
                   <div className="flex items-center space-x-3">
                     <ClubCrest club={clubTheme} customBadgeUrl={customBadgeUrl} className="w-10 h-10" />
                     <div>
@@ -871,8 +871,8 @@ const PlayerProfile = () => {
                             onClick={() => handleClubSelect(c.name)}
                             className={`flex items-center space-x-2 p-2 rounded-xl text-left border text-xs font-bold transition-all ${
                               isSelected 
-                                ? 'bg-emerald-500/15 border-emerald-500 text-emerald-600 dark:text-emerald-400 shadow-sm' 
-                                : 'bg-slate-50 dark:bg-[#071622] border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-400'
+                                ? 'bg-blue-500/15 border-blue-500 text-blue-600 dark:text-blue-400 shadow-sm' 
+                                : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-blue-400'
                             }`}
                           >
                             <ClubCrest club={c} className="w-5 h-5 flex-shrink-0" />
@@ -895,13 +895,13 @@ const PlayerProfile = () => {
 
                 {/* Club Crest Size / Scale Adjuster (Edit Mode) */}
                 {isEditing && (
-                  <div className="bg-slate-50 dark:bg-[#071622] p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 mt-3">
+                  <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 mt-3">
                     <div className="flex items-center justify-between">
                       <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                        <Shield className="w-3.5 h-3.5 text-emerald-500" />
+                        <Shield className="w-3.5 h-3.5 text-blue-500" />
                         <span>Club Crest Watermark Size</span>
                       </label>
-                      <span className="text-xs font-black px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 stat-number">
+                      <span className="text-xs font-black px-2 py-0.5 rounded-md bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-500/30 stat-number">
                         {visualSizes.crestSize}%
                       </span>
                     </div>
@@ -914,13 +914,13 @@ const PlayerProfile = () => {
                         step="2"
                         value={visualSizes.crestSize}
                         onChange={(e) => setVisualSizes(prev => ({ ...prev, crestSize: Number(e.target.value) }))}
-                        className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                        className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
                       />
                       <span className="text-[10px] font-bold text-slate-400">150%</span>
                       <button
                         type="button"
                         onClick={() => setVisualSizes(prev => ({ ...prev, crestSize: 100 }))}
-                        className="text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-emerald-500 px-1.5 py-0.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+                        className="text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-blue-500 px-1.5 py-0.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
                         title="Reset to 100%"
                       >
                         Reset
@@ -952,7 +952,7 @@ const PlayerProfile = () => {
                     value={formData.primaryPosition || ''} 
                     onChange={handleChange} 
                     disabled={!isEditing} 
-                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
+                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
                   >
                     <option value="">Select Primary Position...</option>
                     {POSITION_OPTIONS.map((pos) => (
@@ -971,7 +971,7 @@ const PlayerProfile = () => {
                     value={formData.secondaryPosition || ''} 
                     onChange={handleChange} 
                     disabled={!isEditing} 
-                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
+                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
                   >
                     <option value="">None / Unset</option>
                     {POSITION_OPTIONS.map((pos) => (
@@ -990,7 +990,7 @@ const PlayerProfile = () => {
                     value={formData.preferredFoot || ''} 
                     onChange={handleChange} 
                     disabled={!isEditing} 
-                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
+                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
                   >
                     <option value="">Select Foot...</option>
                     <option value="RIGHT">Right Foot</option>
@@ -1044,7 +1044,7 @@ const PlayerProfile = () => {
                     onChange={handleChange} 
                     disabled={!isEditing} 
                     placeholder="Describe your positional awareness, key strengths, transition play, leadership, and athletic traits..."
-                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
+                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
                   />
                 </div>
 
@@ -1057,7 +1057,7 @@ const PlayerProfile = () => {
                     value={formData.visibility || 'PUBLIC'} 
                     onChange={handleChange} 
                     disabled={!isEditing} 
-                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
+                    className="mt-1 block w-full rounded-lg text-sm px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500"
                   >
                     <option value="PUBLIC">Public — Searchable by all verified scouts & coaches</option>
                     <option value="RESTRICTED">Restricted — Only tournament organizers & shortlisted scouts</option>
@@ -1089,7 +1089,7 @@ const PlayerProfile = () => {
             <button
               type="button"
               onClick={() => navigate('/player/card-studio')}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-md transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white text-xs font-bold shadow-md transition-all cursor-pointer"
             >
               <Palette className="w-3.5 h-3.5" />
               <span>Customize Card Style ({chosenDesignName})</span>
@@ -1199,21 +1199,21 @@ const PlayerProfile = () => {
             icon={Shield}
           >
             <div className="grid grid-cols-3 gap-3 mb-3">
-              <div className="bg-slate-50 dark:bg-[#071622] p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
+              <div className="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
                 <p className="text-[10px] font-bold uppercase text-slate-400">Matches</p>
                 <p className="text-xl font-black text-slate-900 dark:text-white stat-number">
                   <AnimatedStat value={extras.totals?.matches ?? 0} />
                 </p>
               </div>
-              <div className="bg-slate-50 dark:bg-[#071622] p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
+              <div className="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
                 <p className="text-[10px] font-bold uppercase text-slate-400">Goals</p>
-                <p className="text-xl font-black text-emerald-600 dark:text-emerald-400 stat-number">
+                <p className="text-xl font-black text-blue-600 dark:text-blue-400 stat-number">
                   <AnimatedStat value={extras.totals?.goals ?? 0} />
                 </p>
               </div>
-              <div className="bg-slate-50 dark:bg-[#071622] p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
+              <div className="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
                 <p className="text-[10px] font-bold uppercase text-slate-400">Assists</p>
-                <p className="text-xl font-black text-teal-600 dark:text-teal-400 stat-number">
+                <p className="text-xl font-black text-cyan-600 dark:text-cyan-400 stat-number">
                   <AnimatedStat value={extras.totals?.assists ?? 0} />
                 </p>
               </div>

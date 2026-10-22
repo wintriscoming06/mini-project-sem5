@@ -57,7 +57,7 @@ export default function CustomizeCard() {
     <div className="max-w-7xl mx-auto space-y-8">
       {/* Header */}
       <div className="border-b border-slate-200 dark:border-slate-800 pb-6">
-        <div className="flex items-center gap-2 text-xs font-black tracking-widest text-emerald-600 dark:text-emerald-400 uppercase">
+        <div className="flex items-center gap-2 text-xs font-black tracking-widest text-blue-600 dark:text-blue-400 uppercase">
           <Sparkles className="w-4 h-4 text-amber-500" />
           <span>PLAYER CARD STUDIO</span>
         </div>
@@ -75,7 +75,7 @@ export default function CustomizeCard() {
       <div className="grid lg:grid-cols-12 gap-8 items-start">
         {/* Left Column: Visual Card Selection Gallery */}
         <div className="lg:col-span-7 space-y-6">
-          <div className="bg-white dark:bg-[#071927] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-extrabold text-slate-900 dark:text-white text-base">
                 Card Gallery
@@ -98,8 +98,8 @@ export default function CustomizeCard() {
                     onClick={() => selectAndSaveDesign(name)}
                     className={`group relative rounded-xl p-3 text-left transition-all duration-300 ease-out border-2 overflow-hidden flex flex-col justify-between cursor-pointer card-elevate hover:-translate-y-1.5 hover:shadow-lg ${
                       isSelected
-                        ? 'border-emerald-500 ring-2 ring-emerald-500/40 shadow-emerald-500/20 scale-[1.02] shadow-md'
-                        : 'border-slate-200 dark:border-slate-700 hover:border-emerald-400/60'
+                        ? 'border-blue-500 ring-2 ring-blue-500/40 shadow-blue-500/20 scale-[1.02] shadow-md'
+                        : 'border-slate-200 dark:border-slate-700 hover:border-blue-400/60'
                     }`}
                     style={{
                       background: conf.gradient,
@@ -109,7 +109,7 @@ export default function CustomizeCard() {
                   >
                     {/* Active checkmark badge */}
                     {isSelected && (
-                      <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-white text-emerald-600 flex items-center justify-center shadow animate-scale-in">
+                      <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-white text-blue-600 flex items-center justify-center shadow animate-scale-in">
                         <Check className="w-3.5 h-3.5 stroke-[3]" />
                       </div>
                     )}
@@ -143,10 +143,10 @@ export default function CustomizeCard() {
           </div>
 
           {/* Cosmetic Disclaimer Box */}
-          <div className="rounded-2xl p-4 bg-emerald-50/60 dark:bg-[#06241a] border border-emerald-200/60 dark:border-emerald-900/40 text-xs text-slate-600 dark:text-emerald-200/80 flex gap-3 items-start">
-            <Info className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" />
+          <div className="rounded-2xl p-4 bg-blue-50/60 dark:bg-slate-900 border border-blue-200/60 dark:border-blue-900/40 text-xs text-slate-600 dark:text-blue-200/80 flex gap-3 items-start">
+            <Info className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
             <div>
-              <span className="font-black text-emerald-700 dark:text-emerald-300 uppercase tracking-wider block mb-0.5">
+              <span className="font-black text-blue-700 dark:text-blue-300 uppercase tracking-wider block mb-0.5">
                 Cosmetic Customization Only
               </span>
               Card decoration has <strong className="text-slate-900 dark:text-white">ZERO</strong> effect on GPI, Overall Rating, PAC, SHO, PAS, DRI, DEF, PHY, or match statistics. It is purely cosmetic for your public profile and scouting card presentation.
@@ -156,12 +156,12 @@ export default function CustomizeCard() {
 
         {/* Right Column: Live Card Preview */}
         <div className="lg:col-span-5 flex flex-col items-center stagger-2">
-          <div className="bg-white dark:bg-[#071927] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm w-full flex flex-col items-center">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm w-full flex flex-col items-center">
             <div className="w-full flex items-center justify-between mb-6 pb-3 border-b border-slate-100 dark:border-slate-800">
               <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
                 Live Card Preview
               </span>
-              <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 transition-all duration-300">
+              <span className="text-xs font-black text-blue-600 dark:text-blue-400 bg-blue-500/10 px-2.5 py-0.5 rounded-full border border-blue-500/20 transition-all duration-300">
                 {design}
               </span>
             </div>

@@ -21,21 +21,21 @@ module.exports = {
         'slide-down': 'slideDown 0.16s ease-out both'
       },
       colors: {
-        // Football Brand Green Palette
+        // Clean Minimal Stadium - Modern Cobalt Blue Palette
         pitch: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          200: '#a7f3d0',
-          300: '#6ee7b7',
-          400: '#34d399',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
-          800: '#064e3b',
-          900: '#0b2924',
-          950: '#061a17'
+          50: '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
+          950: '#0f172a'
         },
-        // Matchday Stadium Night Palette
+        // Matchday Stadium Sky & Cyan Palette
         stadium: {
           50: '#f0f9ff',
           100: '#e0f2fe',
@@ -45,23 +45,23 @@ module.exports = {
           500: '#0ea5e9',
           600: '#0284c7',
           700: '#0369a1',
-          800: '#0b2638',
-          900: '#071426',
-          950: '#040b15'
+          800: '#075985',
+          900: '#0c4a6e',
+          950: '#082f49'
         },
-        // Tactical Board Slate Palette
+        // Modern Tactical Slate Palette
         tactical: {
-          50: '#f4fbf7',
-          100: '#e5f7ed',
-          200: '#cbeedb',
-          300: '#a2dfc1',
-          400: '#6ec8a0',
-          500: '#42ad7f',
-          600: '#2f8d64',
-          700: '#257051',
-          800: '#1e5942',
-          900: '#12291d',
-          950: '#07120e'
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
+          950: '#020617'
         },
         // Golden Trophy / Competition Highlights
         trophy: {
@@ -76,18 +76,19 @@ module.exports = {
           800: '#92400e',
           900: '#78350f'
         },
-        // Backward-compatible primary/secondary/dark mapped to football theme
+        // Primary brand mapped to Clean Cobalt Blue
         primary: { 
-          50: '#ecfdf5', 
-          100: '#d1fae5', 
-          200: '#a7f3d0', 
-          300: '#6ee7b7', 
-          400: '#34d399', 
-          500: '#10b981', 
-          600: '#059669', 
-          700: '#047857', 
-          800: '#064e3b', 
-          900: '#0b2924' 
+          50: '#eff6ff', 
+          100: '#dbeafe', 
+          200: '#bfdbfe', 
+          300: '#93c5fd', 
+          400: '#60a5fa', 
+          500: '#3b82f6', 
+          600: '#2563eb', 
+          700: '#1d4ed8', 
+          800: '#1e40af', 
+          900: '#1e3a8a',
+          950: '#172554'
         },
         secondary: { 
           50: '#f0f9ff', 
@@ -110,9 +111,9 @@ module.exports = {
           500: '#64748b', 
           600: '#475569', 
           700: '#334155', 
-          800: '#0b1e2d', 
-          900: '#06131b',
-          950: '#030b10'
+          800: '#1e293b', 
+          900: '#0f172a',
+          950: '#090d16'
         }
       }
     }

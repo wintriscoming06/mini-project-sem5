@@ -82,8 +82,8 @@ export const PitchMarkings = ({ className = "absolute inset-0 pointer-events-non
     preserveAspectRatio="none"
     fill="none" 
     stroke="currentColor" 
-    strokeWidth="3.5"
-    strokeOpacity="0.4"
+    strokeWidth="2"
+    strokeOpacity="0.18"
   >
     {/* Outer touchline boundary */}
     <rect x="25" y="25" width="1150" height="550" rx="4" />
@@ -122,12 +122,10 @@ export const PitchMarkings = ({ className = "absolute inset-0 pointer-events-non
 );
 
 /**
- * Grass Blades Row Accent (Used for borders of cards and hero sections)
+ * Sleek Modern Hairline Accent Divider (Replaces jagged grass blades with an elegant modern glow line)
  */
-export const GrassBladesTrim = ({ className = "w-full h-4 text-emerald-600 dark:text-emerald-500 opacity-70" }) => (
-  <svg viewBox="0 0 600 24" preserveAspectRatio="none" className={className} fill="currentColor">
-    <path d="M0,24 L0,14 L12,4 L24,24 L36,8 L48,24 L60,2 L72,24 L84,10 L96,24 L108,6 L120,24 L132,12 L144,24 L156,4 L168,24 L180,8 L192,24 L204,2 L216,24 L228,10 L240,24 L252,6 L264,24 L276,12 L288,24 L300,4 L312,24 L324,8 L336,24 L348,2 L360,24 L372,10 L384,24 L396,6 L408,24 L420,12 L432,24 L444,4 L456,24 L468,8 L480,24 L492,2 L504,24 L516,10 L528,24 L540,6 L552,24 L564,12 L576,24 L588,4 L600,24 Z" />
-  </svg>
+export const GrassBladesTrim = ({ className = "w-full my-2 text-blue-500/40" }) => (
+  <div className={`h-[2px] w-full bg-gradient-to-r from-transparent via-blue-500/50 to-transparent ${className}`} />
 );
 
 /**
@@ -194,7 +192,7 @@ export const WhistleIcon = ({ className = "w-6 h-6", ...props }) => (
     aria-hidden="true"
     {...props}
   >
-    <path d="M10 28h27c9 0 16 5 17 13H24c-8 0-14-5-14-13z" strokeWidth="3" fill="#10b981" fillOpacity="0.2" />
+    <path d="M10 28h27c9 0 16 5 17 13H24c-8 0-14-5-14-13z" strokeWidth="3" fill="#2563eb" fillOpacity="0.2" />
     <path d="M37 28V15h12v13M16 28V14h10v14" strokeWidth="3" />
   </svg>
 );
@@ -235,8 +233,8 @@ export const TournamentStadiumBackdrop = ({ className = "absolute inset-0 pointe
         <stop offset="100%" stopColor="#eab308" stopOpacity="0" />
       </linearGradient>
       <radialGradient id="stadiumCenterGlow" cx="50%" cy="0%" r="80%">
-        <stop offset="0%" stopColor="#22c55e" stopOpacity="0.45" />
-        <stop offset="100%" stopColor="#052e16" stopOpacity="0" />
+        <stop offset="0%" stopColor="#2563eb" stopOpacity="0.35" />
+        <stop offset="100%" stopColor="#090d16" stopOpacity="0" />
       </radialGradient>
     </defs>
     {/* Floodlight Beam Cones */}
@@ -244,8 +242,8 @@ export const TournamentStadiumBackdrop = ({ className = "absolute inset-0 pointe
     <polygon points="1080,0 840,600 1200,600" fill="url(#stadiumBeamRight)" opacity="0.3" />
     <polygon points="600,0 180,600 1020,600" fill="url(#stadiumCenterGlow)" opacity="0.25" />
     {/* Stadium Grandstand silhouette tiers */}
-    <path d="M 0,160 Q 600,220 1200,160 L 1200,240 Q 600,300 0,240 Z" fill="#041f14" opacity="0.7" />
-    <path d="M 0,240 Q 600,300 1200,240 L 1200,320 Q 600,370 0,320 Z" fill="#02140d" opacity="0.85" />
+    <path d="M 0,160 Q 600,220 1200,160 L 1200,240 Q 600,300 0,240 Z" fill="#0f172a" opacity="0.7" />
+    <path d="M 0,240 Q 600,300 1200,240 L 1200,320 Q 600,370 0,320 Z" fill="#090d16" opacity="0.85" />
   </svg>
 );
 

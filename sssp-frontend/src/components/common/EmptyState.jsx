@@ -6,14 +6,14 @@ import { FootballIcon } from './FootballIcons';
 const EmptyState = ({ icon, title, description, message, action, actionText, onAction }) => {
   const text = description || message;
   return (
-    <div className="relative text-center py-12 px-6 border-2 border-dashed border-slate-200 dark:border-emerald-900/30 rounded-xl bg-slate-50/50 dark:bg-[#071724]/40 overflow-hidden">
+    <div className="relative text-center py-12 px-6 border-2 border-dashed border-slate-200 dark:border-blue-900/30 rounded-xl bg-slate-50/50 dark:bg-slate-900/40 overflow-hidden">
       <div className="flex justify-center mb-3">
         {icon ? (
-          <div className="p-3 rounded-full bg-slate-100 dark:bg-emerald-950/40 text-slate-400 dark:text-emerald-400">
+          <div className="p-3 rounded-full bg-slate-100 dark:bg-blue-950/40 text-slate-400 dark:text-blue-400">
             {renderIcon(icon, 'h-8 w-8')}
           </div>
         ) : (
-          <div className="p-3 rounded-full bg-slate-100 dark:bg-emerald-950/40 text-slate-400 dark:text-emerald-400">
+          <div className="p-3 rounded-full bg-slate-100 dark:bg-blue-950/40 text-slate-400 dark:text-blue-400">
             <FootballIcon className="h-8 w-8" />
           </div>
         )}

@@ -153,7 +153,7 @@ export default function PlayerView() {
       <div className="flex items-center justify-between">
         <button 
           onClick={() => navigate('/search')} 
-          className="inline-flex items-center text-xs font-semibold text-slate-400 hover:text-teal-500 transition-colors"
+          className="inline-flex items-center text-xs font-semibold text-slate-400 hover:text-cyan-500 transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5 mr-1" /> Back to Player Directory
         </button>
@@ -241,7 +241,7 @@ export default function PlayerView() {
               />
             ) : (
               <div className="h-full w-full flex items-end justify-center pb-2">
-                <PlayerSilhouette className="h-full w-48 text-emerald-400 drop-shadow-[0_12px_24px_rgba(0,0,0,0.6)]" />
+                <PlayerSilhouette className="h-full w-48 text-blue-400 drop-shadow-[0_12px_24px_rgba(0,0,0,0.6)]" />
               </div>
             )}
           </div>
@@ -268,7 +268,7 @@ export default function PlayerView() {
                 <span>•</span>
                 <span>{physicals.country || p.location || 'Region Unspecified'}</span>
                 <span>•</span>
-                <span className="text-emerald-300 font-bold">{primaryPos}</span>
+                <span className="text-blue-300 font-bold">{primaryPos}</span>
                 {physicals.jerseyNumber && (
                   <>
                     <span>•</span>
@@ -283,7 +283,7 @@ export default function PlayerView() {
               
               {/* Height */}
               <div className="flex items-center space-x-2">
-                <div className="p-1.5 rounded-lg bg-white/10 text-emerald-300">
+                <div className="p-1.5 rounded-lg bg-white/10 text-blue-300">
                   <Ruler className="w-3.5 h-3.5" />
                 </div>
                 <div>
@@ -296,7 +296,7 @@ export default function PlayerView() {
 
               {/* Weight */}
               <div className="flex items-center space-x-2">
-                <div className="p-1.5 rounded-lg bg-white/10 text-emerald-300">
+                <div className="p-1.5 rounded-lg bg-white/10 text-blue-300">
                   <Scale className="w-3.5 h-3.5" />
                 </div>
                 <div>
@@ -322,7 +322,7 @@ export default function PlayerView() {
 
               {/* Preferred Foot */}
               <div className="flex items-center space-x-2">
-                <div className="p-1.5 rounded-lg bg-white/10 text-emerald-300">
+                <div className="p-1.5 rounded-lg bg-white/10 text-blue-300">
                   <Footprints className="w-3.5 h-3.5" />
                 </div>
                 <div>
@@ -348,7 +348,7 @@ export default function PlayerView() {
 
               {/* Secondary Position */}
               <div className="flex items-center space-x-2">
-                <div className="p-1.5 rounded-lg bg-white/10 text-teal-300">
+                <div className="p-1.5 rounded-lg bg-white/10 text-cyan-300">
                   <Activity className="w-3.5 h-3.5" />
                 </div>
                 <div>
@@ -370,12 +370,12 @@ export default function PlayerView() {
               <span>•</span>
               <div className="flex items-center space-x-1.5">
                 <span className="text-slate-400 uppercase text-[10px] font-bold">Goals:</span>
-                <span className="font-black text-emerald-400 stat-number">{totalGoals}</span>
+                <span className="font-black text-blue-400 stat-number">{totalGoals}</span>
               </div>
               <span>•</span>
               <div className="flex items-center space-x-1.5">
                 <span className="text-slate-400 uppercase text-[10px] font-bold">Assists:</span>
-                <span className="font-black text-teal-400 stat-number">{totalAssists}</span>
+                <span className="font-black text-cyan-400 stat-number">{totalAssists}</span>
               </div>
               <span>•</span>
               <div className="flex items-center space-x-1.5 bg-black/40 px-2.5 py-0.5 rounded-lg border border-amber-500/30">
@@ -400,10 +400,10 @@ export default function PlayerView() {
         <div className="space-y-6">
           
           {/* Pillar 1: Player Declared Information */}
-          <div className="bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 overflow-hidden">
-            <div className="px-5 py-3.5 bg-slate-50 dark:bg-[#071622] border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-blue-900/30 overflow-hidden">
+            <div className="px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center">
-                <User className="w-4 h-4 mr-2 text-teal-500" /> Player Registration Data
+                <User className="w-4 h-4 mr-2 text-cyan-500" /> Player Registration Data
               </span>
               <StatusBadge status="INFO" label="Declared" />
             </div>
@@ -436,21 +436,21 @@ export default function PlayerView() {
           </div>
 
           {/* Pillar 2: System Calculated GPI Matrix */}
-          <div className="bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 overflow-hidden">
-            <div className="px-5 py-3.5 bg-slate-50 dark:bg-[#071622] border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-blue-900/30 overflow-hidden">
+            <div className="px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center">
-                <Activity className="w-4 h-4 mr-2 text-emerald-500" /> Analytical Radar & GPI
+                <Activity className="w-4 h-4 mr-2 text-blue-500" /> Analytical Radar & GPI
               </span>
               <StatusBadge status="ACCEPTED" label="System" />
             </div>
             <div className="p-5 space-y-4">
               <div className="flex justify-center -my-2">
-                <SVGRadarChart stats={radarStats} size={220} color="#10b981" />
+                <SVGRadarChart stats={radarStats} size={220} color="#2563eb" />
               </div>
 
               <div className="grid grid-cols-3 gap-2 text-center text-xs">
                 {radarStats.map((stat) => (
-                  <div key={stat.label} className="bg-slate-50 dark:bg-[#071622] rounded-lg py-1 border border-slate-100 dark:border-slate-800">
+                  <div key={stat.label} className="bg-slate-50 dark:bg-slate-900 rounded-lg py-1 border border-slate-100 dark:border-slate-800">
                     <span className="text-[10px] text-slate-400 block font-bold">{stat.label}</span>
                     <span className="font-extrabold text-slate-900 dark:text-white stat-number">{stat.value}</span>
                   </div>
@@ -476,17 +476,17 @@ export default function PlayerView() {
         <div className="lg:col-span-2 space-y-6">
           
           {/* Pillar 3: Organizer-Verified Official Matches */}
-          <div className="bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 overflow-hidden">
-            <div className="px-5 py-3.5 bg-slate-50 dark:bg-[#071622] border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-blue-900/30 overflow-hidden">
+            <div className="px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center">
-                <CheckCircle2 className="w-4 h-4 mr-2 text-emerald-500" /> Verified Competition Match Log
+                <CheckCircle2 className="w-4 h-4 mr-2 text-blue-500" /> Verified Competition Match Log
               </span>
               <span className="text-xs font-bold text-slate-400 stat-number">{s.length} Fixtures</span>
             </div>
 
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-                <thead className="bg-slate-50 dark:bg-[#071622] text-slate-500 dark:text-slate-400 uppercase font-semibold">
+                <thead className="bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 uppercase font-semibold">
                   <tr>
                     <th className="px-4 py-3 text-left">Fixture Match</th>
                     <th className="px-4 py-3 text-center">Minutes</th>
@@ -502,8 +502,8 @@ export default function PlayerView() {
                         {m.matchDescription || m.title || `Fixture #${m.matchId || idx + 1}`}
                       </td>
                       <td className="px-4 py-3 text-center stat-number text-slate-600 dark:text-slate-300">{m.minutesPlayed ?? m.minutes ?? '-'}′</td>
-                      <td className="px-4 py-3 text-center font-bold text-emerald-600 dark:text-emerald-400 stat-number">{m.goals || 0}</td>
-                      <td className="px-4 py-3 text-center font-bold text-teal-600 dark:text-teal-400 stat-number">{m.assists || 0}</td>
+                      <td className="px-4 py-3 text-center font-bold text-blue-600 dark:text-blue-400 stat-number">{m.goals || 0}</td>
+                      <td className="px-4 py-3 text-center font-bold text-cyan-600 dark:text-cyan-400 stat-number">{m.assists || 0}</td>
                       <td className="px-4 py-3 text-center">
                         {(m.yellowCards > 0 || m.redCards > 0) ? (
                           <div className="flex justify-center space-x-1">
@@ -526,10 +526,10 @@ export default function PlayerView() {
           </div>
 
           {/* Pillar 4: Scout Field Observations */}
-          <div className="bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 overflow-hidden">
-            <div className="px-5 py-3.5 bg-slate-50 dark:bg-[#071622] border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-blue-900/30 overflow-hidden">
+            <div className="px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center">
-                <ClipboardList className="w-4 h-4 mr-2 text-teal-500" /> Scout Field Observations
+                <ClipboardList className="w-4 h-4 mr-2 text-cyan-500" /> Scout Field Observations
               </span>
               <StatusBadge status="INFO" label="Tactical Review" />
             </div>
@@ -537,9 +537,9 @@ export default function PlayerView() {
             <div className="p-5 space-y-6">
               
               {/* Submission Form */}
-              <form onSubmit={handleObsSubmit} className="bg-slate-50 dark:bg-[#071622] p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-4">
+              <form onSubmit={handleObsSubmit} className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-4">
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-200 flex items-center">
-                  <Edit className="w-3.5 h-3.5 mr-1.5 text-teal-500" /> Log Field Observation (1–5 Matrix)
+                  <Edit className="w-3.5 h-3.5 mr-1.5 text-cyan-500" /> Log Field Observation (1–5 Matrix)
                 </h4>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -554,7 +554,7 @@ export default function PlayerView() {
                       <select 
                         value={obsForm[key]} 
                         onChange={(e) => setObsForm({ ...obsForm, [key]: Number(e.target.value) })}
-                        className="w-full text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-white p-2"
+                        className="w-full text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white p-2"
                       >
                         {[1, 2, 3, 4, 5].map(n => <option key={n} value={n}>{n} / 5</option>)}
                       </select>
@@ -572,7 +572,7 @@ export default function PlayerView() {
                     onChange={(e) => setObsForm({ ...obsForm, comments: e.target.value })} 
                     required 
                     placeholder="Provide specific notes on decision-making, speed of thought, aerial duels, weak foot..."
-                    className="w-full text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-white p-2.5 placeholder-slate-400"
+                    className="w-full text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white p-2.5 placeholder-slate-400"
                   />
                 </div>
 
@@ -588,16 +588,16 @@ export default function PlayerView() {
                 <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Logged Field Reports</h4>
                 {data.observations.length > 0 ? (
                   data.observations.map((obs, i) => (
-                    <div key={i} className="p-3.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-[#071622]/50 text-xs space-y-2">
+                    <div key={i} className="p-3.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 text-xs space-y-2">
                       <div className="flex justify-between items-center">
                         <span className="font-bold text-slate-900 dark:text-white">{obs.scoutName || 'Licensed Scout'}</span>
                         <span className="text-[10px] text-slate-400">{obs.createdAt ? new Date(obs.createdAt).toLocaleDateString() : 'Recent'}</span>
                       </div>
                       <div className="flex flex-wrap gap-2 text-[11px]">
-                        <span className="px-2 py-0.5 rounded bg-teal-500/10 text-teal-600 dark:text-teal-400 font-semibold">Tech: {obs.tech}/5</span>
-                        <span className="px-2 py-0.5 rounded bg-teal-500/10 text-teal-600 dark:text-teal-400 font-semibold">Tact: {obs.tact}/5</span>
-                        <span className="px-2 py-0.5 rounded bg-teal-500/10 text-teal-600 dark:text-teal-400 font-semibold">Phys: {obs.phys}/5</span>
-                        <span className="px-2 py-0.5 rounded bg-teal-500/10 text-teal-600 dark:text-teal-400 font-semibold">Psych: {obs.psych}/5</span>
+                        <span className="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 font-semibold">Tech: {obs.tech}/5</span>
+                        <span className="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 font-semibold">Tact: {obs.tact}/5</span>
+                        <span className="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 font-semibold">Phys: {obs.phys}/5</span>
+                        <span className="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 font-semibold">Psych: {obs.psych}/5</span>
                       </div>
                       <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{obs.comments}</p>
                     </div>

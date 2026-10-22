@@ -101,7 +101,7 @@ const PlayerDashboard = () => {
             <Button 
               variant="secondary" 
               onClick={() => navigate('/profile')}
-              className="bg-emerald-950/80 text-emerald-200 border-emerald-500/50 hover:bg-emerald-900"
+              className="bg-white/10 text-white border-white/20 hover:bg-white/20"
             >
               View Full Player Card
             </Button>
@@ -114,16 +114,16 @@ const PlayerDashboard = () => {
           </>
         }
       >
-        <div className="flex flex-wrap items-center gap-3 text-xs text-emerald-200/90 font-semibold mt-3">
-          <span className="px-2.5 py-1 rounded-md bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 font-bold">
+        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-200 font-semibold mt-3">
+          <span className="px-2.5 py-1 rounded-md bg-blue-500/20 border border-blue-400/40 text-blue-300 font-bold">
             {profile?.primaryPosition || 'FORWARD'}
           </span>
           <span>•</span>
           <span>{profile?.teamAcademy || 'Independent Player'}</span>
           <span>•</span>
-          <span className="text-emerald-300">{profile?.preferredFoot ? `${profile.preferredFoot}-Footed` : 'Right-Footed'}</span>
+          <span className="text-blue-300">{profile?.preferredFoot ? `${profile.preferredFoot}-Footed` : 'Right-Footed'}</span>
           <span>•</span>
-          <span className="text-emerald-400 font-bold">
+          <span className="text-blue-400 font-bold">
             Scouting Status: Active
           </span>
         </div>
@@ -141,7 +141,7 @@ const PlayerDashboard = () => {
         <StatsCard 
           title="Total Goals" 
           value={performance?.totalGoals || 0} 
-          icon={<ClassicSoccerBall className="w-6 h-6 text-emerald-400" />} 
+          icon={<ClassicSoccerBall className="w-6 h-6 text-blue-400" />} 
           color="emerald"
         />
         <StatsCard 
@@ -169,15 +169,15 @@ const PlayerDashboard = () => {
             subtitle="Organizer-verified competitive match logs and statistics"
             headerAction={
 
-              <Button variant="ghost" size="sm" onClick={() => navigate('/player/stats')} className="text-emerald-600 dark:text-emerald-400">
+              <Button variant="ghost" size="sm" onClick={() => navigate('/player/stats')} className="text-blue-600 dark:text-blue-400">
                 Full Match History <ArrowRight className="w-3.5 h-3.5 ml-1" />
               </Button>
             }
           >
             {recentMatches.length > 0 ? (
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-emerald-100 dark:divide-emerald-950/60">
-                  <thead className="bg-emerald-500/10 dark:bg-[#051910] text-xs font-bold text-slate-600 dark:text-emerald-300 uppercase">
+                <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
+                  <thead className="bg-slate-50 dark:bg-slate-800/50 text-xs font-bold text-slate-600 dark:text-slate-300 uppercase">
                     <tr>
                       <th className="px-4 py-3 text-left">Fixture & Pitch</th>
                       <th className="px-4 py-3 text-center">Minutes</th>
@@ -186,22 +186,22 @@ const PlayerDashboard = () => {
                       <th className="px-4 py-3 text-right">Verification</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-emerald-50 dark:divide-emerald-950/40 text-sm">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
                     {recentMatches.map((match, idx) => (
-                      <tr key={idx} className="hover:bg-emerald-500/10 dark:hover:bg-[#082216]/60 transition-colors">
+                      <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                         <td className="px-4 py-3.5 font-bold text-slate-900 dark:text-white">
                           <div className="flex items-center space-x-2">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
+                            <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />
                             <span>{match.matchDescription || `Fixture #${match.matchId}`}</span>
                           </div>
                         </td>
                         <td className="px-4 py-3.5 text-center text-slate-600 dark:text-slate-300 stat-number font-medium">
                           {match.minutesPlayed ?? '-'}′
                         </td>
-                        <td className="px-4 py-3.5 text-center font-black text-emerald-600 dark:text-emerald-400 stat-number">
+                        <td className="px-4 py-3.5 text-center font-black text-blue-600 dark:text-blue-400 stat-number">
                           {match.goals || 0}
                         </td>
-                        <td className="px-4 py-3.5 text-center font-black text-teal-600 dark:text-teal-400 stat-number">
+                        <td className="px-4 py-3.5 text-center font-black text-cyan-600 dark:text-cyan-400 stat-number">
                           {match.assists || 0}
                         </td>
                         <td className="px-4 py-3.5 text-right">
@@ -214,11 +214,11 @@ const PlayerDashboard = () => {
               </div>
             ) : (
               <div className="text-center py-12">
-                <div className="w-16 h-16 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mx-auto mb-3">
-                  <ClassicSoccerBall className="w-10 h-10 text-emerald-500 animate-football-bounce" />
+                <div className="w-16 h-16 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/40 flex items-center justify-center mx-auto mb-3">
+                  <ClassicSoccerBall className="w-10 h-10 text-blue-500 animate-football-bounce" />
                 </div>
                 <p className="text-base font-bold text-slate-800 dark:text-white">No match fixtures logged yet</p>
-                <p className="text-xs text-slate-500 dark:text-emerald-200/60 mt-1 max-w-sm mx-auto">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">
                   Register for an upcoming competition on the tournament board to log official competitive match statistics.
                 </p>
                 <Button variant="primary" size="sm" onClick={() => navigate('/tournaments')} className="mt-5">
@@ -238,12 +238,12 @@ const PlayerDashboard = () => {
           >
             {gpi ? (
               <div className="space-y-5">
-                <div className="flex justify-between items-center pb-3 border-b border-emerald-100 dark:border-emerald-950/80">
+                <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
                   <div>
                     <span className="text-3xl font-black text-slate-900 dark:text-white stat-number">
                       {Number(gpi.gpi).toFixed(1)}
                     </span>
-                    <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold block">Overall GPI Score</span>
+                    <span className="text-xs text-blue-600 dark:text-blue-400 font-bold block">Overall GPI Score</span>
                   </div>
                   <StatusBadge 
                     status="INFO" 
@@ -257,23 +257,23 @@ const PlayerDashboard = () => {
                   <SVGRadarChart 
                     stats={radarAttributes} 
                     size={220}
-                    color="#10b981" 
+                    color="#2563eb" 
                   />
                 </div>
                 
                 {/* Score breakdown bars */}
                 <div className="space-y-3 pt-2">
                   {[
-                    { label: 'Quantitative Match Score', val: gpi.quantitativeScore || 78, color: 'bg-emerald-500' },
-                    { label: 'Recent Form (Last 5)', val: gpi.recentForm || 82, color: 'bg-teal-500' },
-                    { label: 'Rating Consistency', val: gpi.consistency || 80, color: 'bg-green-500' }
+                    { label: 'Quantitative Match Score', val: gpi.quantitativeScore || 78, color: 'bg-blue-600' },
+                    { label: 'Recent Form (Last 5)', val: gpi.recentForm || 82, color: 'bg-indigo-500' },
+                    { label: 'Rating Consistency', val: gpi.consistency || 80, color: 'bg-cyan-500' }
                   ].map(({ label, val, color }) => (
                     <div key={label}>
                       <div className="flex justify-between text-xs font-bold mb-1">
-                        <span className="text-slate-600 dark:text-emerald-200/80">{label}</span>
+                        <span className="text-slate-600 dark:text-slate-300">{label}</span>
                         <span className="text-slate-900 dark:text-white font-black">{Math.round(val || 0)}%</span>
                       </div>
-                      <div className="w-full bg-slate-100 dark:bg-[#04120a] rounded-full h-2 overflow-hidden border border-emerald-900/30">
+                      <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-200 dark:border-slate-700">
                         <div 
                           className={`${color} h-2 rounded-full transition-all duration-500 shadow-sm`} 
                           style={{ width: `${Math.min(val || 0, 100)}%` }} 
@@ -285,7 +285,7 @@ const PlayerDashboard = () => {
               </div>
             ) : (
               <div className="text-center py-8 text-slate-400">
-                <ClassicSoccerBall className="w-10 h-10 mx-auto text-emerald-500/50 mb-2" />
+                <ClassicSoccerBall className="w-10 h-10 mx-auto text-blue-500/50 mb-2" />
                 <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">Provisional GPI Profile Active</p>
                 <p className="text-xs mt-1 text-slate-400">Play in certified tournaments to build your 6-attribute radar index.</p>
               </div>
@@ -303,7 +303,7 @@ const PlayerDashboard = () => {
                 <h3 className="text-xl font-black text-slate-900 dark:text-white">
                   {profile?.ranking ? `Rank #${profile.ranking}` : 'Top 15% Statewide'}
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-emerald-200/60 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                   Across registered {profile?.primaryPosition || 'regional'} prospects
                 </p>
               </div>

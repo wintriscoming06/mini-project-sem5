@@ -83,8 +83,8 @@ const CreateTournament = () => {
 
       {error && <Alert type="error" message={error} onClose={() => setError(null)} />}
 
-      <Card className="relative overflow-hidden border-2 border-emerald-900/30">
-        <div className="h-1.5 bg-gradient-to-r from-emerald-600 via-emerald-400 to-green-600 -mx-6 -mt-6 mb-6" />
+      <Card className="relative overflow-hidden border-2 border-blue-900/30">
+        <div className="h-1.5 bg-blue-600 -mx-6 -mt-6 mb-6" />
         <div className="absolute inset-0 goal-net-texture opacity-10 pointer-events-none" />
         
         <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
@@ -114,7 +114,7 @@ const CreateTournament = () => {
                   name="ageGroup"
                   value={formData.ageGroup}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-[#081b29] text-slate-900 dark:text-white"
+                  className="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
                 >
                   <option value="U13">Under 13 (U13)</option>
                   <option value="U15">Under 15 (U15)</option>
@@ -133,7 +133,7 @@ const CreateTournament = () => {
                   name="genderCategory"
                   value={formData.genderCategory}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-[#081b29] text-slate-900 dark:text-white"
+                  className="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
                 >
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
@@ -149,7 +149,7 @@ const CreateTournament = () => {
                   name="format"
                   value={formData.format}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-[#081b29] text-slate-900 dark:text-white"
+                  className="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
                 >
                   <option value="League">Standard League (Round Robin Points)</option>
                   <option value="Knockout">Single Elimination Knockout</option>
@@ -163,7 +163,7 @@ const CreateTournament = () => {
           {/* Location & Dates */}
           <div className="space-y-4">
             <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center">
-              <Calendar className="w-4 h-4 mr-2 text-teal-500" /> Host Stadium & Fixture Schedule
+              <Calendar className="w-4 h-4 mr-2 text-cyan-500" /> Host Stadium & Fixture Schedule
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormInput

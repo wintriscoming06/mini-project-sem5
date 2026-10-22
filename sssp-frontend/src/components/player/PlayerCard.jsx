@@ -7,7 +7,7 @@ export const PlayerCard = ({ player, onClick }) => {
   return (
     <div 
       onClick={onClick}
-      className={`group cursor-pointer rounded-2xl border-2 ${theme.border} bg-gradient-to-br ${theme.bgGradient} p-4 text-white shadow-xl card-elevate hover:border-emerald-400/80 hover:shadow-2xl hover:shadow-emerald-950/40 transition-all duration-300 select-none relative overflow-hidden`}
+      className={`group cursor-pointer rounded-2xl border-2 ${theme.border} bg-gradient-to-br ${theme.bgGradient} p-4 text-white shadow-xl card-elevate hover:border-blue-400/80 hover:shadow-2xl hover:shadow-blue-950/40 transition-all duration-300 select-none relative overflow-hidden`}
     >
       <div className="flex justify-between items-center mb-2 relative z-10">
         <div className="transition-transform duration-300 group-hover:scale-110">

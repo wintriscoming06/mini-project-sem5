@@ -58,7 +58,7 @@ export default function UserManagement() {
       ADMIN: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20',
       SCOUT: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
       ORGANIZER: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20',
-      PLAYER: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
+      PLAYER: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20'
     };
     return (
       <span className={`px-2.5 py-0.5 inline-flex text-xs font-bold rounded-full ${styles[role] || 'bg-slate-100 text-slate-800'}`}>
@@ -71,7 +71,7 @@ export default function UserManagement() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-6 bg-white dark:bg-[#0b1e2d] rounded-2xl border border-slate-200 dark:border-emerald-950/40 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-blue-950/40 shadow-sm">
         <div>
           <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Platform User Directory</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">Manage accounts, security roles, and scouting access privileges.</p>
@@ -88,7 +88,7 @@ export default function UserManagement() {
             placeholder="Search by username or email..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div className="flex items-center space-x-2">
@@ -96,7 +96,7 @@ export default function UserManagement() {
           <select 
             value={roleFilter} 
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-2 px-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-2 px-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="ALL">All Roles</option>
             <option value="PLAYER">Players</option>
@@ -127,7 +127,7 @@ export default function UserManagement() {
                   <tr key={user.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 h-9 w-9 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center font-bold text-sm">
+                        <div className="flex-shrink-0 h-9 w-9 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center font-bold text-sm">
                           {user.username?.[0]?.toUpperCase() || <User className="w-4 h-4" />}
                         </div>
                         <div className="ml-3">
@@ -140,13 +140,13 @@ export default function UserManagement() {
                       {getRoleBadge(user.role)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
-                      <span className={`px-2 py-0.5 inline-flex text-xs font-bold rounded-full ${user.isActive !== false ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-rose-500/10 text-rose-600 dark:text-rose-400'}`}>
+                      <span className={`px-2 py-0.5 inline-flex text-xs font-bold rounded-full ${user.isActive !== false ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400' : 'bg-rose-500/10 text-rose-600 dark:text-rose-400'}`}>
                         {user.isActive !== false ? 'Active' : 'Suspended'}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       {user.permissions?.includes('EVALUATOR') ? (
-                        <UserCheck className="w-5 h-5 text-emerald-500 mx-auto" />
+                        <UserCheck className="w-5 h-5 text-blue-500 mx-auto" />
                       ) : (
                         <span className="text-slate-400">-</span>
                       )}
@@ -156,7 +156,7 @@ export default function UserManagement() {
                         <select 
                           value={user.role}
                           onChange={(e) => setConfirmAction({ user, actionType: 'ROLE', payload: { role: e.target.value } })}
-                          className="text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-lg py-1 px-2 focus:ring-emerald-500"
+                          className="text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-lg py-1 px-2 focus:ring-blue-500"
                         >
                           <option value="PLAYER">Player</option>
                           <option value="ORGANIZER">Organizer</option>
@@ -169,7 +169,7 @@ export default function UserManagement() {
                           className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition-colors ${
                             user.isActive !== false 
                               ? 'border-rose-200 dark:border-rose-900/40 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40' 
-                              : 'border-emerald-200 dark:border-emerald-900/40 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40'
+                              : 'border-blue-200 dark:border-blue-900/40 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/40'
                           }`}
                         >
                           {user.isActive !== false ? 'Suspend' : 'Activate'}
@@ -177,7 +177,7 @@ export default function UserManagement() {
                         
                         <button 
                           onClick={() => setConfirmAction({ user, actionType: 'PERMISSION', payload: { permissions: user.permissions?.includes('EVALUATOR') ? [] : ['EVALUATOR'] } })}
-                          className="p-1.5 text-slate-500 hover:text-emerald-600 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors"
+                          className="p-1.5 text-slate-500 hover:text-blue-600 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors"
                           title="Toggle Evaluator Permission"
                         >
                           {user.permissions?.includes('EVALUATOR') ? <ShieldOff className="w-4 h-4" /> : <Shield className="w-4 h-4" />}

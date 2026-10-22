@@ -61,7 +61,7 @@ export default function RoleSelectDropdown({
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
       <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-        Account Role <span className="text-emerald-400">*</span>
+        Account Role <span className="text-blue-400">*</span>
       </label>
 
       {/* Dropdown trigger button */}
@@ -73,7 +73,7 @@ export default function RoleSelectDropdown({
         aria-expanded={isOpen}
         className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left transition-all duration-200 border ${
           isOpen
-            ? 'bg-slate-900 border-emerald-500 ring-2 ring-emerald-500/20'
+            ? 'bg-slate-900 border-blue-500 ring-2 ring-blue-500/20'
             : 'bg-slate-900/90 border-slate-700 hover:border-slate-600'
         } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
       >
@@ -87,7 +87,7 @@ export default function RoleSelectDropdown({
         </div>
 
         <svg
-          className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180 text-emerald-400' : ''}`}
+          className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180 text-blue-400' : ''}`}
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -116,7 +116,7 @@ export default function RoleSelectDropdown({
                 onClick={() => handleSelect(opt)}
                 className={`flex items-start gap-3 p-2.5 rounded-lg cursor-pointer transition-colors ${
                   isSelected
-                    ? 'bg-emerald-500/15 border border-emerald-500/30 text-white'
+                    ? 'bg-blue-500/15 border border-blue-500/30 text-white'
                     : 'hover:bg-slate-800/80 text-slate-300'
                 }`}
               >
@@ -125,7 +125,7 @@ export default function RoleSelectDropdown({
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-black text-white">{opt.label}</span>
                     {isSelected && (
-                      <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
+                      <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">
                         Active
                       </span>
                     )}

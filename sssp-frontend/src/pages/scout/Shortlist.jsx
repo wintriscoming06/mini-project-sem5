@@ -98,15 +98,15 @@ export default function Shortlist() {
           action={<Button onClick={() => navigate('/search')}>Search Player Directory</Button>}
         />
       ) : (
-        <div className="relative bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/40 overflow-hidden">
+        <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-blue-900/40 overflow-hidden">
           {/* Pitch Grass Top Trim */}
-          <div className="h-1.5 bg-gradient-to-r from-emerald-600 via-emerald-400 to-green-600" />
+          <div className="h-1.5 bg-blue-600" />
           {/* Goal Net Texture */}
           <div className="absolute inset-0 goal-net-texture opacity-10 pointer-events-none" />
           
           <div className="overflow-x-auto relative z-10">
             <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
-              <thead className="bg-slate-50 dark:bg-[#071622] text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">
+              <thead className="bg-slate-50 dark:bg-slate-900 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">
                 <tr>
                   <th className="px-5 py-3.5 text-center w-20">Priority</th>
                   <th className="px-5 py-3.5 text-left">Prospect</th>
@@ -125,18 +125,18 @@ export default function Shortlist() {
                         max="99" 
                         value={item.priority || 1} 
                         onChange={(e) => handlePriorityChange(item.id, e.target.value)}
-                        className="w-14 px-2 py-1 text-center font-bold text-slate-900 dark:text-white bg-slate-50 dark:bg-[#081b29] border border-slate-300 dark:border-slate-700 rounded-lg text-xs"
+                        className="w-14 px-2 py-1 text-center font-bold text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-xs"
                       />
                     </td>
                     <td className="px-5 py-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center font-black border border-teal-500/30">
+                        <div className="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-black border border-cyan-500/30">
                           {item.playerName ? item.playerName.charAt(0) : 'P'}
                         </div>
                         <div>
                           <Link 
                             to={`/players/${item.playerId}`} 
-                            className="font-bold text-slate-900 dark:text-white hover:text-teal-500 transition-colors block"
+                            className="font-bold text-slate-900 dark:text-white hover:text-cyan-500 transition-colors block"
                           >
                             {item.playerName}
                           </Link>
@@ -163,7 +163,7 @@ export default function Shortlist() {
                           onClick={() => navigate(`/players/${item.playerId}`)}
                           title="View Player Dossier"
                         >
-                          <Eye className="w-4 h-4 text-teal-500" />
+                          <Eye className="w-4 h-4 text-cyan-500" />
                         </Button>
                         <Button 
                           variant="ghost" 
@@ -171,7 +171,7 @@ export default function Shortlist() {
                           onClick={() => setNoteModal({ isOpen: true, playerId: item.playerId, currentNote: item.note || '' })}
                           title="Edit Observation Note"
                         >
-                          <Edit3 className="w-4 h-4 text-emerald-500" />
+                          <Edit3 className="w-4 h-4 text-blue-500" />
                         </Button>
                         <Button 
                           variant="ghost" 
@@ -215,7 +215,7 @@ export default function Shortlist() {
                 value={noteModal.currentNote}
                 onChange={(e) => setNoteModal({...noteModal, currentNote: e.target.value})}
                 placeholder="Record technical evaluation, tactical discipline, positioning notes..."
-                className="w-full p-3 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-white"
+                className="w-full p-3 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
               />
             </div>
             <div className="flex justify-end space-x-2 pt-2">

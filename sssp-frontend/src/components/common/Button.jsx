@@ -15,15 +15,15 @@ const Button = ({
   title,
   className = ''
 }) => {
-  const baseClasses = 'group relative inline-flex items-center justify-center font-bold rounded-xl btn-micro-press active:scale-[0.98] transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none select-none overflow-hidden';
-  
+  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 disabled:opacity-50 disabled:cursor-not-allowed select-none';
+
   const variants = {
-    primary: 'bg-gradient-to-b from-emerald-500 to-emerald-700 hover:from-emerald-400 hover:to-emerald-600 active:from-emerald-700 active:to-emerald-800 text-white shadow-md shadow-emerald-950/30 border border-emerald-400/50 hover:shadow-emerald-500/25 hover:shadow-lg focus:ring-emerald-500',
-    secondary: 'bg-white dark:bg-[#072418] text-slate-800 dark:text-emerald-100 border border-emerald-300 dark:border-emerald-700/50 hover:bg-emerald-50 dark:hover:bg-[#0c3524] focus:ring-emerald-500 shadow-sm',
-    success: 'bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 text-white shadow-md border border-green-400/50 focus:ring-green-500',
-    danger: 'bg-gradient-to-b from-rose-500 to-rose-700 hover:from-rose-400 hover:to-rose-600 text-white shadow-md border border-rose-400/50 focus:ring-rose-500',
-    outline: 'border-2 border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-transparent hover:bg-emerald-500/10 focus:ring-emerald-500',
-    ghost: 'text-slate-700 dark:text-slate-200 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 focus:ring-emerald-500 border border-transparent'
+    primary: 'bg-blue-600 hover:bg-blue-700 text-white',
+    secondary: 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700',
+    success: 'bg-emerald-600 hover:bg-emerald-700 text-white',
+    danger: 'bg-red-600 hover:bg-red-700 text-white',
+    outline: 'border border-blue-600 text-blue-600 dark:text-blue-400 bg-transparent hover:bg-blue-50 dark:hover:bg-blue-950/40',
+    ghost: 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
   };
 
   const sizes = {
@@ -48,9 +48,6 @@ const Button = ({
       disabled={disabled || loading}
       className={buttonClasses}
     >
-      {/* Subtle grass blade highlight glow at the bottom of the button */}
-      <span className="absolute bottom-0 inset-x-0 h-[2px] bg-emerald-400/30 group-hover:bg-emerald-300 transition-colors pointer-events-none" />
-
       {loading && <div className="mr-2"><LoadingSpinner size="sm" /></div>}
       
       {!loading && Icon && (

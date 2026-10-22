@@ -23,22 +23,15 @@ export default function AuthLayout({
 
 
   return (
-    <div className="min-h-screen w-full bg-[#03130d] text-white flex flex-col lg:flex-row overflow-x-hidden selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen w-full bg-slate-950 text-white flex flex-col lg:flex-row overflow-x-hidden selection:bg-blue-600 selection:text-white">
       {/* ======================================================== */}
       {/* LEFT SIDE: FOOTBALL & SCOUTING EXPERIENCE (55-60%) */}
       {/* ======================================================== */}
-      <div className="w-full lg:w-[58%] xl:w-[60%] relative flex flex-col justify-between p-4 sm:p-6 lg:p-8 xl:p-10 border-b lg:border-b-0 lg:border-r border-emerald-900/50 pitch-turf-stripes overflow-y-auto lg:overflow-hidden transition-colors duration-700">
+      <div className="w-full lg:w-[58%] xl:w-[60%] relative flex flex-col justify-between p-4 sm:p-6 lg:p-8 xl:p-10 border-b lg:border-b-0 lg:border-r border-slate-800/80 bg-slate-900/60 overflow-y-auto lg:overflow-hidden transition-colors duration-700">
         
-        {/* Living Real Grass Lawn Mower Texture */}
-        <div className="absolute inset-0 living-real-grass opacity-90 pointer-events-none" />
-
-        {/* White Chalk Pitch Markings across the left showcase */}
-        <div className="absolute inset-0 opacity-25 pointer-events-none">
-          <PitchMarkings />
-        </div>
-
-        {/* Top Stadium Floodlight Canopy */}
-        <div className="absolute -top-32 inset-x-0 h-96 pointer-events-none opacity-65 stadium-glow animate-floodlight" />
+        {/* Subtle Stadium Night Glow */}
+        <div className="absolute -top-32 inset-x-0 h-96 pointer-events-none opacity-40 stadium-glow animate-floodlight" />
+        <div className="absolute inset-0 goal-net-texture opacity-10 pointer-events-none" />
 
         {/* ======================================================== */}
         {/* DYNAMIC PLAYER ATMOSPHERIC BACKGROUNDS */}
@@ -322,7 +315,7 @@ export default function AuthLayout({
                 className="absolute inset-0"
                 style={{
                   background:
-                    'radial-gradient(ellipse at 40% 20%, rgba(245, 158, 11, 0.28) 0%, transparent 60%), radial-gradient(circle at 80% 80%, rgba(217, 119, 6, 0.20) 0%, transparent 50%), radial-gradient(circle at 15% 80%, rgba(16, 185, 129, 0.14) 0%, transparent 45%)',
+                    'radial-gradient(ellipse at 40% 20%, rgba(245, 158, 11, 0.28) 0%, transparent 60%), radial-gradient(circle at 80% 80%, rgba(217, 119, 6, 0.20) 0%, transparent 50%), radial-gradient(circle at 15% 80%, rgba(37, 99, 235, 0.14) 0%, transparent 45%)',
                 }}
               />
               <div
@@ -389,7 +382,7 @@ export default function AuthLayout({
         <div className="stadium-glow absolute inset-0 pointer-events-none" />
 
         {/* Ambient tactical dots on pitch */}
-        <div className="absolute top-1/4 left-10 w-2 h-2 rounded-full bg-emerald-400/30 animate-tactical-pulse pointer-events-none" />
+        <div className="absolute top-1/4 left-10 w-2 h-2 rounded-full bg-blue-400/30 animate-tactical-pulse pointer-events-none" />
         <div className="absolute top-2/3 left-1/3 w-2 h-2 rounded-full bg-cyan-400/30 animate-tactical-pulse pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 w-2 h-2 rounded-full bg-amber-400/30 animate-tactical-pulse pointer-events-none" />
 
@@ -397,7 +390,7 @@ export default function AuthLayout({
         <div className="relative z-20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3">
           {/* SSSP Branding */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 via-teal-400 to-cyan-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-slate-950 font-black text-base">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-500 via-cyan-400 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20 text-slate-950 font-black text-base">
               ⚽
             </div>
             <div>
@@ -405,7 +398,7 @@ export default function AuthLayout({
                 <span className="text-base sm:text-lg font-black tracking-tight text-white font-mono">
                   SSSP
                 </span>
-                <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-widest">
+                <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-widest">
                   PLATFORM
                 </span>
               </div>
@@ -429,7 +422,7 @@ export default function AuthLayout({
                   onClick={() => onRoleChange && onRoleChange(r.id)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-black tracking-wide transition-all duration-300 flex items-center gap-1.5 ${
                     isActive
-                      ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-md shadow-emerald-500/30'
+                      ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-slate-950 shadow-md shadow-blue-500/30'
                       : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
                   }`}
                 >
@@ -449,10 +442,10 @@ export default function AuthLayout({
 
           {/* Role Status Footers */}
           {activeRole === 'PLAYER' && (
-            <div className="w-full max-w-[480px] mt-2.5 flex items-center justify-between bg-emerald-950/90 border border-emerald-500/40 rounded-2xl p-2 px-3.5 shadow-xl backdrop-blur-md">
+            <div className="w-full max-w-[480px] mt-2.5 flex items-center justify-between bg-blue-950/90 border border-blue-500/40 rounded-2xl p-2 px-3.5 shadow-xl backdrop-blur-md">
               <div className="flex items-center space-x-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[11px] font-black uppercase tracking-wider text-emerald-300">
+                <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+                <span className="text-[11px] font-black uppercase tracking-wider text-blue-300">
                   Scouting Combine • Live GPI Engine
                 </span>
               </div>
@@ -463,21 +456,21 @@ export default function AuthLayout({
           )}
 
           {activeRole === 'SCOUT' && (
-            <div className="w-full max-w-[480px] mt-3 flex items-center justify-between bg-emerald-950/95 border border-emerald-400/40 rounded-2xl p-2.5 px-4 shadow-xl backdrop-blur-md">
+            <div className="w-full max-w-[480px] mt-3 flex items-center justify-between bg-blue-950/95 border border-blue-400/40 rounded-2xl p-2.5 px-4 shadow-xl backdrop-blur-md">
               <div className="flex items-center space-x-2">
-                <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
-                <span className="text-xs font-black uppercase tracking-wider text-emerald-300">
+                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                <span className="text-xs font-black uppercase tracking-wider text-blue-300">
                   Tactical Command • Verified Dossiers
                 </span>
               </div>
-              <span className="text-[10px] font-mono font-bold text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/40">
+              <span className="text-[10px] font-mono font-bold text-blue-300 bg-blue-500/20 px-2 py-0.5 rounded border border-blue-500/40">
                 4-PILLAR RATING
               </span>
             </div>
           )}
 
           {activeRole === 'ORGANIZER' && (
-            <div className="w-full max-w-[480px] mt-3 flex items-center justify-between bg-emerald-950/95 border border-amber-500/40 rounded-2xl p-2.5 px-4 shadow-xl backdrop-blur-md">
+            <div className="w-full max-w-[480px] mt-3 flex items-center justify-between bg-blue-950/95 border border-amber-500/40 rounded-2xl p-2.5 px-4 shadow-xl backdrop-blur-md">
               <div className="flex items-center space-x-2">
                 <span className="text-lg">🏟️</span>
                 <span className="text-xs font-black uppercase tracking-wider text-amber-300">
@@ -499,12 +492,12 @@ export default function AuthLayout({
           </div>
         )}
 
-        {/* Bottom Banner & Rolling Football Animation */}
+        {/* Bottom Banner & Engine Branding */}
         <div className="relative z-20 pt-3 border-t border-slate-800/60 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 gap-2">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
             <span className="font-semibold text-slate-300">
-              Grassroots Football Intelligence Engine
+              Quantitative Football Intelligence Engine
             </span>
           </div>
 
@@ -516,33 +509,16 @@ export default function AuthLayout({
             <span>Scouting Analytics</span>
           </div>
         </div>
-
-        {/* Rolling Football Animation Trajectory across bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 overflow-hidden pointer-events-none opacity-40">
-          <div className="w-4 h-4 text-emerald-400 animate-football-roll text-xs">
-            ⚽
-          </div>
-        </div>
       </div>
 
       {/* ======================================================== */}
-      {/* RIGHT SIDE: AUTHENTICATION FORM (40-45%) - FOOTBALL GRASS PITCH */}
+      {/* RIGHT SIDE: AUTHENTICATION FORM (40-45%) - MODERN STADIUM */}
       {/* ======================================================== */}
-      <div className="w-full lg:w-[42%] xl:w-[40%] flex items-center justify-center p-4 sm:p-8 lg:p-10 relative overflow-hidden pitch-turf-stripes border-t lg:border-t-0 lg:border-l border-emerald-900/40">
-        {/* Living grass turf texture overlay */}
-        <div className="absolute inset-0 living-real-grass opacity-90 pointer-events-none" />
-
+      <div className="w-full lg:w-[42%] xl:w-[40%] flex items-center justify-center p-4 sm:p-8 lg:p-10 relative overflow-hidden bg-slate-950 border-t lg:border-t-0 lg:border-l border-slate-800/80">
         {/* Stadium Floodlight Overhead Canopy */}
-        <div className="absolute -top-32 inset-x-0 h-96 pointer-events-none opacity-60 stadium-glow" />
-
-        {/* White chalk pitch sideline & penalty touchline */}
-        <div className="absolute inset-y-0 left-0 w-1 bg-white/30 pointer-events-none" />
-        <div className="absolute top-1/2 left-0 w-28 h-56 -translate-y-1/2 border-2 border-l-0 border-white/20 rounded-r-full pointer-events-none" />
-
-        {/* Subtle ambient goal net mesh background */}
-        <div className="absolute inset-0 goal-net-texture opacity-20 pointer-events-none" />
-
-
+        <div className="absolute -top-32 inset-x-0 h-96 pointer-events-none opacity-30 stadium-glow" />
+        <div className="absolute top-1/2 -right-20 w-80 h-80 pointer-events-none opacity-20 bg-blue-600/10 rounded-full blur-3xl" />
+        <div className="absolute inset-0 goal-net-texture opacity-10 pointer-events-none" />
 
         {/* Clean, spacious form wrapper (400-480px width) */}
         <div className="w-full max-w-[440px] sm:max-w-[460px] relative z-10">

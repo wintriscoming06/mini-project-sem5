@@ -92,10 +92,10 @@ export default function GPIConfig() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 pb-12">
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-6 bg-white dark:bg-[#0b1e2d] rounded-2xl border border-slate-200 dark:border-emerald-950/40 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-blue-950/40 shadow-sm">
         <div>
           <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center">
-            <Settings className="w-7 h-7 mr-3 text-emerald-500" /> GPI Algorithmic Weight Matrix
+            <Settings className="w-7 h-7 mr-3 text-blue-500" /> GPI Algorithmic Weight Matrix
           </h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">
             Configure mathematical weightings across positions and quantitative vs qualitative scouting ratios.
@@ -105,7 +105,7 @@ export default function GPIConfig() {
 
       {error && <Alert type="error" message={error} onClose={() => setError(null)} />}
       {success && (
-        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-4 py-3 rounded-xl flex items-center text-sm font-semibold">
+        <div className="bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 px-4 py-3 rounded-xl flex items-center text-sm font-semibold">
           <CheckCircle className="w-5 h-5 mr-2"/>{success}
         </div>
       )}
@@ -126,7 +126,7 @@ export default function GPIConfig() {
                 type="number" min="0" max="100" 
                 value={globalSettings.quantWeight} 
                 onChange={e => setGlobalSettings({...globalSettings, quantWeight: e.target.value})}
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white focus:ring-emerald-500 font-bold"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white focus:ring-blue-500 font-bold"
               />
             </div>
             <div>
@@ -137,7 +137,7 @@ export default function GPIConfig() {
                 type="number" min="0" max="100" 
                 value={globalSettings.obsWeight} 
                 onChange={e => setGlobalSettings({...globalSettings, obsWeight: e.target.value})}
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white focus:ring-emerald-500 font-bold"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white focus:ring-blue-500 font-bold"
               />
               <p className="text-xs text-slate-400 mt-1">Must equal 100% total combined weight.</p>
             </div>
@@ -152,7 +152,7 @@ export default function GPIConfig() {
                 type="number" min="1" 
                 value={globalSettings.minMatches} 
                 onChange={e => setGlobalSettings({...globalSettings, minMatches: e.target.value})}
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white focus:ring-emerald-500 font-bold"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white focus:ring-blue-500 font-bold"
               />
               <p className="text-xs text-slate-400 mt-1">Players with fewer matches receive "Provisional" index.</p>
             </div>
@@ -168,7 +168,7 @@ export default function GPIConfig() {
                 onClick={() => setActiveTab(pos)}
                 className={`flex-1 py-3 text-xs font-black text-center tracking-wider border-b-2 transition-all ${
                   activeTab === pos 
-                    ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-white dark:bg-[#0b1e2d]' 
+                    ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-white dark:bg-slate-900' 
                     : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
               >
@@ -180,7 +180,7 @@ export default function GPIConfig() {
           <div className="p-6 space-y-6">
             <div className={`flex items-center justify-between p-3 rounded-xl border ${
               currentSum === 100 
-                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400' 
+                ? 'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400' 
                 : 'bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-400'
             }`}>
               <div className="flex items-center">
@@ -205,7 +205,7 @@ export default function GPIConfig() {
                     type="range" min="0" max="100" 
                     value={weights[activeTab][field.key]} 
                     onChange={e => handleWeightChange(activeTab, field.key, e.target.value)}
-                    className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                    className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
                   />
                   <div className="flex items-center space-x-1">
                     <input 

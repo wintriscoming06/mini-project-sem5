@@ -80,7 +80,7 @@ const OrganizerDashboard = () => {
             <Button 
               variant="secondary" 
               onClick={() => navigate('/matches')}
-              className="bg-emerald-950/80 text-emerald-200 border-emerald-500/50 hover:bg-emerald-900"
+              className="bg-blue-950/80 text-blue-200 border-blue-500/50 hover:bg-blue-900"
               icon={<WhistleIcon className="w-4 h-4" />}
             >
               Match Score Desks
@@ -95,8 +95,8 @@ const OrganizerDashboard = () => {
           </>
         }
       >
-        <div className="flex flex-wrap items-center gap-3 text-xs text-emerald-200/90 font-semibold mt-3">
-          <span className="px-2.5 py-1 rounded-md bg-emerald-950/80 border border-emerald-500/40 text-emerald-300">
+        <div className="flex flex-wrap items-center gap-3 text-xs text-blue-200/90 font-semibold mt-3">
+          <span className="px-2.5 py-1 rounded-md bg-blue-950/80 border border-blue-500/40 text-blue-300">
             {user?.organization || 'Licensed League Director'}
           </span>
           <span>•</span>
@@ -132,7 +132,7 @@ const OrganizerDashboard = () => {
         <StatsCard 
           title="Official Certified Matches" 
           value={confirmedMatches.length} 
-          icon={<WhistleIcon className="w-6 h-6 text-emerald-400" />} 
+          icon={<WhistleIcon className="w-6 h-6 text-blue-400" />} 
           color="emerald"
         />
       </div>
@@ -147,15 +147,15 @@ const OrganizerDashboard = () => {
             subtitle="Current tournaments under your management"
             showMatchBall={true}
             headerAction={
-              <Button variant="ghost" size="sm" onClick={() => navigate('/my-tournaments')} className="text-emerald-600 dark:text-emerald-400">
+              <Button variant="ghost" size="sm" onClick={() => navigate('/my-tournaments')} className="text-blue-600 dark:text-blue-400">
                 View All <ArrowRight className="w-3.5 h-3.5 ml-1" />
               </Button>
             }
           >
             {recentTournaments.length > 0 ? (
-              <div className="divide-y divide-emerald-100 dark:divide-emerald-950/60">
+              <div className="divide-y divide-blue-100 dark:divide-blue-950/60">
                 {recentTournaments.map(t => (
-                  <div key={t.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-emerald-500/10 dark:hover:bg-[#082216]/60 px-3 rounded-2xl transition-colors">
+                  <div key={t.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-blue-500/10 dark:hover:bg-slate-900/60 px-3 rounded-2xl transition-colors">
                     <div className="flex items-start space-x-3.5">
                       <div className="p-3 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-500 border border-amber-500/30 flex-shrink-0">
                         <TrophyIcon className="w-6 h-6" />
@@ -165,7 +165,7 @@ const OrganizerDashboard = () => {
                           <h4 className="font-bold text-slate-900 dark:text-white text-base">{t.name}</h4>
                           <StatusBadge status={t.status} size="sm" />
                         </div>
-                        <p className="text-xs text-slate-500 dark:text-emerald-200/60 mt-1 flex items-center gap-2">
+                        <p className="text-xs text-slate-500 dark:text-blue-200/60 mt-1 flex items-center gap-2">
                           <span>{t.format || '11v11'}</span>
                           <span>•</span>
                           <span>{t.ageGroup || 'Open'}</span>
@@ -177,7 +177,7 @@ const OrganizerDashboard = () => {
                     
                     <div className="flex items-center space-x-2 flex-shrink-0 self-end sm:self-center">
                       <Link to={`/organizer/tournaments/${t.id}/manage`}>
-                        <Button size="sm" variant="outline" className="border-emerald-500/40 text-emerald-600 dark:text-emerald-400">
+                        <Button size="sm" variant="outline" className="border-blue-500/40 text-blue-600 dark:text-blue-400">
                           Manage Console
                         </Button>
                       </Link>
@@ -187,11 +187,11 @@ const OrganizerDashboard = () => {
               </div>
             ) : (
               <div className="text-center py-12">
-                <div className="w-16 h-16 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mx-auto mb-3">
+                <div className="w-16 h-16 rounded-full bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/30 flex items-center justify-center mx-auto mb-3">
                   <TrophyIcon className="w-10 h-10 text-amber-500" />
                 </div>
                 <p className="text-base font-bold text-slate-800 dark:text-white">No active tournaments</p>
-                <p className="text-xs text-slate-500 dark:text-emerald-200/60 mt-1 max-w-sm mx-auto">
+                <p className="text-xs text-slate-500 dark:text-blue-200/60 mt-1 max-w-sm mx-auto">
                   Create your first football competition to schedule matches and receive squad entries.
                 </p>
                 <Button variant="primary" size="sm" onClick={() => navigate('/tournaments/create')} className="mt-5">
@@ -209,15 +209,15 @@ const OrganizerDashboard = () => {
             subtitle="Immediate matches scheduled for scoring"
             showMatchBall={true}
             headerAction={
-              <Link to="/matches" className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
+              <Link to="/matches" className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
                 All Fixtures
               </Link>
             }
           >
             {upcomingMatches.length > 0 ? (
-              <div className="divide-y divide-emerald-100 dark:divide-emerald-950/60">
+              <div className="divide-y divide-blue-100 dark:divide-blue-950/60">
                 {upcomingMatches.map(match => (
-                  <div key={match.id} className="py-3.5 text-xs hover:bg-emerald-500/5 rounded-xl px-2 transition-colors">
+                  <div key={match.id} className="py-3.5 text-xs hover:bg-blue-500/5 rounded-xl px-2 transition-colors">
                     <div className="flex justify-between items-center mb-1.5">
                       <span className="text-[10px] text-slate-400 flex items-center">
                         <Clock className="w-3 h-3 mr-1" />
@@ -226,13 +226,13 @@ const OrganizerDashboard = () => {
                       <StatusBadge status={match.status} size="sm" />
                     </div>
                     <div className="font-bold text-slate-900 dark:text-white flex items-center justify-between my-1">
-                      <span className="text-emerald-600 dark:text-emerald-400">{match.homeTeam?.name || 'TBD'}</span>
+                      <span className="text-blue-600 dark:text-blue-400">{match.homeTeam?.name || 'TBD'}</span>
                       <span className="text-slate-400 font-normal px-2">vs</span>
                       <span className="text-blue-600 dark:text-blue-400">{match.awayTeam?.name || 'TBD'}</span>
                     </div>
                     <div className="mt-2 text-right">
                       <Link to={`/organizer/matches/${match.id}/scoring`}>
-                        <Button size="sm" variant="outline" className="text-[11px] py-1 px-2.5 border-emerald-500/40 text-emerald-600 dark:text-emerald-400">
+                        <Button size="sm" variant="outline" className="text-[11px] py-1 px-2.5 border-blue-500/40 text-blue-600 dark:text-blue-400">
                           Open Match Desk ⚽
                         </Button>
                       </Link>
@@ -242,7 +242,7 @@ const OrganizerDashboard = () => {
               </div>
             ) : (
               <div className="text-center py-8 text-slate-400">
-                <ClassicSoccerBall className="w-8 h-8 mx-auto text-emerald-500/50 mb-2" />
+                <ClassicSoccerBall className="w-8 h-8 mx-auto text-blue-500/50 mb-2" />
                 <p className="text-xs font-semibold">No pending fixtures</p>
                 <p className="text-[10px] text-slate-500 mt-1">Fixtures scheduled in your tournaments will appear here.</p>
               </div>

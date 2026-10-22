@@ -19,7 +19,7 @@ const ConfirmDialog = ({
   const getIcon = () => {
     if (variant === 'danger') return <AlertTriangle className="h-6 w-6 text-rose-500" />;
     if (variant === 'warning') return <AlertTriangle className="h-6 w-6 text-amber-500" />;
-    return <Info className="h-6 w-6 text-emerald-500" />;
+    return <Info className="h-6 w-6 text-blue-500" />;
   };
 
   const getConfirmVariant = () => {

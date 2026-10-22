@@ -38,7 +38,7 @@ export default function AuditLogView() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-6 bg-white dark:bg-[#0b1e2d] rounded-2xl border border-slate-200 dark:border-emerald-950/40 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-blue-950/40 shadow-sm">
         <div>
           <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center">
             <FileText className="w-7 h-7 mr-3 text-purple-500" /> Platform Audit Trail
@@ -58,7 +58,7 @@ export default function AuditLogView() {
             <select 
               value={filterType} 
               onChange={(e) => setFilterType(e.target.value)}
-              className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs py-1.5 px-3 text-slate-900 dark:text-white focus:ring-emerald-500"
+              className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs py-1.5 px-3 text-slate-900 dark:text-white focus:ring-blue-500"
             >
               <option value="ALL">All Entities</option>
               <option value="USER">User Accounts</option>
@@ -118,8 +118,8 @@ export default function AuditLogView() {
                               </pre>
                             </div>
                             <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-inner">
-                              <h5 className="font-bold text-emerald-500 mb-2 border-b border-slate-100 dark:border-slate-700 pb-2">Updated State</h5>
-                              <pre className="text-emerald-600 dark:text-emerald-400 overflow-x-auto whitespace-pre-wrap font-mono text-xs">
+                              <h5 className="font-bold text-blue-500 mb-2 border-b border-slate-100 dark:border-slate-700 pb-2">Updated State</h5>
+                              <pre className="text-blue-600 dark:text-blue-400 overflow-x-auto whitespace-pre-wrap font-mono text-xs">
                                 {JSON.stringify(log.newValue || {}, null, 2)}
                               </pre>
                             </div>

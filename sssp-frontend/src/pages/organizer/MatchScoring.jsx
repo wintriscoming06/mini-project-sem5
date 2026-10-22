@@ -100,7 +100,7 @@ const MatchScoring = () => {
       <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
         <button 
           onClick={() => navigate('/matches')} 
-          className="inline-flex items-center text-xs font-semibold text-slate-400 hover:text-emerald-500 transition-colors"
+          className="inline-flex items-center text-xs font-semibold text-slate-400 hover:text-blue-500 transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-1" /> Back to Fixtures
         </button>
@@ -110,21 +110,21 @@ const MatchScoring = () => {
       {error && <Alert type="error" message={error} onClose={() => setError(null)} />}
 
       {/* Main Matchday Stadium Scoreboard */}
-      <div className="relative overflow-hidden rounded-3xl pitch-turf-stripes text-white shadow-2xl border-2 border-emerald-500/50 p-6 sm:p-10">
+      <div className="relative overflow-hidden rounded-3xl pitch-turf-stripes text-white shadow-2xl border-2 border-blue-500/50 p-6 sm:p-10">
         {/* Stadium floodlight canopy */}
         <div className="absolute top-0 inset-x-0 h-44 stadium-glow opacity-80 pointer-events-none" />
         <div className="absolute inset-0 goal-net-texture opacity-35 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#051710]/60 to-[#020b07]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/60 to-slate-900" />
 
         <div className="relative z-10 flex flex-col items-center">
-          <span className="text-[11px] font-black uppercase tracking-widest text-emerald-300 mb-6 bg-emerald-950/80 px-4 py-1.5 rounded-full border border-emerald-400/50 shadow-md">
+          <span className="text-[11px] font-black uppercase tracking-widest text-blue-300 mb-6 bg-blue-950/80 px-4 py-1.5 rounded-full border border-blue-400/50 shadow-md">
             ⚽ {match.tournament?.name || 'Sanctioned Official Match'}
           </span>
 
           <div className="flex items-center justify-between w-full max-w-2xl my-4">
             {/* Home Team */}
             <div className="text-center w-2/5 space-y-2">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#04120a] border-2 border-emerald-400/60 mx-auto flex items-center justify-center font-black text-2xl text-emerald-300 shadow-xl">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-900 border-2 border-blue-400/60 mx-auto flex items-center justify-center font-black text-2xl text-blue-300 shadow-xl">
                 {match.homeTeam?.name?.charAt(0) || 'H'}
               </div>
               <h2 className="text-base sm:text-xl font-black tracking-tight truncate text-white">
@@ -137,14 +137,14 @@ const MatchScoring = () => {
               <div className="text-4xl sm:text-6xl font-black stat-number tracking-tighter text-amber-300 drop-shadow-lg">
                 {match.homeScore ?? 0} : {match.awayScore ?? 0}
               </div>
-              <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mt-1">
+              <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest block mt-1">
                 {isLive ? '🟢 LIVE ON PITCH' : isCompleted ? 'FULL TIME WHISTLE' : 'SCHEDULED KICKOFF'}
               </span>
             </div>
 
             {/* Away Team */}
             <div className="text-center w-2/5 space-y-2">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#04120a] border-2 border-sky-400/60 mx-auto flex items-center justify-center font-black text-2xl text-sky-300 shadow-xl">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-900 border-2 border-sky-400/60 mx-auto flex items-center justify-center font-black text-2xl text-sky-300 shadow-xl">
                 {match.awayTeam?.name?.charAt(0) || 'A'}
               </div>
               <h2 className="text-base sm:text-xl font-black tracking-tight truncate text-white">
@@ -189,7 +189,7 @@ const MatchScoring = () => {
             )}
 
             {match.confirmed && (
-              <div className="bg-emerald-950/70 text-emerald-400 border border-emerald-500/40 font-bold py-2 px-6 rounded-xl text-xs flex items-center gap-2">
+              <div className="bg-blue-950/70 text-blue-400 border border-blue-500/40 font-bold py-2 px-6 rounded-xl text-xs flex items-center gap-2">
                 <CheckCircle className="w-4 h-4" /> Match Record Locked & Calibrated
               </div>
             )}
@@ -202,14 +202,14 @@ const MatchScoring = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           
           {/* Home Actions */}
-          <div className="bg-white dark:bg-[#0b1e2d] p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 space-y-3">
+          <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-blue-900/30 space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-center">
               {match.homeTeam?.name || 'Home Team'} Actions
             </h3>
             
             <button 
               onClick={() => setEventModal({ show: true, type: 'GOAL', team: match.homeTeam })}
-              className="w-full py-3 px-4 rounded-xl font-extrabold text-sm bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95"
+              className="w-full py-3 px-4 rounded-xl font-extrabold text-sm bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95"
             >
               <span className="text-lg">⚽</span> Log Home Goal
             </button>
@@ -231,14 +231,14 @@ const MatchScoring = () => {
           </div>
 
           {/* Away Actions */}
-          <div className="bg-white dark:bg-[#0b1e2d] p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 space-y-3">
+          <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-blue-900/30 space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-center">
               {match.awayTeam?.name || 'Away Team'} Actions
             </h3>
             
             <button 
               onClick={() => setEventModal({ show: true, type: 'GOAL', team: match.awayTeam })}
-              className="w-full py-3 px-4 rounded-xl font-extrabold text-sm bg-teal-600 hover:bg-teal-500 text-white flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95"
+              className="w-full py-3 px-4 rounded-xl font-extrabold text-sm bg-cyan-600 hover:bg-cyan-500 text-white flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95"
             >
               <span className="text-lg">⚽</span> Log Away Goal
             </button>
@@ -263,10 +263,10 @@ const MatchScoring = () => {
       )}
 
       {/* Official Match Event Log */}
-      <div className="bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 overflow-hidden">
-        <div className="px-5 py-3.5 bg-slate-50 dark:bg-[#071622] border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-blue-900/30 overflow-hidden">
+        <div className="px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
           <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center">
-            <Clock className="w-4 h-4 mr-2 text-emerald-500" /> Official Match Log
+            <Clock className="w-4 h-4 mr-2 text-blue-500" /> Official Match Log
           </span>
           <span className="text-xs text-slate-400 font-bold stat-number">{events.length} Events</span>
         </div>
@@ -315,7 +315,7 @@ const MatchScoring = () => {
             </label>
             <select 
               required
-              className="w-full text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-white p-2.5"
+              className="w-full text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white p-2.5"
               value={eventData.playerId}
               onChange={e => setEventData({ ...eventData, playerId: e.target.value })}
             >
@@ -336,7 +336,7 @@ const MatchScoring = () => {
             <input 
               type="number" 
               required min="1" max="150"
-              className="w-full text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-white p-2.5"
+              className="w-full text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white p-2.5"
               placeholder="e.g. 67"
               value={eventData.minute}
               onChange={e => setEventData({ ...eventData, minute: e.target.value })}
@@ -355,12 +355,12 @@ const MatchScoring = () => {
         <div className="space-y-6">
           <Alert type="warning" message="Locking the match will finalize player G/A statistics and trigger GPI rating calibrations. This cannot be undone." />
           
-          <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-slate-50 dark:bg-[#071622] border border-slate-200 dark:border-slate-800">
+          <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
             <div className="text-center w-2/5 space-y-1">
               <span className="text-xs font-bold text-slate-600 dark:text-slate-300 truncate block">{match.homeTeam?.name}</span>
               <input 
                 type="number" 
-                className="w-16 text-center text-2xl font-black p-1.5 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-[#081b29] text-slate-900 dark:text-white" 
+                className="w-16 text-center text-2xl font-black p-1.5 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-white" 
                 value={finalScore.home} 
                 onChange={e => setFinalScore({ ...finalScore, home: parseInt(e.target.value, 10) || 0 })} 
               />
@@ -370,7 +370,7 @@ const MatchScoring = () => {
               <span className="text-xs font-bold text-slate-600 dark:text-slate-300 truncate block">{match.awayTeam?.name}</span>
               <input 
                 type="number" 
-                className="w-16 text-center text-2xl font-black p-1.5 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-[#081b29] text-slate-900 dark:text-white" 
+                className="w-16 text-center text-2xl font-black p-1.5 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-white" 
                 value={finalScore.away} 
                 onChange={e => setFinalScore({ ...finalScore, away: parseInt(e.target.value, 10) || 0 })} 
               />

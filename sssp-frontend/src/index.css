@@ -14,142 +14,137 @@
   }
 
   html.dark body {
-    background-color: #04100b;
-    color: #e8f1ec;
+    background-color: #090d16;
+    color: #f1f5f9;
   }
 
   /* Consistent, visible keyboard focus everywhere */
   :focus-visible {
-    outline: 2px solid #10b981;
+    outline: 2px solid #2563eb;
     outline-offset: 2px;
   }
 
   ::selection {
-    background: rgba(16, 185, 129, 0.35);
+    background: rgba(37, 99, 235, 0.25);
   }
 }
 
 /* ==========================================================================
-   IN-APP SURFACES  (calm pitch texture; dark = night stadium, light = clean analytics)
+   IN-APP SURFACES (Clean Minimal Stadium: airy, crisp analytics)
    ========================================================================== */
 
 /* Fixed page background used by the authenticated layout */
 .app-bg {
   background:
-    radial-gradient(1100px 480px at 50% -10%, var(--role-glow, rgba(16, 185, 129, 0.14)), transparent 70%),
-    repeating-linear-gradient(90deg, rgba(22, 101, 52, 0.035) 0, rgba(22, 101, 52, 0.035) 96px, rgba(22, 101, 52, 0) 96px, rgba(22, 101, 52, 0) 192px),
-    linear-gradient(180deg, #f3f8f4 0%, #ecf4ee 100%);
+    radial-gradient(1200px 500px at 50% -5%, var(--role-glow, rgba(37, 99, 235, 0.05)), transparent 70%),
+    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 html.dark .app-bg {
   background:
-    radial-gradient(1200px 520px at 50% -8%, var(--role-glow, rgba(16, 185, 129, 0.16)), transparent 70%),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.018) 0, rgba(255, 255, 255, 0.018) 96px, rgba(255, 255, 255, 0) 96px, rgba(255, 255, 255, 0) 192px),
-    linear-gradient(180deg, #061510 0%, #04100b 55%, #030a07 100%);
+    radial-gradient(1200px 520px at 50% -8%, var(--role-glow, rgba(59, 130, 246, 0.10)), transparent 70%),
+    linear-gradient(180deg, #0f172a 0%, #090d16 100%);
 }
 
-/* Role accents: a very light tint at the top of the page, nothing more */
-.role-tint-player { --role-glow: rgba(16, 185, 129, 0.16); }
-.role-tint-scout { --role-glow: rgba(45, 212, 191, 0.14); }
-.role-tint-organizer { --role-glow: rgba(245, 158, 11, 0.12); }
-.role-tint-admin { --role-glow: rgba(99, 102, 241, 0.12); }
+/* Role accents: clean modern tints */
+.role-tint-player { --role-glow: rgba(37, 99, 235, 0.10); }
+.role-tint-scout { --role-glow: rgba(14, 165, 233, 0.10); }
+.role-tint-organizer { --role-glow: rgba(245, 158, 11, 0.10); }
+.role-tint-admin { --role-glow: rgba(99, 102, 241, 0.10); }
 
-/* Banners / heroes that sit on a dark pitch in both themes */
+/* Banners / heroes: modern stadium night gradient */
 .pitch-surface {
-  background-color: #0a3a25;
+  background-color: #0f172a;
   background-image:
-    radial-gradient(120% 90% at 50% 0%, rgba(52, 211, 153, 0.20), transparent 60%),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0, rgba(255, 255, 255, 0.03) 56px, rgba(0, 0, 0, 0.05) 56px, rgba(0, 0, 0, 0.05) 112px),
-    linear-gradient(160deg, #0d4a2f 0%, #072b1b 100%);
+    radial-gradient(120% 90% at 50% 0%, rgba(37, 99, 235, 0.20), transparent 60%),
+    linear-gradient(160deg, #1e293b 0%, #090d16 100%);
 }
 
-/* Training-ground variant for scout surfaces: diagonal mowing + tactical grid */
+/* Tactical training surface: clean slate & cyan */
 .training-surface {
-  background-color: #08301f;
+  background-color: #0f172a;
   background-image:
-    radial-gradient(120% 90% at 20% 0%, rgba(45, 212, 191, 0.18), transparent 60%),
-    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.028) 0, rgba(255, 255, 255, 0.028) 48px, rgba(0, 0, 0, 0.05) 48px, rgba(0, 0, 0, 0.05) 96px),
-    linear-gradient(160deg, #0b3f2b 0%, #06231a 100%);
+    radial-gradient(120% 90% at 20% 0%, rgba(14, 165, 233, 0.18), transparent 60%),
+    linear-gradient(160deg, #1e293b 0%, #090d16 100%);
 }
 
-/* Tactical board grid (used lightly in scout banners) */
+/* Tactical board grid (clean schematic blueprint dots/grid) */
 .tactical-grid {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(59, 130, 246, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.06) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 
-/* Hairline accent used at the top of cards instead of a thick lawn bar */
+/* Hairline accent used at the top of cards */
 .card-accent {
-  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.65) 30%, rgba(52, 211, 153, 0.65) 70%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.75) 30%, rgba(96, 165, 250, 0.75) 70%, transparent);
 }
 
 /* ==========================================================================
-   AUTH / LOGIN GRASS (kept as-is for the login & register experience)
+   SURFACE TEXTURES (Modern Stadium Tech)
    ========================================================================== */
 
 .pitch-turf-stripes {
-  background-color: #0b4526;
-  background-image: repeating-linear-gradient(90deg, #0c4627 0px, #0c4627 68px, #145b34 68px, #145b34 136px);
+  background-color: #0f172a;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(37, 99, 235, 0.20) 0%, transparent 70%),
+    linear-gradient(180deg, #0f172a 0%, #090d16 100%);
 }
 
 html:not(.dark) .pitch-turf-stripes {
-  background-color: #15803d;
-  background-image: repeating-linear-gradient(90deg, #15803d 0px, #15803d 68px, #16a34a 68px, #16a34a 136px);
+  background-color: #f8fafc;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(37, 99, 235, 0.08) 0%, transparent 60%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2f6 100%);
 }
 
 .football-pitch-pattern {
-  background-color: #0b4526;
+  background-color: #090d16;
   background-image:
-    radial-gradient(circle at 50% -10%, rgba(74, 222, 128, 0.28) 0%, transparent 60%),
-    radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.20) 0%, transparent 45%),
-    radial-gradient(circle at 90% 20%, rgba(56, 189, 248, 0.20) 0%, transparent 45%),
-    repeating-linear-gradient(90deg, rgba(12, 70, 39, 0.98) 0px, rgba(12, 70, 39, 0.98) 72px, rgba(20, 91, 52, 0.98) 72px, rgba(20, 91, 52, 0.98) 144px);
+    radial-gradient(circle at 50% -10%, rgba(37, 99, 235, 0.22) 0%, transparent 60%),
+    radial-gradient(circle at 10% 20%, rgba(14, 165, 233, 0.14) 0%, transparent 45%),
+    linear-gradient(180deg, #0f172a 0%, #090d16 100%);
 }
 
 .living-real-grass {
-  background-color: #0b4526;
+  background-color: transparent;
   background-image:
-    radial-gradient(ellipse at 50% 15%, rgba(74, 222, 128, 0.32) 0%, transparent 70%),
-    repeating-linear-gradient(90deg, #0d4929 0px, #0d4929 72px, #155f37 72px, #155f37 144px),
-    radial-gradient(rgba(110, 231, 183, 0.22) 1.2px, transparent 1.2px);
-  background-size: 100% 100%, 144px 100%, 10px 10px;
+    radial-gradient(rgba(148, 163, 184, 0.10) 1.2px, transparent 1.2px);
+  background-size: 28px 28px;
 }
 
 html:not(.dark) .living-real-grass {
-  background-color: #15803d;
+  background-color: transparent;
   background-image:
-    radial-gradient(ellipse at 50% 20%, rgba(220, 252, 231, 0.40) 0%, transparent 65%),
-    repeating-linear-gradient(90deg, #166534 0px, #166534 72px, #15803d 72px, #15803d 144px);
+    radial-gradient(rgba(100, 116, 139, 0.08) 1.2px, transparent 1.2px);
+  background-size: 28px 28px;
 }
 
-/* Soccer Goal Net Mesh Texture */
+/* Modern Stadium Micro Mesh */
 .goal-net-texture {
   background-color: transparent;
   background-image:
-    linear-gradient(30deg, rgba(255, 255, 255, 0.08) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.08) 87.5%, rgba(255, 255, 255, 0.08)),
-    linear-gradient(150deg, rgba(255, 255, 255, 0.08) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.08) 87.5%, rgba(255, 255, 255, 0.08)),
-    linear-gradient(30deg, rgba(255, 255, 255, 0.08) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.08) 87.5%, rgba(255, 255, 255, 0.08)),
-    linear-gradient(150deg, rgba(255, 255, 255, 0.08) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.08) 87.5%, rgba(255, 255, 255, 0.08)),
-    linear-gradient(60deg, rgba(255, 255, 255, 0.05) 25%, transparent 25.5%, transparent 75%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05)),
-    linear-gradient(60deg, rgba(255, 255, 255, 0.05) 25%, transparent 25.5%, transparent 75%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05));
-  background-size: 24px 42px;
-  background-position: 0 0, 0 0, 12px 21px, 12px 21px, 0 0, 12px 21px;
+    radial-gradient(circle, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
 /* Stadium Floodlight Beams */
 .stadium-glow {
-  background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.25) 0%, rgba(14, 165, 233, 0.08) 45%, transparent 75%);
+  background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.20) 0%, rgba(37, 99, 235, 0.08) 45%, transparent 75%);
 }
 
 .pitch-glow {
-  background: radial-gradient(circle at 50% 0%, rgba(34, 197, 94, 0.28) 0%, rgba(21, 128, 61, 0.10) 45%, transparent 75%);
+  background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.20) 0%, rgba(14, 165, 233, 0.06) 45%, transparent 75%);
 }
 
 @keyframes floodlightBreathe {
   0%, 100% { opacity: 0.35; }
   50% { opacity: 0.65; }
+}
+
+.animate-floodlight {
+  animation: floodlightBreathe 6s ease-in-out infinite;
 }
 
 .animate-floodlight {
@@ -223,7 +218,7 @@ html:not(.dark) .living-real-grass {
   right: 0;
   bottom: -1px;
   height: 2px;
-  background: #10b981;
+  background: #2563eb;
   transform: scaleX(0);
   transform-origin: center;
   transition: transform 0.2s ease;
@@ -246,17 +241,17 @@ html:not(.dark) .living-real-grass {
   25% {
     transform: translate3d(80px, -24px, 0) scale(1.15) rotate(160deg);
     opacity: 1;
-    filter: drop-shadow(0 10px 14px rgba(16, 185, 129, 0.5));
+    filter: drop-shadow(0 10px 14px rgba(37, 99, 235, 0.45));
   }
   60% {
     transform: translate3d(240px, -70px, 0) scale(1.0) rotate(380deg);
     opacity: 0.95;
-    filter: drop-shadow(0 12px 20px rgba(52, 211, 153, 0.6));
+    filter: drop-shadow(0 12px 20px rgba(56, 189, 248, 0.5));
   }
   100% {
     transform: translate3d(460px, -140px, 0) scale(0.55) rotate(720deg);
     opacity: 0;
-    filter: drop-shadow(0 0 25px rgba(16, 185, 129, 0.8));
+    filter: drop-shadow(0 0 25px rgba(37, 99, 235, 0.7));
   }
 }
 
@@ -372,8 +367,8 @@ html:not(.dark) .living-real-grass {
 }
 
 .card-elevate:hover {
-  transform: translateY(-8px) scale(1.015) !important;
-  box-shadow: 0 20px 30px -10px rgba(16, 185, 129, 0.25), 0 10px 15px -5px rgba(0, 0, 0, 0.3) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px -6px rgba(15, 23, 42, 0.18) !important;
 }
 
 .card-elevate-subtle {
@@ -382,8 +377,7 @@ html:not(.dark) .living-real-grass {
 }
 
 .card-elevate-subtle:hover {
-  transform: translateY(-4px) !important;
-  box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.25) !important;
+  box-shadow: 0 4px 12px -6px rgba(15, 23, 42, 0.15) !important;
 }
 
 /* 6. Staggered Entrance Animations */

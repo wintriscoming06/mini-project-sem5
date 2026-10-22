@@ -90,12 +90,12 @@ const PlayerStats = () => {
   const renderGPIBar = (label, value) => (
     <div className="mb-4">
       <div className="flex justify-between text-xs font-bold mb-1.5">
-        <span className="text-slate-600 dark:text-emerald-200/80">{label}</span>
+        <span className="text-slate-600 dark:text-blue-200/80">{label}</span>
         <span className="font-black text-slate-900 dark:text-white stat-number">{value}%</span>
       </div>
-      <div className="w-full bg-slate-100 dark:bg-[#04120a] rounded-full h-2.5 overflow-hidden border border-emerald-900/30">
+      <div className="w-full bg-slate-100 dark:bg-slate-900 rounded-full h-2.5 overflow-hidden border border-blue-900/30">
         <div 
-          className="bg-gradient-to-r from-emerald-600 to-green-400 h-2.5 rounded-full transition-all duration-500 shadow-sm" 
+          className="bg-gradient-to-r from-blue-600 to-blue-400 h-2.5 rounded-full transition-all duration-500 shadow-sm" 
           style={{ width: `${value}%` }} 
         />
       </div>
@@ -121,11 +121,11 @@ const PlayerStats = () => {
       {error && <Alert type="error" message={error} />}
 
       {/* 2. NAVIGATION TABS */}
-      <div className="flex border-b border-emerald-200 dark:border-emerald-950/60 space-x-2">
+      <div className="flex border-b border-blue-200 dark:border-blue-950/60 space-x-2">
         <button 
           className={`py-3 px-5 text-xs font-black uppercase tracking-wider rounded-t-xl transition-all ${
             activeTab === 'OVERVIEW' 
-              ? 'border-b-2 border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-white dark:bg-[#071d15]' 
+              ? 'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400 bg-white dark:bg-slate-900' 
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
           }`}
           onClick={() => setActiveTab('OVERVIEW')}
@@ -135,7 +135,7 @@ const PlayerStats = () => {
         <button 
           className={`py-3 px-5 text-xs font-black uppercase tracking-wider rounded-t-xl transition-all ${
             activeTab === 'MATCHES' 
-              ? 'border-b-2 border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-white dark:bg-[#071d15]' 
+              ? 'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400 bg-white dark:bg-slate-900' 
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
           }`}
           onClick={() => setActiveTab('MATCHES')}
@@ -157,7 +157,7 @@ const PlayerStats = () => {
             <StatsCard 
               title="Minutes On Pitch" 
               value={performance?.totalMinutes || 0} 
-              icon={<Clock className="w-6 h-6 text-emerald-400" />} 
+              icon={<Clock className="w-6 h-6 text-blue-400" />} 
               color="emerald"
             />
             <StatsCard 
@@ -187,7 +187,7 @@ const PlayerStats = () => {
                 </div>
               ) : (
                 <div className="text-center py-10 text-slate-400">
-                  <ClassicSoccerBall className="w-10 h-10 mx-auto text-emerald-500/50 mb-2" />
+                  <ClassicSoccerBall className="w-10 h-10 mx-auto text-blue-500/50 mb-2" />
                   <p className="font-bold text-slate-700 dark:text-slate-200">No GPI calculation data available</p>
                   <p className="text-xs text-slate-500 mt-1">Play at least 3 sanctioned tournament matches to unlock rating components.</p>
                 </div>
@@ -217,8 +217,8 @@ const PlayerStats = () => {
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#04120a] border border-emerald-900/30 text-xs text-slate-500 dark:text-emerald-200/70">
-                  <span className="font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block mb-1">Fair Play Rule</span>
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-blue-900/30 text-xs text-slate-500 dark:text-blue-200/70">
+                  <span className="font-black text-blue-600 dark:text-blue-400 uppercase tracking-wider block mb-1">Fair Play Rule</span>
                   Disciplinary sanctions and cards affect your final GPI consistency score and can result in match suspensions.
                 </div>
               </div>
@@ -230,8 +230,8 @@ const PlayerStats = () => {
         <Card title="Certified Match Logs" subtitle="Chronological list of all certified fixture appearances">
           {matchStats.length > 0 ? (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-emerald-100 dark:divide-emerald-950/60 text-sm">
-                <thead className="bg-emerald-500/10 dark:bg-[#051910] text-xs font-bold text-slate-600 dark:text-emerald-300 uppercase">
+              <table className="min-w-full divide-y divide-blue-100 dark:divide-blue-950/60 text-sm">
+                <thead className="bg-blue-500/10 dark:bg-slate-900 text-xs font-bold text-slate-600 dark:text-blue-300 uppercase">
                   <tr>
                     <th className="px-4 py-3 text-left">Match Fixture</th>
                     <th className="px-4 py-3 text-center">Date</th>
@@ -242,9 +242,9 @@ const PlayerStats = () => {
                     <th className="px-4 py-3 text-right">Verification</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-emerald-50 dark:divide-emerald-950/40">
+                <tbody className="divide-y divide-blue-50 dark:divide-blue-950/40">
                   {matchStats.map((m, idx) => (
-                    <tr key={idx} className="hover:bg-emerald-500/10 dark:hover:bg-[#082216]/60 transition-colors">
+                    <tr key={idx} className="hover:bg-blue-500/10 dark:hover:bg-slate-900/60 transition-colors">
                       <td className="px-4 py-3.5 font-bold text-slate-900 dark:text-white">
                         {m.matchDescription || `Fixture #${m.matchId || idx + 1}`}
                       </td>
@@ -254,10 +254,10 @@ const PlayerStats = () => {
                       <td className="px-4 py-3.5 text-center stat-number font-medium">
                         {m.minutesPlayed ?? '-'}′
                       </td>
-                      <td className="px-4 py-3.5 text-center font-black text-emerald-600 dark:text-emerald-400 stat-number">
+                      <td className="px-4 py-3.5 text-center font-black text-blue-600 dark:text-blue-400 stat-number">
                         {m.goals || 0}
                       </td>
-                      <td className="px-4 py-3.5 text-center font-black text-teal-600 dark:text-teal-400 stat-number">
+                      <td className="px-4 py-3.5 text-center font-black text-cyan-600 dark:text-cyan-400 stat-number">
                         {m.assists || 0}
                       </td>
                       <td className="px-4 py-3.5 text-center">
@@ -277,7 +277,7 @@ const PlayerStats = () => {
             </div>
           ) : (
             <div className="text-center py-12 text-slate-400">
-              <ClassicSoccerBall className="w-12 h-12 mx-auto text-emerald-500/50 mb-2 animate-football-bounce" />
+              <ClassicSoccerBall className="w-12 h-12 mx-auto text-blue-500/50 mb-2 animate-football-bounce" />
               <p className="font-bold text-slate-700 dark:text-slate-200">No certified match appearances logged</p>
               <p className="text-xs text-slate-500 mt-1">Tournament match logs will automatically synchronize after final whistle certification.</p>
             </div>

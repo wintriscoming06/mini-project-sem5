@@ -314,7 +314,7 @@ export default function ScoutProfile() {
               />
             ) : (
               <div className="h-full w-full flex items-end justify-center pb-2">
-                <CoachSilhouette className="h-full w-48 text-teal-400 drop-shadow-[0_12px_24px_rgba(0,0,0,0.6)]" />
+                <CoachSilhouette className="h-full w-48 text-cyan-400 drop-shadow-[0_12px_24px_rgba(0,0,0,0.6)]" />
               </div>
             )}
 
@@ -333,8 +333,8 @@ export default function ScoutProfile() {
             {/* Cutout Processing Indicator */}
             {isRemovingBg && (
               <div className="absolute inset-0 bg-black/70 rounded-2xl flex flex-col items-center justify-center p-3 z-30 backdrop-blur-sm">
-                <RefreshCw className="w-8 h-8 text-teal-400 animate-spin mb-2" />
-                <span className="text-xs font-black text-teal-300 uppercase tracking-wider text-center">
+                <RefreshCw className="w-8 h-8 text-cyan-400 animate-spin mb-2" />
+                <span className="text-xs font-black text-cyan-300 uppercase tracking-wider text-center">
                   Extracting Cutout... {bgRemovalProgress ? `${bgRemovalProgress}` : ''}
                 </span>
               </div>
@@ -351,8 +351,8 @@ export default function ScoutProfile() {
                   {activeData.name}
                 </h1>
 
-                <span className="inline-flex items-center text-xs font-black bg-teal-500/25 text-teal-300 border border-teal-500/50 px-2.5 py-0.5 rounded-full shadow-sm">
-                  <Shield className="w-3 h-3 mr-1 text-teal-400" /> Certified Scout
+                <span className="inline-flex items-center text-xs font-black bg-cyan-500/25 text-cyan-300 border border-cyan-500/50 px-2.5 py-0.5 rounded-full shadow-sm">
+                  <Shield className="w-3 h-3 mr-1 text-cyan-400" /> Certified Scout
                 </span>
               </div>
 
@@ -364,7 +364,7 @@ export default function ScoutProfile() {
                 <span>•</span>
                 <span>{activeData.location}</span>
                 <span>•</span>
-                <span className="text-teal-300 font-bold">{activeData.license}</span>
+                <span className="text-cyan-300 font-bold">{activeData.license}</span>
               </div>
             </div>
 
@@ -386,7 +386,7 @@ export default function ScoutProfile() {
 
               {/* Territory */}
               <div className="flex items-center space-x-2">
-                <div className="p-1.5 rounded-lg bg-white/10 text-teal-300">
+                <div className="p-1.5 rounded-lg bg-white/10 text-cyan-300">
                   <Globe className="w-3.5 h-3.5" />
                 </div>
                 <div>
@@ -399,7 +399,7 @@ export default function ScoutProfile() {
 
               {/* Tactical Specialization */}
               <div className="flex items-center space-x-2">
-                <div className="p-1.5 rounded-lg bg-white/10 text-emerald-300">
+                <div className="p-1.5 rounded-lg bg-white/10 text-blue-300">
                   <Compass className="w-3.5 h-3.5" />
                 </div>
                 <div>
@@ -454,7 +454,7 @@ export default function ScoutProfile() {
             {/* Bottom Scouting Performance & Metrics Strip */}
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-1 text-xs">
               <div className="flex items-center space-x-1.5">
-                <Bookmark className="w-3.5 h-3.5 text-teal-400" />
+                <Bookmark className="w-3.5 h-3.5 text-cyan-400" />
                 <span className="text-slate-400 uppercase text-[10px] font-bold">Shortlisted Prospects:</span>
                 <span className="font-black text-white stat-number">
                   <AnimatedStat value={stats.shortlistCount} />
@@ -462,16 +462,16 @@ export default function ScoutProfile() {
               </div>
               <span>•</span>
               <div className="flex items-center space-x-1.5">
-                <FileText className="w-3.5 h-3.5 text-emerald-400" />
+                <FileText className="w-3.5 h-3.5 text-blue-400" />
                 <span className="text-slate-400 uppercase text-[10px] font-bold">Field Observations:</span>
-                <span className="font-black text-emerald-400 stat-number">
+                <span className="font-black text-blue-400 stat-number">
                   <AnimatedStat value={stats.observationsCount} />
                 </span>
               </div>
               <span>•</span>
-              <div className="flex items-center space-x-1.5 bg-black/40 px-2.5 py-0.5 rounded-lg border border-teal-500/30">
-                <CheckCircle2 className="w-3 h-3 text-teal-300" />
-                <span className="text-teal-300 uppercase text-[10px] font-black">Scout Status:</span>
+              <div className="flex items-center space-x-1.5 bg-black/40 px-2.5 py-0.5 rounded-lg border border-cyan-500/30">
+                <CheckCircle2 className="w-3 h-3 text-cyan-300" />
+                <span className="text-cyan-300 uppercase text-[10px] font-black">Scout Status:</span>
                 <span className="font-black text-white">ACTIVE / LEVEL 5 PRO</span>
               </div>
             </div>
@@ -501,7 +501,7 @@ export default function ScoutProfile() {
       {/* ======================================================== */}
       {/* 2. LEGENDARY COACH / SCOUT PERSONA PRESETS BAR */}
       {/* ======================================================== */}
-      <div className="bg-white dark:bg-[#071622] rounded-2xl p-4 border border-slate-200 dark:border-emerald-950/40 shadow-sm">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-blue-950/40 shadow-sm">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-2">
             <Sparkles className="w-4 h-4 text-amber-500" />
@@ -524,7 +524,7 @@ export default function ScoutProfile() {
                 onClick={() => applyPresetCoach(preset)}
                 className={`relative flex items-center p-2.5 rounded-xl border text-left card-elevate hover:-translate-y-1 hover:shadow-md transition-all duration-200 ease-out ${
                   isSelected 
-                    ? 'border-teal-500 bg-teal-50 dark:bg-teal-950/40 ring-2 ring-teal-500/20' 
+                    ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-950/40 ring-2 ring-cyan-500/20' 
                     : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
@@ -540,7 +540,7 @@ export default function ScoutProfile() {
                   </div>
                 </div>
                 {isSelected && (
-                  <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-teal-500 text-white flex items-center justify-center">
+                  <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-cyan-500 text-white flex items-center justify-center">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
                 )}
@@ -554,11 +554,11 @@ export default function ScoutProfile() {
       {/* 3. EDIT DOSSIER FORM (WHEN EDITING) */}
       {/* ======================================================== */}
       {isEditing && (
-        <div className="bg-white dark:bg-[#071622] rounded-3xl p-6 border-2 border-teal-500/40 shadow-xl space-y-6 animate-in fade-in slide-in-from-top-2">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border-2 border-cyan-500/40 shadow-xl space-y-6 animate-in fade-in slide-in-from-top-2">
           <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
             <div>
               <h2 className="text-base font-black text-slate-900 dark:text-white flex items-center">
-                <Edit2 className="w-4 h-4 mr-2 text-teal-500" /> Edit Scout Dossier & Credentials
+                <Edit2 className="w-4 h-4 mr-2 text-cyan-500" /> Edit Scout Dossier & Credentials
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Update your organization identity, professional licenses, and tactical methodology.
@@ -582,7 +582,7 @@ export default function ScoutProfile() {
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -592,7 +592,7 @@ export default function ScoutProfile() {
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -601,7 +601,7 @@ export default function ScoutProfile() {
                 <select 
                   value={formData.organization}
                   onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 >
                   {PRESET_CLUBS.map(c => (
                     <option key={c.id} value={c.name}>{c.name} ({c.type})</option>
@@ -657,7 +657,7 @@ export default function ScoutProfile() {
                   value={formData.license}
                   onChange={(e) => setFormData({ ...formData, license: e.target.value })}
                   placeholder="e.g. UEFA Pro License, AFC Pro"
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -668,7 +668,7 @@ export default function ScoutProfile() {
                   value={formData.territory}
                   onChange={(e) => setFormData({ ...formData, territory: e.target.value })}
                   placeholder="e.g. Global Elite, European U21s, South America"
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -679,7 +679,7 @@ export default function ScoutProfile() {
                   value={formData.specialization}
                   onChange={(e) => setFormData({ ...formData, specialization: e.target.value })}
                   placeholder="e.g. Positional Play & Overloads, High Press"
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -690,7 +690,7 @@ export default function ScoutProfile() {
                     type="text"
                     value={formData.experience}
                     onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                   />
                 </div>
                 <div>
@@ -699,7 +699,7 @@ export default function ScoutProfile() {
                     type="text"
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                   />
                 </div>
               </div>
@@ -715,7 +715,7 @@ export default function ScoutProfile() {
                   type="text"
                   value={formData.preferredFormation}
                   onChange={(e) => setFormData({ ...formData, preferredFormation: e.target.value })}
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -725,7 +725,7 @@ export default function ScoutProfile() {
                   type="text"
                   value={formData.recruitmentFocus}
                   onChange={(e) => setFormData({ ...formData, recruitmentFocus: e.target.value })}
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -735,7 +735,7 @@ export default function ScoutProfile() {
                   rows={3}
                   value={formData.bio}
                   onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 resize-none"
                 />
               </div>
             </div>
@@ -750,9 +750,9 @@ export default function ScoutProfile() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* Card 1: Scouting Methodology & Tri-Pillar Framework */}
-        <div className="bg-white dark:bg-[#071622] rounded-2xl p-5 border border-slate-200 dark:border-emerald-950/40 shadow-sm space-y-4">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-blue-950/40 shadow-sm space-y-4">
           <div className="flex items-center space-x-2.5">
-            <div className="p-2 rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400">
+            <div className="p-2 rounded-xl bg-cyan-500/15 text-cyan-600 dark:text-cyan-400">
               <Compass className="w-5 h-5" />
             </div>
             <div>
@@ -780,9 +780,9 @@ export default function ScoutProfile() {
         </div>
 
         {/* Card 2: Tactical System & Target Archetypes */}
-        <div className="bg-white dark:bg-[#071622] rounded-2xl p-5 border border-slate-200 dark:border-emerald-950/40 shadow-sm space-y-4">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-blue-950/40 shadow-sm space-y-4">
           <div className="flex items-center space-x-2.5">
-            <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+            <div className="p-2 rounded-xl bg-blue-500/15 text-blue-600 dark:text-blue-400">
               <Activity className="w-5 h-5" />
             </div>
             <div>
@@ -814,7 +814,7 @@ export default function ScoutProfile() {
               <span className="text-[10px] uppercase font-bold text-slate-400 block">Core Athletic Traits Sought</span>
               <div className="flex flex-wrap gap-1.5 mt-2">
                 {['High-Press Stamina', 'Under-Pressure Passing', 'First-Touch Velocity', 'Explosive Acceleration', 'Tactical IQ'].map((trait, i) => (
-                  <span key={i} className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-teal-500/15 text-teal-600 dark:text-teal-400 border border-teal-500/30">
+                  <span key={i} className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30">
                     {trait}
                   </span>
                 ))}
