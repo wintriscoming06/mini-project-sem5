@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -158,6 +159,16 @@ public class ScoutService {
         if(!asc) comp = comp.reversed();
         responses.sort(comp);
 
+        if (request.getPage() != null && request.getSize() != null && request.getSize() > 0) {
+            int page = Math.max(0, request.getPage());
+            int fromIndex = page * request.getSize();
+            if (fromIndex >= responses.size()) {
+                return Collections.emptyList();
+            }
+            int toIndex = Math.min(fromIndex + request.getSize(), responses.size());
+            return responses.subList(fromIndex, toIndex);
+        }
+
         return responses;
     }
 
@@ -227,6 +238,11 @@ public class ScoutService {
 
     public List<ObservationResponse> getObservations(Long playerId) {
         return scoutObservationRepository.findByPlayerId(playerId).stream().map(this::mapToObservationResponse).collect(Collectors.toList());
+    }
+
+    public List<ObservationResponse> getObservationsByEvaluator(String username) {
+        User scout = userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Scout not found"));
+        return scoutObservationRepository.findByEvaluator(scout).stream().map(this::mapToObservationResponse).collect(Collectors.toList());
     }
 
     public ScoutFilterResponse saveFilter(ScoutFilterRequest request, String username) {

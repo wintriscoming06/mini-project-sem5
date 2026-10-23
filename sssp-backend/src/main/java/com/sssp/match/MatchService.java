@@ -52,6 +52,7 @@ public class MatchService {
     private final PlayerMatchStatisticsRepository playerMatchStatisticsRepository;
     private final PlayerProfileRepository playerProfileRepository;
     private final GPIService gpiService;
+    private final com.sssp.application.TournamentApplicationRepository tournamentApplicationRepository;
 
     public MatchResponse createMatch(MatchRequest request, String username) {
         Tournament tournament = tournamentRepository.findById(request.getTournamentId())
@@ -127,6 +128,14 @@ public class MatchService {
         User player = userRepository.findById(request.getPlayerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Player not found"));
 
+        boolean isAccepted = tournamentApplicationRepository
+                .findByPlayerIdAndTournamentId(player.getId(), match.getTournament().getId())
+                .map(app -> app.getStatus() == com.sssp.common.enums.ApplicationStatus.ACCEPTED)
+                .orElse(false);
+        if (!isAccepted) {
+            throw new IllegalArgumentException("Player must have an ACCEPTED application for this tournament to record events");
+        }
+
         MatchEvent event = new MatchEvent();
         event.setMatch(match);
         event.setPlayer(player);
@@ -155,6 +164,15 @@ public class MatchService {
 
         Team team = teamRepository.findById(request.getTeamId())
                 .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
+
+        // Verify player is registered and ACCEPTED in this tournament
+        boolean isAccepted = tournamentApplicationRepository
+                .findByPlayerIdAndTournamentId(player.getId(), match.getTournament().getId())
+                .map(app -> app.getStatus() == com.sssp.common.enums.ApplicationStatus.ACCEPTED)
+                .orElse(false);
+        if (!isAccepted) {
+            throw new IllegalArgumentException("Player must have an ACCEPTED application for this tournament to participate");
+        }
 
         MatchParticipation participation = new MatchParticipation();
         participation.setMatch(match);

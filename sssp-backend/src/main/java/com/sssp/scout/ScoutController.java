@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 @RestController
 @RequestMapping("/api/scouts")
+@PreAuthorize("hasRole('SCOUT') or hasRole('COACH')")
 public class ScoutController {
 
     private final ScoutService scoutService;
@@ -51,6 +54,11 @@ public class ScoutController {
     @GetMapping("/players/{playerId}/observations")
     public List<ObservationResponse> getObservations(@PathVariable Long playerId) {
         return scoutService.getObservations(playerId);
+    }
+
+    @GetMapping("/observations/my")
+    public List<ObservationResponse> getMyObservations(@AuthenticationPrincipal UserDetails userDetails) {
+        return scoutService.getObservationsByEvaluator(userDetails.getUsername());
     }
 
     @PostMapping("/players/{playerId}/notes")

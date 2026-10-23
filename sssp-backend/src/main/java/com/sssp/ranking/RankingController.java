@@ -17,8 +17,11 @@ public class RankingController {
     }
 
     @GetMapping({"", "/"})
-    public List<RankingResponse> getRankingsByContext(@RequestParam(defaultValue = "OVERALL") String context) {
-        return rankingService.getRankingsByContext(context);
+    public List<RankingResponse> getRankingsByContext(
+            @RequestParam(defaultValue = "OVERALL") String context,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
+        return rankingService.getRankingsByContext(context, page, size);
     }
 
     @GetMapping("/contexts")
