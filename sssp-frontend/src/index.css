@@ -435,3 +435,14 @@ html:not(.dark) .living-real-grass {
     scroll-behavior: auto !important;
   }
 }
+
+/* Ensure native select dropdown options render with opaque backgrounds and readable contrast across OS themes */
+select option {
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+html:not(.dark) select option {
+  background-color: #ffffff;
+  color: #0f172a;
+}

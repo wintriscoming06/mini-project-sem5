@@ -59,7 +59,7 @@ export default function RoleSelectDropdown({
   };
 
   return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
+    <div className={`relative ${isOpen ? "z-50" : "z-10"} ${className}`} ref={dropdownRef}>
       <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
         Account Role <span className="text-blue-400">*</span>
       </label>
@@ -104,7 +104,7 @@ export default function RoleSelectDropdown({
       {isOpen && (
         <div
           role="listbox"
-          className="absolute z-50 left-0 right-0 mt-1.5 p-1 rounded-xl bg-slate-900 border border-slate-700 shadow-2xl backdrop-blur-md transition-all duration-200"
+          className="absolute z-[100] left-0 right-0 mt-1.5 p-1 rounded-xl bg-slate-900 border border-slate-700 shadow-2xl transition-all duration-200"
         >
           {ROLE_OPTIONS.map((opt) => {
             const isSelected = opt.value === value;
