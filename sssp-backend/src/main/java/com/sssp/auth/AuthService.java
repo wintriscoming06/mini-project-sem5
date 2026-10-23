@@ -61,6 +61,9 @@ public class AuthService {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new BadRequestException("Username is already taken");
         }
+        if (request.getRole() == UserRole.ADMIN) {
+            throw new BadRequestException("Self-registration as ADMIN is prohibited");
+        }
 
         User user = new User();
         user.setUsername(request.getUsername());

@@ -97,6 +97,7 @@ public class PlayerController {
     }
 
     @PutMapping("/{id}/card")
+    @PreAuthorize("hasRole('PLAYER') and @playerSecurityService.isOwner(#id, principal.username)")
     public ResponseEntity<Map<String, Object>> updatePlayerCard(
             @PathVariable Long id,
             @RequestBody CardCustomizationRequest request) {
@@ -114,6 +115,7 @@ public class PlayerController {
     }
 
     @PutMapping("/{id}/attributes")
+    @PreAuthorize("hasRole('PLAYER') and @playerSecurityService.isOwner(#id, principal.username)")
     public ResponseEntity<Map<String, Object>> updatePlayerAttributes(
             @PathVariable Long id,
             @RequestBody AttributesUpdateRequest request) {
