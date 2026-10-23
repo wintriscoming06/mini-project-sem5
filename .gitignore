@@ -1,12 +1,11 @@
 # ==========================================
-# Node.js / React / Vite
+# Node.js / React
 # ==========================================
 node_modules/
 **/node_modules/
-dist/
-**/dist/
-.vite/
-**/.vite/
+build/
+**/build/
+.npm/
 
 # ==========================================
 # Environment variables and secrets
@@ -32,16 +31,12 @@ pnpm-debug.log*
 # ==========================================
 coverage/
 .nyc_output/
-build/
-**/build/
 
 # ==========================================
-# Java / Maven / Gradle backend
+# Java / Maven backend
 # ==========================================
 target/
 **/target/
-build/
-.gradle/
 *.class
 *.jar
 *.war
