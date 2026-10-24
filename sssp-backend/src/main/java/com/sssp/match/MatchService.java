@@ -225,7 +225,6 @@ public class MatchService {
             stats.setMatchDate(match.getMatchDateTime() != null ? match.getMatchDateTime().toLocalDate() : LocalDate.now());
             PlayerProfile pProfile = playerProfileRepository.findByUserId(p.getPlayer().getId()).orElse(null);
             stats.setPosition(pProfile != null && pProfile.getPrimaryPosition() != null ? pProfile.getPrimaryPosition() : "CM");
-            stats.setMatchKind("OFFICIAL");
             stats.setStars(3);
             stats.setMinutesPlayed(p.getMinutesPlayed() != null ? p.getMinutesPlayed() : 0);
 
@@ -297,8 +296,7 @@ public class MatchService {
         stat.setOpponent(request.getOpponent());
         stat.setCompetition(request.getCompetition());
         stat.setPosition(position);
-        stat.setMatchKind(request.getMatchKind() != null ? request.getMatchKind().toUpperCase() : "OFFICIAL");
-        stat.setStars("OFFICIAL".equalsIgnoreCase(stat.getMatchKind()) ? (request.getStars() != null ? request.getStars() : 3) : null);
+        stat.setStars(request.getStars() != null ? request.getStars() : 3);
         stat.setMinutesPlayed(request.getMinutesPlayed() != null ? request.getMinutesPlayed() : 0);
         stat.setGoals(request.getGoals());
         stat.setAssists(request.getAssists());

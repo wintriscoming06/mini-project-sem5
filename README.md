@@ -85,7 +85,7 @@ mini-project-sem5/
 ## Setup & Running the Platform
 
 ### Prerequisites
-- Java 17 (Eclipse Adoptium / OpenJDK 17)
+- Java 25 LTS (Eclipse Adoptium / OpenJDK 25)
 - Maven 3.8+
 - Node.js 18+ and npm
 - PostgreSQL 14+ running locally on port 5432
@@ -104,8 +104,8 @@ cp .env.example .env
 ### 2. Backend Setup
 ```bash
 cd sssp-backend
-JAVA_HOME=/path/to/jdk-17 mvn clean compile
-JAVA_HOME=/path/to/jdk-17 mvn spring-boot:run
+JAVA_HOME=/path/to/jdk-25 mvn clean compile
+JAVA_HOME=/path/to/jdk-25 mvn spring-boot:run
 ```
 The backend API server will start on `http://localhost:8080`.
 
