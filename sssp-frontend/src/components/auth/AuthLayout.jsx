@@ -457,6 +457,7 @@ export default function AuthLayout({
             </div>
           )}
 
+<<<<<<< HEAD
           {activeRole === 'COACH' && (
             <div className="w-full max-w-[480px] mt-3 flex items-center justify-between bg-emerald-950/95 border border-emerald-400/40 rounded-2xl p-2.5 px-4 shadow-xl backdrop-blur-md">
               <div className="flex items-center space-x-2">
@@ -480,6 +481,17 @@ export default function AuthLayout({
                 </span>
               </div>
               <span className="text-[10px] font-mono font-bold text-cyan-300 bg-cyan-500/20 px-2 py-0.5 rounded border border-cyan-500/40">
+=======
+          {activeRole === 'SCOUT' && (
+            <div className="w-full max-w-[480px] mt-3 flex items-center justify-between bg-blue-950/95 border border-blue-400/40 rounded-2xl p-2.5 px-4 shadow-xl backdrop-blur-md">
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                <span className="text-xs font-black uppercase tracking-wider text-blue-300">
+                  Tactical Command • Verified Dossiers
+                </span>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-blue-300 bg-blue-500/20 px-2 py-0.5 rounded border border-blue-500/40">
+>>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
                 4-PILLAR RATING
               </span>
             </div>

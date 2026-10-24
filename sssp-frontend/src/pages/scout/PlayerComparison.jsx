@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, CheckCircle2, AlertCircle, X, Trophy, GitCompare, Star } from 'lucide-react';
+import { ArrowLeft, Plus, X, GitCompare } from 'lucide-react';
 import { playerService, scoutService } from '../../services/api';
-import { LoadingSpinner, Alert, Card, Button, StatusBadge, EmptyState, FootballIcon, ScoutTargetIcon, PitchHero, ClassicSoccerBall } from '../../components/common';
+import { LoadingSpinner, Alert, Button, StatusBadge, FootballIcon, PitchHero } from '../../components/common';
 import SVGRadarChart from '../../components/auth/SVGRadarChart';
 
 export default function PlayerComparison() {

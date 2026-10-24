@@ -25,4 +25,6 @@ public class PlayerSearchRequest {
     private String sortBy = "gpi";
     @Builder.Default
     private String sortDir = "desc";
+    private Integer page;
+    private Integer size;
 }

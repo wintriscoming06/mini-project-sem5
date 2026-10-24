@@ -1,6 +1,5 @@
 import React from 'react';
-import { Trophy, Star } from 'lucide-react';
-import { getClubTheme, ClubCrest, PlayerSilhouette } from '../../utils/clubTheme';
+import { getClubTheme, ClubCrest } from '../../utils/clubTheme';
 
 export const PlayerCard = ({ player, onClick }) => {
   const theme = getClubTheme(player?.team || player?.teamAcademy);

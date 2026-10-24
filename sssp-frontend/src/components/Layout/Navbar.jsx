@@ -69,8 +69,11 @@ const Navbar = () => {
     switch (role) {
       case 'PLAYER':
         return 'bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30';
+<<<<<<< HEAD
       case 'COACH':
         return 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30';
+=======
+>>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
       case 'SCOUT':
         return 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border-cyan-500/30';
       case 'ORGANIZER':

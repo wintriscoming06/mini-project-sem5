@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080/api',
 });
 
 api.interceptors.request.use((config) => {
@@ -108,6 +108,7 @@ export const scoutService = {
   deleteFilter: (id) => api.delete(`/scouts/filters/${id}`),
   submitObservation: (playerId, data) => api.post(`/scouts/players/${playerId}/observations`, data),
   getObservations: (playerId) => api.get(`/scouts/players/${playerId}/observations`),
+  getMyObservations: () => api.get("/scouts/observations/my"),
   addNote: (playerId, data) => api.post(`/scouts/players/${playerId}/notes`, data),
   getNotes: (playerId) => api.get(`/scouts/players/${playerId}/notes`)
 };

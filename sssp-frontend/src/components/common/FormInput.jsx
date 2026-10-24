@@ -38,9 +38,13 @@ const FormInput = ({
           disabled={disabled}
           className={`${baseClasses} px-3 py-2`}
         >
-          <option value="">Select...</option>
+          <option value="" className="bg-white dark:bg-slate-900 text-slate-500">Select...</option>
           {options.map((opt) => (
+<<<<<<< HEAD
             <option key={opt.value} value={opt.value} className="dark:bg-slate-900">
+=======
+            <option key={opt.value} value={opt.value} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+>>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
               {opt.label}
             </option>
           ))}

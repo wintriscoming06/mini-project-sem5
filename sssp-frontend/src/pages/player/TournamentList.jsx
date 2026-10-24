@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, MapPin, Calendar, Users, Filter, CheckCircle, Trophy, Shield } from 'lucide-react';
+import { Search, MapPin, Calendar, Users, Filter, CheckCircle, Trophy } from 'lucide-react';
 import { tournamentService } from '../../services/api';
 import { 
   LoadingSpinner, Alert, Card, Button, StatusBadge, EmptyState, 

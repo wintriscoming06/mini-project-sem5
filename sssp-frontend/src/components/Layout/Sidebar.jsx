@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { LayoutDashboard, Users, Shield, Search, Bell } from 'lucide-react';
+import { LayoutDashboard, Users, Shield, Bell } from 'lucide-react';
 import { TrophyIcon, StadiumIcon, WhistleIcon, FootballIcon, ScoutTargetIcon } from '../common/FootballIcons';
 
 const Sidebar = () => {

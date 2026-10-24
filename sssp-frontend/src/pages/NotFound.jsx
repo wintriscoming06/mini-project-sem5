@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home } from 'lucide-react';
-import { WhistleIcon, FootballIcon } from '../components/common/FootballIcons';
+import { WhistleIcon } from '../components/common/FootballIcons';
 import Button from '../components/common/Button';
 
 const NotFound = () => {

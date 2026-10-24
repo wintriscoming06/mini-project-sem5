@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -102,8 +103,22 @@ public class RankingService {
     }
 
     public List<RankingResponse> getRankingsByContext(String context) {
-        return rankingRecordRepository.findByContextOrderByRankValueAsc(context)
+        return getRankingsByContext(context, null, null);
+    }
+
+    public List<RankingResponse> getRankingsByContext(String context, Integer page, Integer size) {
+        List<RankingResponse> list = rankingRecordRepository.findByContextOrderByRankValueAsc(context)
                 .stream().map(this::mapToRankingResponse).collect(Collectors.toList());
+        if (page != null && size != null && size > 0) {
+            int p = Math.max(0, page);
+            int fromIndex = p * size;
+            if (fromIndex >= list.size()) {
+                return Collections.emptyList();
+            }
+            int toIndex = Math.min(fromIndex + size, list.size());
+            return list.subList(fromIndex, toIndex);
+        }
+        return list;
     }
 
     public List<String> getAvailableContexts() {

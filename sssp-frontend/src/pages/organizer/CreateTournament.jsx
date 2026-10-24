@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { tournamentService } from '../../services/api';
-import { Card, Button, FormInput, Alert, TrophyIcon } from '../../components/common';
-import { Save, ArrowLeft, Trophy, Calendar, MapPin } from 'lucide-react';
+import { Card, Button, FormInput, Alert } from '../../components/common';
+import { Save, ArrowLeft, Trophy, Calendar } from 'lucide-react';
 import PitchHero from '../../components/common/PitchHero';
-import { ClassicSoccerBall, GrassBladesTrim, CornerFlag } from '../../components/common/FootballIcons';
 
 const CreateTournament = () => {
   const navigate = useNavigate();

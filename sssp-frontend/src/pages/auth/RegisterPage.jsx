@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Trophy, Mail, Lock, User, UserPlus, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, User, UserPlus, Eye, EyeOff } from 'lucide-react';
 import { authService, getErrorMessage } from '../../services/api';
-import { Alert, ClassicSoccerBall, GrassBladesTrim } from '../../components/common';
+import { Alert, ClassicSoccerBall } from '../../components/common';
 import AuthLayout from '../../components/auth/AuthLayout';
 import RoleSelectDropdown from '../../components/auth/RoleSelectDropdown';
 

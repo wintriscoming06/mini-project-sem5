@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { getErrorMessage } from '../../services/api';
-import { Alert, ClassicSoccerBall, GrassBladesTrim } from '../../components/common';
+import { Alert, ClassicSoccerBall } from '../../components/common';
 import AuthLayout from '../../components/auth/AuthLayout';
 
 const ROLE_THEMES = {
@@ -12,7 +12,11 @@ const ROLE_THEMES = {
     icon: '⚽',
     tunnelLabel: 'ATHLETE PERFORMANCE DOSSIER',
     subheading: 'Access verified match statistics, rankings & scouting cards',
+<<<<<<< HEAD
     actionText: 'Sign In / Player Portal',
+=======
+    actionText: 'Sign In / Access Dossier',
+>>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
     loadingText: 'Authenticating Athlete...',
     cardBorder: 'border-blue-500/30',
     cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
@@ -23,6 +27,7 @@ const ROLE_THEMES = {
     roleTag: 'bg-blue-800/40 text-blue-200 border-blue-500/30',
     inputRing: 'focus:ring-blue-500 focus:border-blue-500',
     focusGlow: 'shadow-blue-500/10',
+<<<<<<< HEAD
   },
   COACH: {
     name: 'Coach',
@@ -40,10 +45,13 @@ const ROLE_THEMES = {
     roleTag: 'bg-emerald-800/40 text-emerald-200 border-emerald-500/30',
     inputRing: 'focus:ring-emerald-500 focus:border-emerald-500',
     focusGlow: 'shadow-emerald-500/10',
+=======
+>>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
   },
   SCOUT: {
     name: 'Scout',
     icon: '🔎',
+<<<<<<< HEAD
     tunnelLabel: 'TALENT RADAR & PROSPECT DOSSIER',
     subheading: 'Access quantitative talent analytics, radar & prospect rankings',
     actionText: 'Sign In / Scout Portal',
@@ -52,6 +60,16 @@ const ROLE_THEMES = {
     cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
     topTrim: 'bg-gradient-to-r from-cyan-500 via-sky-400 to-blue-500',
     buttonGrad: 'bg-cyan-600 hover:from-cyan-500 hover:to-sky-500 shadow-cyan-500/30 text-white font-bold',
+=======
+    tunnelLabel: 'TACTICAL RECRUITMENT DOSSIER',
+    subheading: 'Access quantitative talent analytics, scout notes & prospect rankings',
+    actionText: 'Sign In / Scout Portal',
+    loadingText: 'Consulting Tactical Board...',
+    cardBorder: 'border-cyan-500/30',
+    cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
+    topTrim: 'bg-blue-600',
+    buttonGrad: 'bg-blue-600 hover:from-cyan-500 hover:to-sky-500 shadow-cyan-500/30 text-white',
+>>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
     accentColor: 'text-cyan-400',
     badgeBg: 'bg-cyan-900/60 border-cyan-400/40 text-cyan-300',
     roleTag: 'bg-cyan-800/40 text-cyan-200 border-cyan-500/30',
@@ -123,8 +141,13 @@ const LoginPage = () => {
         {/* Top Trim Highlight */}
         <div className={`h-2.5 ${currentTheme.topTrim} rounded-t-3xl -mx-6 -mt-6 sm:-mx-8 sm:-mt-8 mb-4 transition-all duration-500`} />
         
+<<<<<<< HEAD
         {/* Tactical Grid watermark for Coach / Scout */}
         {(activeRole === 'SCOUT' || activeRole === 'COACH') && (
+=======
+        {/* Tactical Grid watermark for Scout */}
+        {activeRole === 'SCOUT' && (
+>>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
           <div className="absolute inset-0 tactical-grid opacity-20 pointer-events-none" />
         )}
 

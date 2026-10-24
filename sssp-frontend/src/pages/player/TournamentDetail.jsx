@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Calendar, Users, Trophy, ChevronLeft, Clock, Shield, CheckCircle } from 'lucide-react';
 import { tournamentService } from '../../services/api';
 import { LoadingSpinner, Alert, Card, Button, StatusBadge, TrophyIcon } from '../../components/common';
-import { ClassicSoccerBall, PitchMarkings, GrassBladesTrim } from '../../components/common/FootballIcons';
+import { PitchMarkings } from '../../components/common/FootballIcons';
 
 const TournamentDetail = () => {
   const { id } = useParams();
