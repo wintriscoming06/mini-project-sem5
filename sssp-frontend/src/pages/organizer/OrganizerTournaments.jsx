@@ -21,7 +21,8 @@ const OrganizerTournaments = () => {
   const fetchTournaments = async () => {
     try {
       setLoading(true);
-      const response = await tournamentService.getAll();
+      // Fetch tournaments belonging to the logged-in organizer if available, otherwise fallback to all
+      const response = await tournamentService.getMyTournaments().catch(() => tournamentService.getAll());
       setTournaments(response.data || []);
       setError(null);
     } catch (err) {

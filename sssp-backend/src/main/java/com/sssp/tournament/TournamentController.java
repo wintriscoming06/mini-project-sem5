@@ -36,6 +36,13 @@ public class TournamentController {
         return ResponseEntity.ok(tournamentService.getAllTournaments());
     }
 
+    @GetMapping("/tournaments/my")
+    @PreAuthorize("hasRole('ORGANIZER')")
+    public ResponseEntity<List<TournamentResponse>> getMyTournaments(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(tournamentService.getOrganizerTournaments(userDetails.getUsername()));
+    }
+
     @GetMapping("/tournaments/{id}")
     public ResponseEntity<TournamentResponse> getTournament(@PathVariable Long id) {
         return ResponseEntity.ok(tournamentService.getTournament(id));

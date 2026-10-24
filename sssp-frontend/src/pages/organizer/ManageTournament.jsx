@@ -27,12 +27,24 @@ const ManageTournament = () => {
   
   // Modals state
   const [showStatusModal, setShowStatusModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showTeamModal, setShowTeamModal] = useState(false);
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [showAddMemberModal, setShowAddMemberModal] = useState(false);
   
   // Form states
   const [newStatus, setNewStatus] = useState('');
+  const [editFormData, setEditFormData] = useState({
+    name: '',
+    ageGroup: '',
+    genderCategory: '',
+    location: '',
+    venue: '',
+    startDate: '',
+    endDate: '',
+    format: '',
+    registrationDeadline: ''
+  });
   const [teamName, setTeamName] = useState('');
   const [matchData, setMatchData] = useState({ homeTeamId: '', awayTeamId: '', date: '', venue: '' });
   const [selectedTeamId, setSelectedTeamId] = useState('');
@@ -103,7 +115,34 @@ const ManageTournament = () => {
       setShowStatusModal(false);
       fetchTournamentData();
     } catch (err) {
-      setError("Failed to update status.");
+      setError(err?.response?.data?.message || "Failed to update status.");
+    }
+  };
+
+  const openEditModal = () => {
+    if (!tournament) return;
+    setEditFormData({
+      name: tournament.name || '',
+      ageGroup: tournament.ageGroup || 'Open',
+      genderCategory: tournament.genderCategory || 'Mixed',
+      location: tournament.location || '',
+      venue: tournament.venue || '',
+      startDate: tournament.startDate || '',
+      endDate: tournament.endDate || '',
+      format: tournament.format || 'League',
+      registrationDeadline: tournament.registrationDeadline || ''
+    });
+    setShowEditModal(true);
+  };
+
+  const handleUpdateTournament = async (e) => {
+    e.preventDefault();
+    try {
+      await tournamentService.update(id, editFormData);
+      setShowEditModal(false);
+      fetchTournamentData();
+    } catch (err) {
+      setError(err?.response?.data?.message || "Failed to update tournament specifications.");
     }
   };
 
@@ -187,6 +226,13 @@ const ManageTournament = () => {
               icon={<ArrowLeft className="w-4 h-4 mr-1" />}
             >
               Tournaments
+            </Button>
+            <Button 
+              variant="secondary" 
+              className="bg-blue-900/60 text-white border-blue-400/50 hover:bg-blue-800/80"
+              onClick={openEditModal}
+            >
+              Edit Details
             </Button>
             {availableStatuses.length > 0 && (
               <Button 
@@ -333,47 +379,52 @@ const ManageTournament = () => {
                         </td>
                       </tr>
                     ) : (
-                      applications.map(app => (
-                        <tr key={app.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
-                          <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-8 h-8 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs">
-                                {app.player?.name?.[0] || 'P'}
+                      applications.map(app => {
+                        const displayName = app.playerName || app.player?.name || app.player?.username || 'Tournament Player';
+                        const displayInitial = (displayName[0] || 'P').toUpperCase();
+                        const displayDate = app.appliedAt || app.createdAt;
+                        return (
+                          <tr key={app.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
+                            <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">
+                              <div className="flex items-center space-x-3">
+                                <div className="w-8 h-8 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs">
+                                  {displayInitial}
+                                </div>
+                                <div>
+                                  <div>{displayName}</div>
+                                  <div className="text-xs font-normal text-slate-400">{app.player?.email || `@${app.playerName || displayName.toLowerCase()}`}</div>
+                                </div>
                               </div>
-                              <div>
-                                <div>{app.player?.name || 'Unknown User'}</div>
-                                <div className="text-xs font-normal text-slate-400">{app.player?.email || ''}</div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 text-xs">{new Date(app.createdAt).toLocaleDateString()}</td>
-                          <td className="px-6 py-4"><StatusBadge status={app.status} size="sm" /></td>
-                          <td className="px-6 py-4 text-right">
-                            {app.status === 'PENDING' ? (
-                              <div className="flex justify-end gap-2">
-                                <Button 
-                                  size="sm" 
-                                  variant="outline" 
-                                  className="text-blue-600 border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40"
-                                  onClick={() => handleApplicationDecision(app.id, 'ACCEPTED')}
-                                >
-                                  <Check size={14} className="mr-1" /> Accept
-                                </Button>
-                                <Button 
-                                  size="sm" 
-                                  variant="outline" 
-                                  className="text-rose-600 border-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40"
-                                  onClick={() => handleApplicationDecision(app.id, 'REJECTED')}
-                                >
-                                  <X size={14} className="mr-1" /> Reject
-                                </Button>
-                              </div>
-                            ) : (
-                              <span className="text-xs text-slate-400 italic">Decision Recorded</span>
-                            )}
-                          </td>
-                        </tr>
-                      ))
+                            </td>
+                            <td className="px-6 py-4 text-xs">{displayDate ? new Date(displayDate).toLocaleDateString() : 'Recent'}</td>
+                            <td className="px-6 py-4"><StatusBadge status={app.status} size="sm" /></td>
+                            <td className="px-6 py-4 text-right">
+                              {app.status === 'PENDING' ? (
+                                <div className="flex justify-end gap-2">
+                                  <Button 
+                                    size="sm" 
+                                    variant="outline" 
+                                    className="text-blue-600 border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40"
+                                    onClick={() => handleApplicationDecision(app.id, 'ACCEPTED')}
+                                  >
+                                    <Check size={14} className="mr-1" /> Accept
+                                  </Button>
+                                  <Button 
+                                    size="sm" 
+                                    variant="outline" 
+                                    className="text-rose-600 border-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40"
+                                    onClick={() => handleApplicationDecision(app.id, 'REJECTED')}
+                                  >
+                                    <X size={14} className="mr-1" /> Reject
+                                  </Button>
+                                </div>
+                              ) : (
+                                <span className="text-xs text-slate-400 italic">Decision Recorded</span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })
                     )}
                   </tbody>
                 </table>
@@ -416,8 +467,8 @@ const ManageTournament = () => {
                       {team.members?.length > 0 ? (
                         team.members.map(member => (
                           <li key={member.id} className="flex justify-between items-center p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                            <span className="font-medium text-slate-800 dark:text-slate-200">{member.name}</span>
-                            <span className="text-xs text-slate-400">{member.primaryPosition || 'Player'}</span>
+                            <span className="font-medium text-slate-800 dark:text-slate-200">{member.name || member.playerName || 'Player'}</span>
+                            <span className="text-xs text-slate-400">{member.primaryPosition || 'Squad Member'}</span>
                           </li>
                         ))
                       ) : (
@@ -466,14 +517,16 @@ const ManageTournament = () => {
                       matches.map(match => (
                         <tr key={match.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
                           <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">
-                            <span className="text-blue-600 dark:text-blue-400">{match.homeTeam?.name || 'TBD'}</span>
+                            <span className="text-blue-600 dark:text-blue-400">{match.homeTeamName || match.homeTeam?.name || 'TBD'}</span>
                             <span className="mx-2 text-slate-400">vs</span>
-                            <span className="text-blue-600 dark:text-blue-400">{match.awayTeam?.name || 'TBD'}</span>
+                            <span className="text-blue-600 dark:text-blue-400">{match.awayTeamName || match.awayTeam?.name || 'TBD'}</span>
                           </td>
-                          <td className="px-6 py-4 text-xs text-slate-500 dark:text-slate-400">{new Date(match.date).toLocaleString()}</td>
+                          <td className="px-6 py-4 text-xs text-slate-500 dark:text-slate-400">
+                            {match.matchDateTime ? new Date(match.matchDateTime).toLocaleString() : match.date ? new Date(match.date).toLocaleString() : 'TBD'}
+                          </td>
                           <td className="px-6 py-4"><StatusBadge status={match.status} size="sm" /></td>
                           <td className="px-6 py-4 font-black text-slate-900 dark:text-white">
-                            {match.status === 'COMPLETED' ? `${match.homeScore} - ${match.awayScore}` : '-'}
+                            {match.status === 'COMPLETED' ? `${match.homeScore ?? 0} - ${match.awayScore ?? 0}` : '-'}
                           </td>
                           <td className="px-6 py-4 text-right">
                             <Link to={`/organizer/matches/${match.id}/scoring`}>
@@ -494,6 +547,103 @@ const ManageTournament = () => {
       </div>
 
       {/* MODALS */}
+      {/* Edit Tournament Details Modal */}
+      <Modal isOpen={showEditModal} onClose={() => setShowEditModal(false)} title="Edit Competition Specifications">
+        <form onSubmit={handleUpdateTournament} className="space-y-4 py-2">
+          <FormInput
+            label="Competition / Tournament Name"
+            name="name"
+            value={editFormData.name}
+            onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+            required
+          />
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1">Age Division</label>
+              <select
+                className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
+                value={editFormData.ageGroup}
+                onChange={(e) => setEditFormData({ ...editFormData, ageGroup: e.target.value })}
+              >
+                <option value="U16">Under-16 (U16)</option>
+                <option value="U18">Under-18 (U18)</option>
+                <option value="U21">Under-21 (U21)</option>
+                <option value="Open">Open Senior</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1">Gender Division</label>
+              <select
+                className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
+                value={editFormData.genderCategory}
+                onChange={(e) => setEditFormData({ ...editFormData, genderCategory: e.target.value })}
+              >
+                <option value="Male">Men's / Boys</option>
+                <option value="Female">Women's / Girls</option>
+                <option value="Mixed">Mixed / All</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <FormInput
+              label="Host City / Region"
+              name="location"
+              value={editFormData.location}
+              onChange={(e) => setEditFormData({ ...editFormData, location: e.target.value })}
+            />
+            <FormInput
+              label="Stadium / Pitch Venue"
+              name="venue"
+              value={editFormData.venue}
+              onChange={(e) => setEditFormData({ ...editFormData, venue: e.target.value })}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <FormInput
+              label="Kickoff Date"
+              type="date"
+              name="startDate"
+              value={editFormData.startDate}
+              onChange={(e) => setEditFormData({ ...editFormData, startDate: e.target.value })}
+              required
+            />
+            <FormInput
+              label="Conclusion Date"
+              type="date"
+              name="endDate"
+              value={editFormData.endDate}
+              onChange={(e) => setEditFormData({ ...editFormData, endDate: e.target.value })}
+              required
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1">Competition Format</label>
+              <select
+                className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
+                value={editFormData.format}
+                onChange={(e) => setEditFormData({ ...editFormData, format: e.target.value })}
+              >
+                <option value="League">Round-Robin League</option>
+                <option value="Knockout">Single Elimination Knockout</option>
+                <option value="Group + Knockout">Group Stage + Knockout</option>
+              </select>
+            </div>
+            <FormInput
+              label="Registration Deadline"
+              type="date"
+              name="registrationDeadline"
+              value={editFormData.registrationDeadline}
+              onChange={(e) => setEditFormData({ ...editFormData, registrationDeadline: e.target.value })}
+            />
+          </div>
+          <div className="flex justify-end gap-2 mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+            <Button type="button" variant="outline" onClick={() => setShowEditModal(false)}>Cancel</Button>
+            <Button type="submit">Save Changes</Button>
+          </div>
+        </form>
+      </Modal>
+
       {/* Advance Status Modal */}
       <Modal isOpen={showStatusModal} onClose={() => setShowStatusModal(false)} title="Advance Tournament Lifecycle">
         <div className="space-y-4 py-2">
@@ -597,9 +747,13 @@ const ManageTournament = () => {
             required
           >
             <option value="">Select Player</option>
-            {applications.filter(a => a.status === 'ACCEPTED').map(a => (
-              <option key={a.id} value={a.player?.id}>{a.player?.name || a.player?.username}</option>
-            ))}
+            {applications.filter(a => a.status === 'ACCEPTED').map(a => {
+              const pId = a.playerId || a.player?.id;
+              const pName = a.playerName || a.player?.name || a.player?.username || `Player #${pId}`;
+              return (
+                <option key={a.id} value={pId}>{pName}</option>
+              );
+            })}
           </select>
           <div className="flex justify-end gap-2 mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
             <Button type="button" variant="outline" onClick={() => setShowAddMemberModal(false)}>Cancel</Button>

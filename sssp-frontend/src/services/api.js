@@ -68,6 +68,7 @@ export const playerService = {
 
 export const tournamentService = {
   getAll: () => api.get('/tournaments'),
+  getMyTournaments: () => api.get('/tournaments/my'),
   getById: (id) => api.get(`/tournaments/${id}`),
   create: (data) => api.post('/tournaments', data),
   update: (id, data) => api.put(`/tournaments/${id}`, data),
@@ -77,8 +78,8 @@ export const tournamentService = {
   getMyApplications: () => api.get('/tournaments/my-applications'),
   decideApplication: (appId, decision) => api.patch(`/applications/${appId}`, { decision }),
   getTeams: (tournamentId) => api.get(`/tournaments/${tournamentId}/teams`),
-  createTeam: (data) => api.post('/teams', data),
-  addTeamMember: (teamId, data) => api.post(`/teams/${teamId}/members`, data),
+  createTeam: (tournamentId, data) => api.post('/teams', { ...data, tournamentId }),
+  addTeamMember: (tournamentId, teamId, playerId) => api.post(`/teams/${teamId}/members`, { playerId }),
   removeTeamMember: (teamId, playerId) => api.delete(`/teams/${teamId}/members/${playerId}`)
 };
 

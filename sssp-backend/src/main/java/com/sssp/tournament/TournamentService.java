@@ -52,10 +52,14 @@ public class TournamentService {
         
         Tournament tournament = new Tournament();
         tournament.setName(request.getName());
-        
+        tournament.setAgeGroup(request.getAgeGroup());
+        tournament.setGenderCategory(request.getGenderCategory());
+        tournament.setLocation(request.getLocation());
+        tournament.setVenue(request.getVenue());
         tournament.setStartDate(request.getStartDate());
         tournament.setEndDate(request.getEndDate());
-        tournament.setLocation(request.getLocation());
+        tournament.setFormat(request.getFormat());
+        tournament.setRegistrationDeadline(request.getRegistrationDeadline());
         tournament.setOrganizer(organizer);
         tournament.setStatus(TournamentStatus.DRAFT);
         
@@ -89,10 +93,14 @@ public class TournamentService {
         }
         
         if (request.getName() != null) tournament.setName(request.getName());
-        if (null != null) 
+        if (request.getAgeGroup() != null) tournament.setAgeGroup(request.getAgeGroup());
+        if (request.getGenderCategory() != null) tournament.setGenderCategory(request.getGenderCategory());
+        if (request.getLocation() != null) tournament.setLocation(request.getLocation());
+        if (request.getVenue() != null) tournament.setVenue(request.getVenue());
         if (request.getStartDate() != null) tournament.setStartDate(request.getStartDate());
         if (request.getEndDate() != null) tournament.setEndDate(request.getEndDate());
-        if (request.getLocation() != null) tournament.setLocation(request.getLocation());
+        if (request.getFormat() != null) tournament.setFormat(request.getFormat());
+        if (request.getRegistrationDeadline() != null) tournament.setRegistrationDeadline(request.getRegistrationDeadline());
         
         return mapToTournamentResponse(tournamentRepository.save(tournament));
     }
@@ -254,24 +262,38 @@ public class TournamentService {
         return TournamentResponse.builder()
                 .id(t.getId())
                 .name(t.getName())
+                .ageGroup(t.getAgeGroup())
+                .genderCategory(t.getGenderCategory())
+                .location(t.getLocation())
+                .venue(t.getVenue())
                 .startDate(t.getStartDate())
                 .endDate(t.getEndDate())
-                .location(t.getLocation())
+                .format(t.getFormat())
+                .registrationDeadline(t.getRegistrationDeadline())
                 .organizerId(t.getOrganizer().getId())
                 .organizerName(t.getOrganizer().getUsername())
                 .status(t.getStatus())
+                .createdAt(t.getCreatedAt())
                 .build();
     }
 
     private ApplicationResponse mapToApplicationResponse(TournamentApplication a) {
+        Map<String, Object> playerMap = new java.util.HashMap<>();
+        playerMap.put("id", a.getPlayer().getId());
+        playerMap.put("username", a.getPlayer().getUsername());
+        playerMap.put("name", a.getPlayer().getUsername());
+        playerMap.put("email", a.getPlayer().getEmail());
+
         return ApplicationResponse.builder()
                 .id(a.getId())
                 .playerId(a.getPlayer().getId())
                 .playerName(a.getPlayer().getUsername())
+                .player(playerMap)
                 .tournamentId(a.getTournament().getId())
                 .tournamentName(a.getTournament().getName())
                 .status(a.getStatus())
                 .appliedAt(a.getAppliedAt())
+                .createdAt(a.getAppliedAt() != null ? a.getAppliedAt() : a.getCreatedAt())
                 .decisionAt(a.getDecisionAt())
                 .decidedByName(a.getDecidedBy() != null ? a.getDecidedBy().getUsername() : null)
                 .build();
@@ -297,6 +319,7 @@ public class TournamentService {
                 .teamId(m.getTeam().getId())
                 .playerId(m.getPlayer().getId())
                 .playerName(m.getPlayer().getUsername())
+                .name(m.getPlayer().getUsername())
                 .joinedAt(m.getJoinedAt())
                 .build();
     }
