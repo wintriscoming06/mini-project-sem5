@@ -11,7 +11,8 @@ import SVGRadarChart from '../../components/auth/SVGRadarChart';
 import { useAuth } from '../../context/AuthContext';
 import { 
   getClubTheme, ClubCrest, ClubWatermark, PlayerSilhouette, 
-  getStoredClubBadge, getStoredPlayerPhysicals, calculateAge 
+  getStoredClubBadge, getStoredPlayerPhysicals, calculateAge,
+  getStoredScoutDossier
 } from '../../utils/clubTheme';
 
 
@@ -123,12 +124,37 @@ export default function PlayerView() {
     setContactSuccess(null);
     try {
       const res = await scoutService.getProfile();
-      setScoutProfileInfo(res.data);
-      if (!res.data?.phoneNumber || !res.data.phoneNumber.trim()) {
+      let phone = res.data?.phoneNumber;
+
+      // If backend profile phoneNumber isn't set yet, check local scout dossier fallback
+      if (!phone || !phone.trim()) {
+        const scoutKey = user?.id || user?.userId || user?.username || 'current_scout';
+        const localDossier = getStoredScoutDossier(scoutKey);
+        if (localDossier?.phoneNumber && localDossier.phoneNumber.trim()) {
+          phone = localDossier.phoneNumber.trim();
+          // Auto-sync local phone to backend
+          scoutService.updateProfile({
+            organization: localDossier.organization,
+            phoneNumber: phone
+          }).catch(() => {});
+        }
+      }
+
+      const mergedProfile = { ...res.data, phoneNumber: phone };
+      setScoutProfileInfo(mergedProfile);
+
+      if (!phone || !phone.trim()) {
         setContactError("You must save a valid mobile contact number in your Scout Dossier before you can send a contact request.");
       }
     } catch (e) {
-      setContactError("Failed to verify scout profile contact details.");
+      // Fallback check to local storage if API is slow or offline
+      const scoutKey = user?.id || user?.userId || user?.username || 'current_scout';
+      const localDossier = getStoredScoutDossier(scoutKey);
+      if (localDossier?.phoneNumber) {
+        setScoutProfileInfo({ phoneNumber: localDossier.phoneNumber, organization: localDossier.organization });
+      } else {
+        setContactError("You must save a valid mobile contact number in your Scout Dossier before you can send a contact request.");
+      }
     }
     setIsContactModalOpen(true);
   };
@@ -141,6 +167,14 @@ export default function PlayerView() {
     setSendingContact(true);
     setContactError(null);
     try {
+      // Ensure scout mobile is saved on backend before sending if needed
+      if (scoutProfileInfo?.phoneNumber) {
+        await scoutService.updateProfile({
+          organization: scoutProfileInfo.organization,
+          phoneNumber: scoutProfileInfo.phoneNumber
+        }).catch(() => {});
+      }
+
       const targetPlayerUserId = p.userId || p.id || id;
       await scoutService.sendContactRequest(targetPlayerUserId, { message: contactMessage.trim() });
       setContactSuccess("Scouting contact request sent successfully! The player can now view your inquiry and mobile number.");
