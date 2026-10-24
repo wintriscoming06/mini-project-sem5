@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, Filter, Save, Users, Star, ArrowUpDown, MapPin, CheckCircle, Award, GitCompare, X } from 'lucide-react';
+import { Search, Filter, Save, Star, ArrowUpDown, MapPin, CheckCircle, GitCompare } from 'lucide-react';
 import { scoutService } from '../../services/api';
-import { LoadingSpinner, Alert, Modal, Button, StatusBadge, EmptyState, ScoutTargetIcon, FootballIcon, PitchHero, ClassicSoccerBall, PitchMarkings } from '../../components/common';
+import { LoadingSpinner, Alert, Modal, Button, EmptyState, PitchHero, PitchMarkings } from '../../components/common';
 import { 
   getClubTheme, ClubCrest, ClubWatermark, PlayerSilhouette, 
   getStoredClubBadge, calculateAge 

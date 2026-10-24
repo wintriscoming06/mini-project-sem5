@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { getErrorMessage } from '../../services/api';
-import { Alert, ClassicSoccerBall, GrassBladesTrim } from '../../components/common';
+import { Alert, ClassicSoccerBall } from '../../components/common';
 import AuthLayout from '../../components/auth/AuthLayout';
 
 const ROLE_THEMES = {

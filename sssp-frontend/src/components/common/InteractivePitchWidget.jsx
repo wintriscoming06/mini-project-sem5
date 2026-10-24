@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 /**
   * InteractivePitchWidget disabled as part of football platform polish pass.

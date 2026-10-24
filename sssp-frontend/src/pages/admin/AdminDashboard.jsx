@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, AlertTriangle, FileText, Settings, Activity, ChevronRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { Users, AlertTriangle, FileText, Settings, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { adminService } from '../../services/api';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import Alert from '../../components/common/Alert';
 import Card from '../../components/common/Card';
-import { FootballIcon, WhistleIcon, StadiumIcon, ClassicSoccerBall } from '../../components/common/FootballIcons';
+import { FootballIcon } from '../../components/common/FootballIcons';
 import PitchHero from '../../components/common/PitchHero';
 
 export default function AdminDashboard() {

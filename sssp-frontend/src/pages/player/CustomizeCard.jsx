@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Sparkles, Shield, Check, Info } from 'lucide-react';
+import { Sparkles, Check, Info } from 'lucide-react';
 import { playerService, getErrorMessage } from '../../services/api';
 import PlayerFUTCard from '../../components/common/PlayerFUTCard';
 import { CARD_DESIGNS, CARD_DESIGN_NAMES } from '../../utils/cardDesigns';
-import { LoadingSpinner, Alert, PitchHero } from '../../components/common';
+import { LoadingSpinner, Alert } from '../../components/common';
 
 export default function CustomizeCard() {
   const [player, setPlayer] = useState(null);

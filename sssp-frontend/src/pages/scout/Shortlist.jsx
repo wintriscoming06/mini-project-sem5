@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { scoutService } from '../../services/api';
-import { Star, Trash2, Edit3, Eye, Search, Plus, GitCompare, FileText } from 'lucide-react';
-import { LoadingSpinner, Alert, ConfirmDialog, Modal, Button, StatusBadge, EmptyState, FootballIcon, ScoutTargetIcon } from '../../components/common';
+import { Star, Trash2, Edit3, Eye, Search } from 'lucide-react';
+import { LoadingSpinner, Alert, ConfirmDialog, Modal, Button, EmptyState } from '../../components/common';
 import PitchHero from '../../components/common/PitchHero';
-import { ClassicSoccerBall, GrassBladesTrim } from '../../components/common/FootballIcons';
 
 export default function Shortlist() {
   const navigate = useNavigate();

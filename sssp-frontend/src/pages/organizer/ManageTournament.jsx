@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { tournamentService, matchService } from '../../services/api';
-import { ArrowLeft, Calendar, MapPin, Users, Settings, Plus, Check, X, Trash2, Trophy, Clock, Shield } from 'lucide-react';
+import { ArrowLeft, Users, Settings, Plus, Check, X, Shield } from 'lucide-react';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import StatusBadge from '../../components/common/StatusBadge';
@@ -10,7 +10,7 @@ import Alert from '../../components/common/Alert';
 import Modal from '../../components/common/Modal';
 import FormInput from '../../components/common/FormInput';
 import PitchHero from '../../components/common/PitchHero';
-import { TrophyIcon, StadiumIcon, FootballIcon, ClassicSoccerBall } from '../../components/common/FootballIcons';
+import { TrophyIcon, StadiumIcon, FootballIcon } from '../../components/common/FootballIcons';
 
 const ManageTournament = () => {
   const { id } = useParams();

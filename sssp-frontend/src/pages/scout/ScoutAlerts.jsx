@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Bell, Check, CheckCircle2, AlertTriangle, Info, Clock, Filter, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Bell, Check, CheckCircle2, AlertTriangle, Info, Clock, ArrowLeft } from 'lucide-react';
 import { scoutService } from '../../services/api';
 import { LoadingSpinner, Alert, Button, StatusBadge, EmptyState } from '../../components/common';
 import PitchHero from '../../components/common/PitchHero';
-import { ClassicSoccerBall, GrassBladesTrim, WhistleIcon } from '../../components/common/FootballIcons';
 
 export default function ScoutAlerts() {
   const navigate = useNavigate();

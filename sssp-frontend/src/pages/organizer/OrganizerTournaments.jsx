@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { tournamentService } from '../../services/api';
-import { Plus, Search, Filter, Calendar, MapPin, Users, Settings, Trophy } from 'lucide-react';
-import { Card, Button, StatusBadge, LoadingSpinner, Alert, EmptyState, TrophyIcon } from '../../components/common';
+import { Plus, Calendar, MapPin, Settings, Trophy } from 'lucide-react';
+import { Button, StatusBadge, LoadingSpinner, Alert, EmptyState, TrophyIcon } from '../../components/common';
 import PitchHero from '../../components/common/PitchHero';
-import { ClassicSoccerBall, GrassBladesTrim, CornerFlag } from '../../components/common/FootballIcons';
 
 const OrganizerTournaments = () => {
   const navigate = useNavigate();

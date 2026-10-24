@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { matchService } from '../../services/api';
-import { Card, Button, StatusBadge, LoadingSpinner, Alert, WhistleIcon, StadiumIcon, FootballIcon } from '../../components/common';
-import { Eye, Edit3, CheckCircle, Calendar, Clock, ArrowLeft, Trophy } from 'lucide-react';
+import { Button, StatusBadge, LoadingSpinner, Alert } from '../../components/common';
+import { Eye, Edit3, CheckCircle } from 'lucide-react';
 import PitchHero from '../../components/common/PitchHero';
-import { ClassicSoccerBall, GrassBladesTrim } from '../../components/common/FootballIcons';
+import { ClassicSoccerBall } from '../../components/common/FootballIcons';
 
 const MatchList = () => {
   const navigate = useNavigate();

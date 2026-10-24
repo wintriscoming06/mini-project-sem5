@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, ChevronRight, XCircle, Trophy, Calendar } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 import { tournamentService } from '../../services/api';
 import { LoadingSpinner, Alert, Card, StatusBadge, Button, ConfirmDialog, EmptyState, TrophyIcon } from '../../components/common';
 import PitchHero from '../../components/common/PitchHero';
-import { ClassicSoccerBall, GrassBladesTrim } from '../../components/common/FootballIcons';
 
 const MyApplications = () => {
   const [applications, setApplications] = useState([]);

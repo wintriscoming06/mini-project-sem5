@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { matchService } from '../../services/api';
-import { ArrowLeft, Play, Square, CheckCircle, Clock, Shield, AlertTriangle } from 'lucide-react';
-import { Modal, Button, LoadingSpinner, Alert, StatusBadge, WhistleIcon, FootballIcon } from '../../components/common';
+import { ArrowLeft, Play, Square, CheckCircle, Clock } from 'lucide-react';
+import { Modal, Button, LoadingSpinner, Alert, StatusBadge } from '../../components/common';
 
 const MatchScoring = () => {
   const { id } = useParams();

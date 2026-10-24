@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { adminService } from '../../services/api';
-import { AlertCircle, CheckCircle, XCircle, Clock, Search } from 'lucide-react';
+import { AlertCircle, CheckCircle, XCircle, Clock } from 'lucide-react';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import Alert from '../../components/common/Alert';
 import Modal from '../../components/common/Modal';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
-import { FootballIcon } from '../../components/common/FootballIcons';
 
 export default function CorrectionQueue() {
   const [corrections, setCorrections] = useState([]);

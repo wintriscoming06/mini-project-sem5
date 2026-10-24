@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { matchService } from '../../services/api';
-import { ArrowLeft, Clock, MapPin, AlertCircle, Edit3, Shield, CheckCircle } from 'lucide-react';
-import { Card, StatusBadge, LoadingSpinner, Alert, Button, WhistleIcon, FootballIcon } from '../../components/common';
-import { ClassicSoccerBall, PitchMarkings, GrassBladesTrim } from '../../components/common/FootballIcons';
+import { ArrowLeft, Clock, MapPin, Edit3 } from 'lucide-react';
+import { LoadingSpinner, Alert, Button } from '../../components/common';
+import { ClassicSoccerBall, PitchMarkings } from '../../components/common/FootballIcons';
 
 const MatchDetail = () => {
   const { id } = useParams();
