@@ -105,26 +105,28 @@ const RegisterPage = () => {
 
         {/* Registration Form */}
         <form onSubmit={handleSubmit} className="space-y-3.5 relative z-10">
-          {/* Full Name */}
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-              Full Name <span className="text-blue-400">*</span>
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <User className="w-4 h-4" />
+          {/* Full Name (For Player & Scout only) */}
+          {formData.role !== 'ORGANIZER' && (
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                Full Name <span className="text-blue-400">*</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <User className="w-4 h-4" />
+                </div>
+                <input
+                  name="fullName"
+                  type="text"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  placeholder="Enter your full name"
+                  required
+                  className="w-full pl-10 pr-4 py-2 bg-slate-950/70 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200"
+                />
               </div>
-              <input
-                name="fullName"
-                type="text"
-                value={formData.fullName}
-                onChange={handleChange}
-                placeholder="Enter your full name"
-                required
-                className="w-full pl-10 pr-4 py-2 bg-slate-950/70 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200"
-              />
             </div>
-          </div>
+          )}
 
           {/* Username */}
           <div>
