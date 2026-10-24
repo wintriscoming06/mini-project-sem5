@@ -3,18 +3,17 @@ import { useAuth } from '../../context/AuthContext';
 import { scoutService } from '../../services/api';
 import { 
   Shield, Award, MapPin, Calendar, Globe, Compass, 
-  Edit2, Camera, RefreshCw, CheckCircle2, Bookmark, 
+  Edit2, CheckCircle2, Bookmark, 
   Activity, Sparkles, Building, FileText,
   Check
 } from 'lucide-react';
 import { Button, Alert, LoadingSpinner, PitchMarkings } from '../../components/common';
 import { 
-  getClubTheme, ClubCrest, ClubWatermark, CoachSilhouette, 
+  getClubTheme, ClubCrest, ClubWatermark, 
   PRESET_CLUBS, 
   getStoredScoutDossier, saveStoredScoutDossier, 
   getStoredClubBadge, saveStoredClubBadge 
 } from '../../utils/clubTheme';
-import { removeBackground } from '../../utils/backgroundRemoval';
 import useCountUp from '../../hooks/useCountUp';
 
 const AnimatedStat = ({ value, decimals = 0, duration = 800 }) => {
@@ -39,7 +38,6 @@ export default function ScoutProfile() {
     specialization: 'Positional Play & Overloads',
     experience: '12 Seasons Pro Scouting',
     location: 'Manchester, England',
-    photoUrl: '/assets/coaches/pep_guardiola.png',
     customBadgeUrl: null,
     bio: 'Dedicated football recruitment specialist focusing on positional intelligence, high-press sustainability, and elite passing vision. Oversees European prospect tracking and quantitative GPI data verification.',
     methodology: 'Tri-pillar scouting framework: 1. Video & spatial pattern audit, 2. Live in-stadium physical endurance check, 3. Algorithmic GPI performance validation.',
@@ -50,8 +48,6 @@ export default function ScoutProfile() {
   const [dossier, setDossier] = useState(defaultDossier);
   const [formData, setFormData] = useState(defaultDossier);
   const [isEditing, setIsEditing] = useState(false);
-  const [isRemovingBg, setIsRemovingBg] = useState(false);
-  const [bgRemovalProgress, setBgRemovalProgress] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
@@ -95,54 +91,6 @@ export default function ScoutProfile() {
 
     loadData();
   }, [scoutKey]);
-
-  // Handle Preset Coach Persona Selection
-  // Photo Cutout Upload with Auto Background Removal
-  const handlePhotoUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      setError('Please upload a valid image file (PNG, JPG, WebP).');
-      return;
-    }
-
-    try {
-      setIsRemovingBg(true);
-      setError(null);
-      setBgRemovalProgress('10%');
-
-      const result = await removeBackground(file, (pct) => {
-        setBgRemovalProgress(`${pct}%`);
-      });
-
-      const finalUrl = result.dataUrl;
-      setFormData(prev => ({ ...prev, photoUrl: finalUrl }));
-      if (!isEditing) {
-        const updated = { ...dossier, photoUrl: finalUrl };
-        setDossier(updated);
-        saveStoredScoutDossier(scoutKey, updated);
-      }
-      setSuccess('Coach portrait extracted with transparent background!');
-    } catch (err) {
-      console.warn('AI Cutout failed, loading original photo:', err);
-      const reader = new FileReader();
-      reader.onload = (loadEvent) => {
-        const originalUrl = loadEvent.target.result;
-        setFormData(prev => ({ ...prev, photoUrl: originalUrl }));
-        if (!isEditing) {
-          const updated = { ...dossier, photoUrl: originalUrl };
-          setDossier(updated);
-          saveStoredScoutDossier(scoutKey, updated);
-        }
-      };
-      reader.readAsDataURL(file);
-    } finally {
-      setIsRemovingBg(false);
-      setBgRemovalProgress(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    }
-  };
 
   // Custom Club Badge Upload
   const handleBadgeUpload = (e) => {
@@ -264,10 +212,10 @@ export default function ScoutProfile() {
               </Button>
             ) : (
               <div className="flex gap-2">
-                <Button type="button" size="sm" variant="secondary" onClick={handleCancel} disabled={saving || isRemovingBg}>
+                <Button type="button" size="sm" variant="secondary" onClick={handleCancel} disabled={saving}>
                   Cancel
                 </Button>
-                <Button type="button" size="sm" variant="primary" onClick={handleSave} disabled={saving || isRemovingBg}>
+                <Button type="button" size="sm" variant="primary" onClick={handleSave} disabled={saving}>
                   {saving ? 'Saving...' : 'Save Dossier'}
                 </Button>
               </div>
@@ -275,52 +223,13 @@ export default function ScoutProfile() {
           </div>
         </div>
 
-        {/* Main Showcase Body: Coach Cutout + Compact Scout Info Layout */}
+        {/* Main Showcase Body: Scout Info Layout */}
         <div 
-          key={activeData.name || activeData.photoUrl} 
-          className="relative z-10 px-6 pt-2 pb-5 flex flex-col md:flex-row items-center md:items-end gap-6 lg:gap-8 animate-persona-fade"
+          key={activeData.name} 
+          className="relative z-10 px-6 py-4 flex flex-col md:flex-row items-center md:items-start gap-6 lg:gap-8 animate-persona-fade"
         >
-          
-          {/* LEFT: Unconstrained Transparent Coach Cutout */}
-          <div className="relative flex items-end justify-center flex-shrink-0 w-44 sm:w-52 lg:w-60 h-60 sm:h-72 lg:h-80 -mb-2 group select-none">
-            
-            {activePhoto ? (
-              <img 
-                src={activePhoto} 
-                alt={activeData.name || 'Coach Cutout'} 
-                className="h-full w-full object-contain object-bottom filter drop-shadow-[0_16px_28px_rgba(0,0,0,0.7)] transition-transform duration-300 group-hover:scale-105" 
-              />
-            ) : (
-              <div className="h-full w-full flex items-end justify-center pb-2">
-                <CoachSilhouette className="h-full w-48 text-cyan-400 drop-shadow-[0_12px_24px_rgba(0,0,0,0.6)]" />
-              </div>
-            )}
-
-            {/* In-banner Photo Upload Trigger */}
-            {isEditing && (
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="absolute top-2 right-2 p-2.5 rounded-full bg-black/75 hover:bg-black text-white border border-white/20 shadow-xl transition-all duration-200 hover:scale-110 cursor-pointer"
-                title="Upload portrait photo (auto background cutout)"
-              >
-                <Camera className="w-4 h-4" />
-              </button>
-            )}
-
-            {/* Cutout Processing Indicator */}
-            {isRemovingBg && (
-              <div className="absolute inset-0 bg-black/70 rounded-2xl flex flex-col items-center justify-center p-3 z-30 backdrop-blur-sm">
-                <RefreshCw className="w-8 h-8 text-cyan-400 animate-spin mb-2" />
-                <span className="text-xs font-black text-cyan-300 uppercase tracking-wider text-center">
-                  Extracting Cutout... {bgRemovalProgress ? `${bgRemovalProgress}` : ''}
-                </span>
-              </div>
-            )}
-          </div>
-
-          {/* RIGHT: Compact Scout Dossier Details */}
-          <div className="flex-1 w-full space-y-3 text-center md:text-left">
+          {/* Scout Dossier Details */}
+          <div className="flex-1 w-full space-y-4 text-center md:text-left">
             
             {/* Scout Name & Verification Badge */}
             <div>
@@ -535,18 +444,8 @@ export default function ScoutProfile() {
                 </select>
               </div>
 
-              {/* Photo & Badge Upload Buttons */}
+              {/* Badge Upload Buttons */}
               <div className="pt-2 space-y-2">
-                <Button 
-                  type="button" 
-                  size="sm" 
-                  variant="outline" 
-                  className="w-full justify-center"
-                  onClick={() => fileInputRef.current?.click()}
-                  icon={Camera}
-                >
-                  Upload Portrait (AI Cutout)
-                </Button>
                 <div className="flex gap-2">
                   <Button 
                     type="button" 
