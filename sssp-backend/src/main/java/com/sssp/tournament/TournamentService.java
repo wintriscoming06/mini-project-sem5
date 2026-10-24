@@ -315,12 +315,12 @@ public class TournamentService {
         Match match = request.getMatchId() != null
                 ? matchRepository.findById(request.getMatchId()).orElse(null) : null;
 
-        // One stats record per player per tournament (or match)
+        // Match-specific stats separation: If match is specified, find or create stats for that specific match and player
         PlayerMatchStatistics stat = null;
         if (match != null) {
-            stat = playerMatchStatisticsRepository.findByMatchIdAndPlayerId(match.getId(), request.getPlayerId()).orElse(null);
-        }
-        if (stat == null) {
+            stat = playerMatchStatisticsRepository.findByMatchIdAndPlayerId(match.getId(), request.getPlayerId())
+                    .orElseGet(PlayerMatchStatistics::new);
+        } else {
             stat = playerMatchStatisticsRepository.findByTournamentIdAndPlayerId(tournamentId, request.getPlayerId())
                     .orElseGet(PlayerMatchStatistics::new);
         }

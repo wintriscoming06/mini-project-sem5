@@ -610,6 +610,7 @@ const ManageTournament = () => {
                 <table className="w-full text-xs text-left">
                   <thead className="bg-slate-50 dark:bg-slate-800 text-slate-400 text-[10px] uppercase font-bold tracking-wider border-b border-slate-100 dark:border-slate-800">
                     <tr>
+                      <th className="px-4 py-3">Fixture</th>
                       <th className="px-4 py-3">Player (Username)</th>
                       <th className="px-4 py-3">Team</th>
                       <th className="px-4 py-3">Pos</th>
@@ -626,11 +627,22 @@ const ManageTournament = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                    {stats.map((s) => (
-                      <tr key={s.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
-                        <td className="px-4 py-3 font-bold text-slate-900 dark:text-white">
-                          {s.playerUsername || s.playerName}
-                        </td>
+                    {stats.map((s) => {
+                      const matchForStat = matches.find(m => String(m.id) === String(s.matchId));
+                      const fixtureLabel = matchForStat 
+                        ? `${matchForStat.homeTeamName} vs ${matchForStat.awayTeamName}` 
+                        : (s.matchId ? `Fixture #${s.matchId}` : 'Tournament Wide');
+
+                      return (
+                        <tr key={s.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                          <td className="px-4 py-3">
+                            <span className="font-semibold text-slate-700 dark:text-slate-300 text-[11px] block truncate max-w-[150px]">
+                              {fixtureLabel}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 font-bold text-slate-900 dark:text-white">
+                            {s.playerUsername || s.playerName}
+                          </td>
                         <td className="px-4 py-3 text-slate-500">{s.teamName || '—'}</td>
                         <td className="px-4 py-3">
                           <span className="font-bold text-blue-500">{s.position}</span>
@@ -897,7 +909,7 @@ const ManageTournament = () => {
             ) : (
               <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
                 {getMatchEligiblePlayers().map(p => {
-                  const playerStat = stats.find(s => s.playerId === p.playerId);
+                  const playerStat = stats.find(s => s.playerId === p.playerId && String(s.matchId) === String(selectedMatch?.id));
                   return (
                     <div key={`${p.teamId}-${p.playerId}`} className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-xs">
                       <div>
