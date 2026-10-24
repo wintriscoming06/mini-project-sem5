@@ -102,7 +102,7 @@ export default function PlayerComparison() {
   
   if (ids.length === 0) return (
     <div className="max-w-xl mx-auto py-16 text-center space-y-4">
-      <div className="w-16 h-16 rounded-2xl bg-teal-500/10 text-teal-500 mx-auto flex items-center justify-center border border-teal-500/30">
+      <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 text-cyan-500 mx-auto flex items-center justify-center border border-cyan-500/30">
         <GitCompare className="w-8 h-8" />
       </div>
       <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white">No Prospects Selected for Comparison</h2>
@@ -136,7 +136,7 @@ export default function PlayerComparison() {
             <Button 
               variant="secondary" 
               onClick={() => navigate('/search')}
-              className="bg-emerald-950/80 text-emerald-200 border-emerald-500/50 hover:bg-emerald-900"
+              className="bg-blue-950/80 text-blue-200 border-blue-500/50 hover:bg-blue-900"
               icon={<ArrowLeft className="w-4 h-4 mr-1" />}
             >
               Directory
@@ -157,15 +157,15 @@ export default function PlayerComparison() {
       {error && <Alert type="error" message={error} />}
 
       {/* Comparison Grid Matrix */}
-      <div className="bg-white dark:bg-[#0b1e2d] shadow-sm border border-slate-200 dark:border-emerald-900/30 rounded-2xl overflow-x-auto">
+      <div className="bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-blue-900/30 rounded-2xl overflow-x-auto">
         <table className="w-full text-sm text-left border-collapse">
           <thead>
             <tr className="border-b border-slate-200 dark:border-slate-800">
-              <th className="p-5 bg-slate-50 dark:bg-[#071622] border-r border-slate-200 dark:border-slate-800 w-48 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <th className="p-5 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 w-48 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Prospect Profile
               </th>
               {players.map(p => (
-                <th key={p.id} className="p-6 min-w-[240px] relative bg-white dark:bg-[#0b1e2d] text-center border-r border-slate-100 dark:border-slate-800/80">
+                <th key={p.id} className="p-6 min-w-[240px] relative bg-white dark:bg-slate-900 text-center border-r border-slate-100 dark:border-slate-800/80">
                   <button 
                     onClick={() => removePlayer(p.id)} 
                     className="absolute top-3 right-3 p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -175,21 +175,21 @@ export default function PlayerComparison() {
                   </button>
 
                   <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 rounded-2xl bg-teal-500/10 border-2 border-teal-500/30 overflow-hidden mb-3 flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 border-2 border-cyan-500/30 overflow-hidden mb-3 flex items-center justify-center">
                       {p.profile.photoUrl ? (
                         <img src={p.profile.photoUrl} alt="" className="w-full h-full object-cover" />
                       ) : (
-                        <FootballIcon className="w-8 h-8 text-teal-500" />
+                        <FootballIcon className="w-8 h-8 text-cyan-500" />
                       )}
                     </div>
                     <Link 
                       to={`/players/${p.id}`} 
-                      className="font-extrabold text-base text-slate-900 dark:text-white hover:text-teal-500 transition-colors"
+                      className="font-extrabold text-base text-slate-900 dark:text-white hover:text-cyan-500 transition-colors"
                     >
                       {p.profile.name}
                     </Link>
                     <div className="flex items-center gap-1.5 mt-1">
-                      <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                      <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-500/30">
                         {p.profile.position}
                       </span>
                       <span className="text-xs text-slate-400">{p.profile.team}</span>
@@ -198,10 +198,10 @@ export default function PlayerComparison() {
                 </th>
               ))}
               {Array.from({ length: Math.max(0, 4 - players.length) }).map((_, i) => (
-                <th key={`empty-${i}`} className="p-6 min-w-[200px] bg-slate-50/40 dark:bg-[#071622]/40 text-center align-middle border-r border-slate-100 dark:border-slate-800/40">
+                <th key={`empty-${i}`} className="p-6 min-w-[200px] bg-slate-50/40 dark:bg-slate-900/40 text-center align-middle border-r border-slate-100 dark:border-slate-800/40">
                   <button 
                     onClick={() => navigate('/search')}
-                    className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl hover:border-teal-500 hover:text-teal-500 transition-colors w-full"
+                    className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl hover:border-cyan-500 hover:text-cyan-500 transition-colors w-full"
                   >
                     <Plus className="w-6 h-6 mb-1 text-slate-400" />
                     <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Add Slot</span>
@@ -213,8 +213,8 @@ export default function PlayerComparison() {
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
             
             {/* Primary GPI Rating Highlight */}
-            <tr className="bg-emerald-50/40 dark:bg-emerald-950/20">
-              <td className="p-4 bg-emerald-50/80 dark:bg-[#071d18] border-r border-slate-200 dark:border-slate-800 font-bold text-xs uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
+            <tr className="bg-blue-50/40 dark:bg-blue-950/20">
+              <td className="p-4 bg-blue-50/80 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 font-bold text-xs uppercase tracking-wider text-blue-800 dark:text-blue-300">
                 Overall GPI Rating
               </td>
               {players.map(p => {
@@ -222,11 +222,11 @@ export default function PlayerComparison() {
                 return (
                   <td key={p.id} className="p-4 text-center border-r border-slate-100 dark:border-slate-800/80">
                     <div className="flex flex-col items-center">
-                      <span className={`text-2xl font-black stat-number ${isLeader ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-800 dark:text-slate-200'}`}>
+                      <span className={`text-2xl font-black stat-number ${isLeader ? 'text-blue-600 dark:text-blue-400' : 'text-slate-800 dark:text-slate-200'}`}>
                         {p.gpi.value}
                       </span>
                       {isLeader && (
-                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full mt-1">
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-blue-500 bg-blue-500/10 px-2 py-0.5 rounded-full mt-1">
                           Benchmark Leader
                         </span>
                       )}
@@ -239,7 +239,7 @@ export default function PlayerComparison() {
 
             {/* Confidence */}
             <tr>
-              <td className="p-4 bg-slate-50 dark:bg-[#071622] border-r border-slate-200 dark:border-slate-800 font-semibold text-xs text-slate-600 dark:text-slate-400">
+              <td className="p-4 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 font-semibold text-xs text-slate-600 dark:text-slate-400">
                 Data Confidence
               </td>
               {players.map(p => (
@@ -262,7 +262,7 @@ export default function PlayerComparison() {
               const maxVal = Math.max(...players.map(p => p.gpi[key] || 0));
               return (
                 <tr key={key}>
-                  <td className="p-4 bg-slate-50 dark:bg-[#071622] border-r border-slate-200 dark:border-slate-800 font-medium text-xs text-slate-700 dark:text-slate-300">
+                  <td className="p-4 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 font-medium text-xs text-slate-700 dark:text-slate-300">
                     {label}
                   </td>
                   {players.map(p => {
@@ -270,7 +270,7 @@ export default function PlayerComparison() {
                     const isTop = val > 0 && val === maxVal;
                     return (
                       <td key={p.id} className="p-4 text-center border-r border-slate-100 dark:border-slate-800/80">
-                        <span className={`font-black text-sm stat-number ${isTop ? 'text-teal-600 dark:text-teal-400' : 'text-slate-700 dark:text-slate-300'}`}>
+                        <span className={`font-black text-sm stat-number ${isTop ? 'text-cyan-600 dark:text-cyan-400' : 'text-slate-700 dark:text-slate-300'}`}>
                           {val}
                         </span>
                       </td>
@@ -282,8 +282,8 @@ export default function PlayerComparison() {
             })}
 
             {/* Scout Observations */}
-            <tr className="bg-teal-50/30 dark:bg-teal-950/20">
-              <td colSpan={players.length + Math.max(0, 4 - players.length) + 1} className="py-2.5 px-4 text-xs font-black uppercase tracking-wider text-teal-800 dark:text-teal-300 text-center">
+            <tr className="bg-cyan-50/30 dark:bg-cyan-950/20">
+              <td colSpan={players.length + Math.max(0, 4 - players.length) + 1} className="py-2.5 px-4 text-xs font-black uppercase tracking-wider text-cyan-800 dark:text-cyan-300 text-center">
                 Scout Field Observation Averages (1–10 Scale)
               </td>
             </tr>
@@ -295,7 +295,7 @@ export default function PlayerComparison() {
               { label: 'Mental / Psychosocial', key: 'psych' }
             ].map(({ label, key }) => (
               <tr key={key}>
-                <td className="p-4 bg-slate-50 dark:bg-[#071622] border-r border-slate-200 dark:border-slate-800 font-medium text-xs text-slate-700 dark:text-slate-300">
+                <td className="p-4 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 font-medium text-xs text-slate-700 dark:text-slate-300">
                   {label}
                 </td>
                 {players.map(p => (

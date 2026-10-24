@@ -5,7 +5,7 @@ import React from 'react';
  * Inspired by AttributeRadar.jsx in gpi-app(2).
  * Displays PAC, SHO, PAS, DRI, DEF, PHY with animated polygon.
  */
-export default function SVGRadarChart({ attributes, size = 145, themeColor = '#10b981' }) {
+export default function SVGRadarChart({ attributes, size = 145, themeColor = '#2563eb' }) {
   const keys = ['PAC', 'SHO', 'PAS', 'DRI', 'DEF', 'PHY'];
   const values = keys.map((k) => attributes?.[k] ?? 70);
 

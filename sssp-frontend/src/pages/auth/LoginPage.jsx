@@ -10,53 +10,70 @@ const ROLE_THEMES = {
   PLAYER: {
     name: 'Player',
     icon: '⚽',
-    tunnelLabel: 'MATCHDAY LOCKER ROOM TUNNEL',
-    subheading: 'Enter the pitch, lace up & access verified performance data',
-    actionText: 'Enter Pitch / Kick Off',
-    loadingText: 'Entering Pitch...',
-    cardBorder: 'border-emerald-500/40',
-    cardBg: 'bg-emerald-950/90 dark:bg-[#071c14]/95',
-    topTrim: 'bg-gradient-to-r from-emerald-600 via-emerald-400 to-green-600',
-    buttonGrad: 'bg-gradient-to-r from-emerald-500 via-teal-400 to-green-500 hover:from-emerald-400 hover:to-teal-300 shadow-emerald-500/30',
+    tunnelLabel: 'ATHLETE PERFORMANCE DOSSIER',
+    subheading: 'Access verified match statistics, rankings & scouting cards',
+    actionText: 'Sign In / Player Portal',
+    loadingText: 'Authenticating Athlete...',
+    cardBorder: 'border-blue-500/30',
+    cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
+    topTrim: 'bg-blue-600',
+    buttonGrad: 'bg-blue-600 hover:from-blue-500 hover:to-indigo-500 shadow-blue-500/30 text-white',
+    accentColor: 'text-blue-400',
+    badgeBg: 'bg-blue-900/60 border-blue-400/40 text-blue-300',
+    roleTag: 'bg-blue-800/40 text-blue-200 border-blue-500/30',
+    inputRing: 'focus:ring-blue-500 focus:border-blue-500',
+    focusGlow: 'shadow-blue-500/10',
+  },
+  COACH: {
+    name: 'Coach',
+    icon: '📋',
+    tunnelLabel: 'TACTICAL MASTER & SQUAD COMMAND',
+    subheading: 'Access squad management, tactical boards & formation strategies',
+    actionText: 'Sign In / Coach Portal',
+    loadingText: 'Authenticating Coach Credentials...',
+    cardBorder: 'border-emerald-500/30',
+    cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
+    topTrim: 'bg-gradient-to-r from-emerald-500 via-teal-400 to-green-500',
+    buttonGrad: 'bg-emerald-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-500/30 text-white font-bold',
     accentColor: 'text-emerald-400',
-    badgeBg: 'bg-emerald-900/80 border-emerald-400/50 text-emerald-300',
-    roleTag: 'bg-emerald-800/60 text-emerald-200 border-emerald-500/30',
-    inputRing: 'focus:ring-emerald-400/60 focus:border-emerald-400',
-    focusGlow: 'shadow-emerald-900/40',
+    badgeBg: 'bg-emerald-900/60 border-emerald-400/40 text-emerald-300',
+    roleTag: 'bg-emerald-800/40 text-emerald-200 border-emerald-500/30',
+    inputRing: 'focus:ring-emerald-500 focus:border-emerald-500',
+    focusGlow: 'shadow-emerald-500/10',
   },
   SCOUT: {
     name: 'Scout',
     icon: '🔎',
-    tunnelLabel: 'TACTICAL RECRUITMENT DOSSIER',
-    subheading: 'Access quantitative talent analytics, scout notes & prospect rankings',
-    actionText: 'Blow Whistle / Sign In',
-    loadingText: 'Consulting Tactical Board...',
-    cardBorder: 'border-teal-500/40',
-    cardBg: 'bg-[#08222b]/95 dark:bg-[#05181f]/95',
-    topTrim: 'bg-gradient-to-r from-teal-500 via-emerald-400 to-cyan-500',
-    buttonGrad: 'bg-gradient-to-r from-teal-500 via-emerald-400 to-cyan-500 hover:from-teal-400 hover:to-emerald-300 shadow-teal-500/30',
-    accentColor: 'text-teal-400',
-    badgeBg: 'bg-teal-900/80 border-teal-400/50 text-teal-300',
-    roleTag: 'bg-teal-800/60 text-teal-200 border-teal-500/30',
-    inputRing: 'focus:ring-teal-400/60 focus:border-teal-400',
-    focusGlow: 'shadow-teal-900/40',
+    tunnelLabel: 'TALENT RADAR & PROSPECT DOSSIER',
+    subheading: 'Access quantitative talent analytics, radar & prospect rankings',
+    actionText: 'Sign In / Scout Portal',
+    loadingText: 'Authenticating Scout Credentials...',
+    cardBorder: 'border-cyan-500/30',
+    cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
+    topTrim: 'bg-gradient-to-r from-cyan-500 via-sky-400 to-blue-500',
+    buttonGrad: 'bg-cyan-600 hover:from-cyan-500 hover:to-sky-500 shadow-cyan-500/30 text-white font-bold',
+    accentColor: 'text-cyan-400',
+    badgeBg: 'bg-cyan-900/60 border-cyan-400/40 text-cyan-300',
+    roleTag: 'bg-cyan-800/40 text-cyan-200 border-cyan-500/30',
+    inputRing: 'focus:ring-cyan-500 focus:border-cyan-500',
+    focusGlow: 'shadow-cyan-500/10',
   },
   ORGANIZER: {
     name: 'Organizer',
     icon: '🏟',
     tunnelLabel: 'CHAMPIONSHIP ARENA CONTROL',
     subheading: 'Manage tournaments, fixtures, match scoring & official rankings',
-    actionText: 'Turn On Floodlights / Sign In',
-    loadingText: 'Powering Arena Floodlights...',
-    cardBorder: 'border-amber-500/40',
-    cardBg: 'bg-[#1e1709]/95 dark:bg-[#140e04]/95',
-    topTrim: 'bg-gradient-to-r from-amber-500 via-yellow-400 to-emerald-500',
-    buttonGrad: 'bg-gradient-to-r from-amber-500 via-yellow-400 to-emerald-500 hover:from-amber-400 hover:to-yellow-300 shadow-amber-500/30',
+    actionText: 'Sign In / Arena Control',
+    loadingText: 'Connecting Matchday Systems...',
+    cardBorder: 'border-amber-500/30',
+    cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
+    topTrim: 'bg-gradient-to-r from-amber-500 via-yellow-400 to-orange-500',
+    buttonGrad: 'bg-gradient-to-r from-amber-500 via-yellow-500 to-orange-500 hover:from-amber-400 hover:to-yellow-400 shadow-amber-500/30 text-slate-950 font-black',
     accentColor: 'text-amber-400',
-    badgeBg: 'bg-amber-900/80 border-amber-400/50 text-amber-300',
-    roleTag: 'bg-amber-800/60 text-amber-200 border-amber-500/30',
-    inputRing: 'focus:ring-amber-400/60 focus:border-amber-400',
-    focusGlow: 'shadow-amber-900/40',
+    badgeBg: 'bg-amber-900/60 border-amber-400/40 text-amber-300',
+    roleTag: 'bg-amber-800/40 text-amber-200 border-amber-500/30',
+    inputRing: 'focus:ring-amber-500 focus:border-amber-500',
+    focusGlow: 'shadow-amber-500/10',
   }
 };
 
@@ -85,7 +102,7 @@ const LoginPage = () => {
 
     try {
       const [loginRes] = await Promise.all([
-        login(identifier, password),
+        login({ identifier, password, role: activeRole }),
         new Promise((resolve) => setTimeout(resolve, animationDelay))
       ]);
       navigate('/dashboard');
@@ -106,15 +123,8 @@ const LoginPage = () => {
         {/* Top Trim Highlight */}
         <div className={`h-2.5 ${currentTheme.topTrim} rounded-t-3xl -mx-6 -mt-6 sm:-mx-8 sm:-mt-8 mb-4 transition-all duration-500`} />
         
-        {/* Grass Blades Trim for Player / Subtle Markings for others */}
-        {activeRole === 'PLAYER' && (
-          <div className="overflow-hidden leading-none -mx-6 sm:-mx-8 mb-4 pointer-events-none opacity-40">
-            <GrassBladesTrim className="w-full h-3 text-emerald-400" />
-          </div>
-        )}
-
-        {/* Tactical Grid watermark for Scout */}
-        {activeRole === 'SCOUT' && (
+        {/* Tactical Grid watermark for Coach / Scout */}
+        {(activeRole === 'SCOUT' || activeRole === 'COACH') && (
           <div className="absolute inset-0 tactical-grid opacity-20 pointer-events-none" />
         )}
 
@@ -134,30 +144,40 @@ const LoginPage = () => {
         {motionActive === 'PLAYER' && (
           <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden flex items-center justify-center">
             {/* Speed Streak */}
-            <div className="absolute bottom-20 left-10 h-1.5 bg-gradient-to-r from-emerald-400 via-teal-300 to-transparent rounded-full animate-kick-streak" />
+            <div className="absolute bottom-20 left-10 h-1.5 bg-gradient-to-r from-blue-400 via-cyan-300 to-transparent rounded-full animate-kick-streak" />
             {/* Ball Trajectory */}
             <div className="absolute bottom-14 left-8 text-2xl animate-football-kick flex items-center justify-center">
-              <ClassicSoccerBall className="w-10 h-10 drop-shadow-[0_8px_18px_rgba(16,185,129,0.7)]" />
+              <ClassicSoccerBall className="w-10 h-10 drop-shadow-[0_8px_18px_rgba(37,99,235,0.7)]" />
             </div>
             {/* Target Area Goal Flare */}
-            <div className="absolute top-12 right-12 w-28 h-28 rounded-full bg-emerald-400/25 blur-xl animate-ping" />
+            <div className="absolute top-12 right-12 w-28 h-28 rounded-full bg-blue-400/25 blur-xl animate-pulse" />
           </div>
         )}
 
-        {/* 2. SCOUT: Referee Whistle Acoustic Resonance Pulse */}
+        {/* 2. COACH: Tactical Formation Clipboard Pulse */}
+        {motionActive === 'COACH' && (
+          <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden flex items-center justify-center bg-emerald-950/30 backdrop-blur-[2px]">
+            <div className="absolute w-32 h-32 rounded-full border-2 border-emerald-400/80 animate-ping" />
+            <div className="relative p-4 rounded-2xl bg-emerald-900/90 border border-emerald-400/70 shadow-2xl animate-bounce flex items-center justify-center">
+              <span className="text-4xl filter drop-shadow-[0_4px_12px_rgba(16,185,129,0.7)]">📋</span>
+            </div>
+          </div>
+        )}
+
+        {/* 3. SCOUT: Referee Whistle Acoustic Resonance Pulse */}
         {motionActive === 'SCOUT' && (
-          <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden flex items-center justify-center bg-teal-950/30 backdrop-blur-[2px]">
+          <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden flex items-center justify-center bg-cyan-950/30 backdrop-blur-[2px]">
             {/* Acoustic Wave Rings */}
-            <div className="absolute w-32 h-32 rounded-full border-2 border-teal-400/80 animate-whistle-wave-1" />
+            <div className="absolute w-32 h-32 rounded-full border-2 border-cyan-400/80 animate-whistle-wave-1" />
             <div className="absolute w-32 h-32 rounded-full border-2 border-cyan-400/60 animate-whistle-wave-2" />
             {/* Whistle Icon with vibrate/pulse */}
-            <div className="relative p-4 rounded-2xl bg-teal-900/90 border border-teal-400/70 shadow-2xl animate-whistle-vibrate flex items-center justify-center">
+            <div className="relative p-4 rounded-2xl bg-cyan-900/90 border border-cyan-400/70 shadow-2xl animate-whistle-vibrate flex items-center justify-center">
               <span className="text-4xl filter drop-shadow-[0_4px_12px_rgba(45,212,191,0.7)]">🪈</span>
             </div>
           </div>
         )}
 
-        {/* 3. ORGANIZER: Stadium Matchday Floodlight Sweep */}
+        {/* 4. ORGANIZER: Stadium Matchday Floodlight Sweep */}
         {motionActive === 'ORGANIZER' && (
           <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden">
             {/* Beam Sweep */}
@@ -172,7 +192,7 @@ const LoginPage = () => {
 
         {/* In-Card Role Quick Selector Pills */}
         <div className="relative z-10 flex items-center justify-between p-1 mb-5 rounded-xl bg-black/45 border border-white/10 backdrop-blur-md">
-          {['PLAYER', 'SCOUT', 'ORGANIZER'].map((role) => {
+          {['PLAYER', 'COACH', 'SCOUT', 'ORGANIZER'].map((role) => {
             const isCur = activeRole === role;
             const rConf = ROLE_THEMES[role];
             return (
@@ -229,7 +249,15 @@ const LoginPage = () => {
                 type="text"
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                placeholder={activeRole === 'PLAYER' ? 'e.g. cr7@sssp.org or player username' : `e.g. ${activeRole.toLowerCase()}@sssp.org`}
+                placeholder={
+                  activeRole === 'PLAYER' 
+                    ? 'e.g. cr7@sssp.org or player username' 
+                    : activeRole === 'COACH'
+                    ? 'e.g. coach@sssp.org or coach username'
+                    : activeRole === 'SCOUT' 
+                    ? 'e.g. scout@sssp.org or scout username' 
+                    : 'e.g. organizer@sssp.org'
+                }
                 required
                 className={`w-full pl-10 pr-4 py-2.5 bg-black/40 border border-slate-700/60 rounded-xl text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 ${currentTheme.inputRing} transition-all duration-200`}
               />
@@ -282,7 +310,7 @@ const LoginPage = () => {
               <input
                 type="checkbox"
                 defaultChecked
-                className="w-4 h-4 rounded border-slate-700 bg-black/40 text-emerald-500 focus:ring-emerald-500 mr-2"
+                className="w-4 h-4 rounded border-slate-700 bg-black/40 text-blue-500 focus:ring-blue-500 mr-2"
               />
               Stay logged in on matchdays
             </label>

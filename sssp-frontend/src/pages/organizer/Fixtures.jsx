@@ -56,13 +56,13 @@ const MatchList = () => {
       {error && <Alert type="error" message={error} onClose={() => setError(null)} />}
 
       {/* Filter Bar */}
-      <div className="bg-white dark:bg-[#0b1e2d] p-4 rounded-xl shadow-sm border border-slate-200 dark:border-emerald-900/30 flex items-center justify-between">
+      <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-blue-900/30 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Filter By Status:</span>
           <select 
             value={statusFilter} 
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-white py-1.5 px-3"
+            className="text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white py-1.5 px-3"
           >
             <option value="ALL">All Matches</option>
             <option value="SCHEDULED">Scheduled</option>
@@ -75,16 +75,16 @@ const MatchList = () => {
       </div>
 
       {/* Matches Table Card */}
-      <div className="relative bg-white dark:bg-[#0b1e2d] border border-slate-200 dark:border-emerald-900/40 rounded-2xl shadow-sm overflow-hidden">
+      <div className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-blue-900/40 rounded-2xl shadow-sm overflow-hidden">
         {/* Pitch Grass Top Trim */}
-        <div className="h-1.5 bg-gradient-to-r from-emerald-600 via-emerald-400 to-green-600" />
+        <div className="h-1.5 bg-blue-600" />
         
         {/* Goal net mesh texture in background */}
         <div className="absolute inset-0 goal-net-texture opacity-10 pointer-events-none" />
 
         <div className="overflow-x-auto relative z-10">
           <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-sm">
-            <thead className="bg-slate-50 dark:bg-[#071622] text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">
+            <thead className="bg-slate-50 dark:bg-slate-900 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">
               <tr>
                 <th className="px-5 py-3.5 text-left">Fixture Match</th>
                 <th className="px-5 py-3.5 text-left">Tournament</th>
@@ -127,7 +127,7 @@ const MatchList = () => {
                     </td>
                     <td className="px-5 py-4 text-center">
                       {match.confirmed ? (
-                        <span className="inline-flex items-center text-emerald-600 dark:text-emerald-400 text-xs font-bold">
+                        <span className="inline-flex items-center text-blue-600 dark:text-blue-400 text-xs font-bold">
                           <CheckCircle className="w-4 h-4 mr-1" /> Confirmed
                         </span>
                       ) : (

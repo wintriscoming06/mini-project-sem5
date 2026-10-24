@@ -81,7 +81,7 @@ public class AuthService {
             OrganizerProfile organizerProfile = new OrganizerProfile();
             organizerProfile.setUser(savedUser);
             organizerProfileRepository.save(organizerProfile);
-        } else if (savedUser.getRole() == UserRole.SCOUT) {
+        } else if (savedUser.getRole() == UserRole.SCOUT || savedUser.getRole() == UserRole.COACH) {
             ScoutProfile scoutProfile = new ScoutProfile();
             scoutProfile.setUser(savedUser);
             scoutProfileRepository.save(scoutProfile);
@@ -107,6 +107,16 @@ public class AuthService {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), request.getPassword())
         );
+
+        if (request.getRole() == null) {
+            throw new BadRequestException("Portal role is required to authenticate. Please select your login portal (Player, Coach, Scout, or Organizer).");
+        }
+
+        if (user.getRole() != UserRole.ADMIN && user.getRole() != request.getRole()) {
+            String portalName = formatRoleName(request.getRole());
+            String userRoleName = formatRoleName(user.getRole());
+            throw new BadRequestException("Access denied: You cannot log into the " + portalName + " portal with a " + userRoleName + " account. Please select the " + userRoleName + " login portal.");
+        }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtTokenProvider.generateToken(authentication);
@@ -134,5 +144,17 @@ public class AuthService {
                 .evaluatorPermission(user.isEvaluatorPermission())
                 .createdAt(user.getCreatedAt())
                 .build();
+    }
+
+    private String formatRoleName(UserRole role) {
+        if (role == null) return "specified";
+        switch (role) {
+            case PLAYER: return "Player";
+            case COACH: return "Coach";
+            case SCOUT: return "Scout";
+            case ORGANIZER: return "Organizer";
+            case ADMIN: return "Admin";
+            default: return role.name();
+        }
     }
 }

@@ -117,8 +117,8 @@ export default function PlayerSearch() {
   const renderGPIBadge = (gpi) => {
     const val = Number(gpi || 0);
     let colorClass = 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700';
-    if (val >= 80) colorClass = 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-500/40';
-    else if (val >= 65) colorClass = 'bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border-teal-500/40';
+    if (val >= 80) colorClass = 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-500/40';
+    else if (val >= 65) colorClass = 'bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 border-cyan-500/40';
     else if (val >= 50) colorClass = 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-500/40';
 
     return (
@@ -155,7 +155,7 @@ export default function PlayerSearch() {
             <Button 
               variant="secondary" 
               onClick={() => navigate('/shortlist')}
-              className="bg-emerald-950/80 text-emerald-200 border-emerald-500/50 hover:bg-emerald-900"
+              className="bg-blue-950/80 text-blue-200 border-blue-500/50 hover:bg-blue-900"
             >
               View Active Shortlist
             </Button>
@@ -167,10 +167,10 @@ export default function PlayerSearch() {
         
         {/* Tactical Filter Sidebar */}
         <div className="w-full lg:w-80 flex-shrink-0">
-          <div className="bg-white dark:bg-[#0b1e2d] p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 space-y-5 sticky top-20">
+          <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-blue-900/30 space-y-5 sticky top-20">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center">
-                <Filter className="w-4 h-4 mr-2 text-teal-500" /> Tactical Filters
+                <Filter className="w-4 h-4 mr-2 text-cyan-500" /> Tactical Filters
               </h2>
               <button 
                 onClick={handleClear} 
@@ -190,7 +190,7 @@ export default function PlayerSearch() {
                   value={filters.query} 
                   onChange={e => setFilters({...filters, query: e.target.value})} 
                   placeholder="Player name, academy..." 
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-teal-500"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -208,8 +208,8 @@ export default function PlayerSearch() {
                         onClick={() => handlePositionToggle(pos)}
                         className={`py-1 text-xs font-bold rounded-lg border transition-all ${
                           active 
-                            ? 'bg-teal-600 border-teal-500 text-white shadow-sm' 
-                            : 'bg-slate-50 dark:bg-[#081b29] text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-teal-400'
+                            ? 'bg-cyan-600 border-cyan-500 text-white shadow-sm' 
+                            : 'bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-cyan-400'
                         }`}
                       >
                         {pos}
@@ -226,7 +226,7 @@ export default function PlayerSearch() {
                 <select 
                   value={filters.ageGroup} 
                   onChange={e => setFilters({...filters, ageGroup: e.target.value})} 
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500"
                 >
                   <option value="">Any Age Group</option>
                   {AGE_GROUPS.map(age => <option key={age} value={age}>{age}</option>)}
@@ -245,7 +245,7 @@ export default function PlayerSearch() {
                     placeholder="Min (e.g. 70)" 
                     value={filters.minGpi} 
                     onChange={e => setFilters({...filters, minGpi: e.target.value})} 
-                    className="w-full px-3 py-1.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-white"
+                    className="w-full px-3 py-1.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
                   />
                   <span className="text-slate-400">—</span>
                   <input 
@@ -255,7 +255,7 @@ export default function PlayerSearch() {
                     placeholder="Max (100)" 
                     value={filters.maxGpi} 
                     onChange={e => setFilters({...filters, maxGpi: e.target.value})} 
-                    className="w-full px-3 py-1.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-white"
+                    className="w-full px-3 py-1.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
                   />
                 </div>
               </div>
@@ -270,7 +270,7 @@ export default function PlayerSearch() {
                   placeholder="e.g. 5"
                   value={filters.minMatches} 
                   onChange={e => setFilters({...filters, minMatches: e.target.value})} 
-                  className="w-full px-3 py-1.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-white"
+                  className="w-full px-3 py-1.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
                 />
               </div>
 
@@ -281,7 +281,7 @@ export default function PlayerSearch() {
                 <select 
                   value={filters.dataConfidence} 
                   onChange={e => setFilters({...filters, dataConfidence: e.target.value})} 
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-white"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
                 >
                   <option value="">Any Confidence</option>
                   <option value="HIGH">High (10+ Matches)</option>
@@ -291,7 +291,7 @@ export default function PlayerSearch() {
               </div>
 
               <div className="pt-2 space-y-2 border-t border-slate-100 dark:border-slate-800">
-                <Button type="submit" variant="primary" fullWidth className="bg-teal-600 hover:bg-teal-500 border-teal-500">
+                <Button type="submit" variant="primary" fullWidth className="bg-cyan-600 hover:bg-cyan-500 border-cyan-500">
                   Apply Tactical Filters
                 </Button>
                 <Button 
@@ -313,11 +313,11 @@ export default function PlayerSearch() {
           {error && <Alert type="error" message={error} />}
           
           {/* Results Toolbar */}
-          <div className="bg-white dark:bg-[#0b1e2d] px-5 py-3.5 rounded-xl shadow-sm border border-slate-200 dark:border-emerald-900/30 flex flex-wrap justify-between items-center gap-3">
+          <div className="bg-white dark:bg-slate-900 px-5 py-3.5 rounded-xl shadow-sm border border-slate-200 dark:border-blue-900/30 flex flex-wrap justify-between items-center gap-3">
             <div className="flex items-center space-x-3 text-sm">
               <span className="font-bold text-slate-900 dark:text-white">{results.length} Prospects</span>
               {selectedPlayers.length > 0 && (
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-500/20 text-teal-600 dark:text-teal-300 border border-teal-500/30">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 border border-cyan-500/30">
                   {selectedPlayers.length} Selected for Compare
                 </span>
               )}
@@ -328,7 +328,7 @@ export default function PlayerSearch() {
               <select 
                 value={filters.sortBy} 
                 onChange={e => { setFilters({...filters, sortBy: e.target.value}); fetchResults(); }} 
-                className="text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-white px-2 py-1.5"
+                className="text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-2 py-1.5"
               >
                 <option value="gpi">GPI Rating</option>
                 <option value="recent_form">Recent Form</option>
@@ -374,10 +374,10 @@ export default function PlayerSearch() {
                   <div 
                     key={playerId} 
                     style={{ animationDelay: `${Math.min(idx * 35, 240)}ms` }}
-                    className={`group bg-white dark:bg-[#0b1e2d] rounded-3xl shadow-md border transition-all duration-300 ease-out overflow-hidden flex flex-col justify-between card-elevate hover:shadow-2xl hover:-translate-y-[5px] animate-page-in ${
+                    className={`group bg-white dark:bg-slate-900 rounded-3xl shadow-md border transition-all duration-300 ease-out overflow-hidden flex flex-col justify-between card-elevate hover:shadow-2xl hover:-translate-y-[5px] animate-page-in ${
                       isSelected 
-                        ? 'border-teal-400 ring-2 ring-teal-400/30 shadow-teal-900/20' 
-                        : 'border-slate-200 dark:border-emerald-900/30 hover:border-teal-500/50'
+                        ? 'border-cyan-400 ring-2 ring-cyan-400/30 shadow-cyan-900/20' 
+                        : 'border-slate-200 dark:border-blue-900/30 hover:border-cyan-500/50'
                     }`}
                   >
                     {/* AUTHENTIC MINI BANNER HEADER */}
@@ -422,7 +422,7 @@ export default function PlayerSearch() {
                               type="checkbox" 
                               checked={isSelected} 
                               onChange={() => togglePlayerSelection(playerId)} 
-                              className="w-4 h-4 rounded text-teal-500 border-white/40 focus:ring-teal-400 cursor-pointer"
+                              className="w-4 h-4 rounded text-cyan-500 border-white/40 focus:ring-cyan-400 cursor-pointer"
                             />
                           </label>
 
@@ -458,7 +458,7 @@ export default function PlayerSearch() {
                             <div className="h-full w-full flex items-end justify-center">
                               <PlayerSilhouette 
                                 className="h-full w-20 filter drop-shadow-[0_6px_12px_rgba(0,0,0,0.6)]" 
-                                style={{ color: clubTheme.accent || '#34d399' }}
+                                style={{ color: clubTheme.accent || '#60a5fa' }}
                               />
                             </div>
                           )}
@@ -487,18 +487,18 @@ export default function PlayerSearch() {
 
                     {/* CARD DETAILS BODY */}
                     <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
-                      <div className="grid grid-cols-2 gap-2 text-xs py-2.5 px-3 bg-slate-50 dark:bg-[#071622] rounded-2xl border border-slate-100 dark:border-slate-800/80">
+                      <div className="grid grid-cols-2 gap-2 text-xs py-2.5 px-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800/80">
                         <div>
                           <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Location</span>
                           <span className="font-bold text-slate-800 dark:text-slate-200 truncate flex items-center mt-0.5">
-                            <MapPin className="w-3 h-3 mr-1 text-teal-500 flex-shrink-0" />
+                            <MapPin className="w-3 h-3 mr-1 text-cyan-500 flex-shrink-0" />
                             <span className="truncate">{playerLocation}</span>
                           </span>
                         </div>
                         <div>
                           <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Verified Matches</span>
                           <span className="font-bold text-slate-800 dark:text-slate-200 stat-number flex items-center mt-0.5">
-                            <CheckCircle className="w-3 h-3 text-emerald-500 mr-1 flex-shrink-0" />
+                            <CheckCircle className="w-3 h-3 text-blue-500 mr-1 flex-shrink-0" />
                             {playerMatches}
                           </span>
                         </div>
@@ -508,7 +508,7 @@ export default function PlayerSearch() {
                       <div className="flex items-center gap-2 pt-1">
                         <Link 
                           to={`/players/${playerId}`} 
-                          className="flex-1 text-center py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-[#081b29] border border-slate-200 dark:border-slate-700 hover:bg-teal-600 hover:text-white dark:hover:bg-teal-600 dark:hover:text-white hover:border-teal-500 transition-all duration-200"
+                          className="flex-1 text-center py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-cyan-600 hover:text-white dark:hover:bg-cyan-600 dark:hover:text-white hover:border-cyan-500 transition-all duration-200"
                         >
                           Tactical Dossier
                         </Link>
@@ -542,7 +542,7 @@ export default function PlayerSearch() {
                 value={filterName} 
                 onChange={e => setFilterName(e.target.value)} 
                 placeholder="e.g. Elite U19 Wingers (GPI 75+)" 
-                className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#081b29] text-slate-900 dark:text-white"
+                className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
               />
             </div>
             <div className="flex justify-end space-x-2 pt-2">

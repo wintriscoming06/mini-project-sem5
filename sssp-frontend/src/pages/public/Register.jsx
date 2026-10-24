@@ -68,13 +68,13 @@ const RegisterPage = () => {
 
   return (
     <AuthLayout activeRole={formData.role} onRoleChange={handleRoleChange}>
-      <div className="relative overflow-hidden bg-emerald-950/90 dark:bg-[#071c14]/95 border-2 border-emerald-500/40 rounded-3xl shadow-2xl p-6 sm:p-8 backdrop-blur-md">
+      <div className="relative overflow-hidden bg-blue-950/90 dark:bg-slate-900/95 border-2 border-blue-500/40 rounded-3xl shadow-2xl p-6 sm:p-8 backdrop-blur-md">
         {/* Pitch Grass Top Trim */}
-        <div className="h-2.5 bg-gradient-to-r from-emerald-600 via-emerald-400 to-green-600 rounded-t-3xl -mx-6 -mt-6 sm:-mx-8 sm:-mt-8 mb-4" />
+        <div className="h-2.5 bg-blue-600 rounded-t-3xl -mx-6 -mt-6 sm:-mx-8 sm:-mt-8 mb-4" />
         
         {/* Grass Blades Trim */}
         <div className="overflow-hidden leading-none -mx-6 sm:-mx-8 mb-4 pointer-events-none opacity-40">
-          <GrassBladesTrim className="w-full h-3 text-emerald-400" />
+          <GrassBladesTrim className="w-full h-3 text-blue-400" />
         </div>
 
         {/* Goal Net Texture Watermark */}
@@ -82,17 +82,17 @@ const RegisterPage = () => {
 
         {/* Form Header */}
         <div className="text-left mb-6 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/80 border border-emerald-400/50 text-emerald-300 text-xs font-black uppercase tracking-widest mb-3 shadow-md">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/80 border border-blue-400/50 text-blue-300 text-xs font-black uppercase tracking-widest mb-3 shadow-md">
             <ClassicSoccerBall className="w-4 h-4" />
             <span>OFFICIAL ROSTER CONTRACT DRAFT</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center justify-between">
             <span>Sign Contract</span>
-            <span className="text-xs font-bold px-2.5 py-1 rounded-md bg-emerald-800/60 text-emerald-200 border border-emerald-500/30 uppercase tracking-wider">
+            <span className="text-xs font-bold px-2.5 py-1 rounded-md bg-blue-800/60 text-blue-200 border border-blue-500/30 uppercase tracking-wider">
               {formData.role}
             </span>
           </h2>
-          <p className="text-xs sm:text-sm text-emerald-200/80 mt-1 font-medium">
+          <p className="text-xs sm:text-sm text-blue-200/80 mt-1 font-medium">
             Register your official player or scouting credentials in SSSP
           </p>
         </div>
@@ -106,7 +106,7 @@ const RegisterPage = () => {
           {/* Full Name / Username */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-              Full Name / Username <span className="text-emerald-400">*</span>
+              Full Name / Username <span className="text-blue-400">*</span>
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -119,7 +119,7 @@ const RegisterPage = () => {
                 onChange={handleChange}
                 placeholder="Enter your name or username"
                 required
-                className="w-full pl-10 pr-4 py-2 bg-slate-950/70 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all duration-200"
+                className="w-full pl-10 pr-4 py-2 bg-slate-950/70 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200"
               />
             </div>
           </div>
@@ -127,7 +127,7 @@ const RegisterPage = () => {
           {/* Email Address */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-              Email Address <span className="text-emerald-400">*</span>
+              Email Address <span className="text-blue-400">*</span>
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -140,7 +140,7 @@ const RegisterPage = () => {
                 onChange={handleChange}
                 placeholder="Enter your email address"
                 required
-                className="w-full pl-10 pr-4 py-2 bg-slate-950/70 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all duration-200"
+                className="w-full pl-10 pr-4 py-2 bg-slate-950/70 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200"
               />
             </div>
           </div>
@@ -149,7 +149,7 @@ const RegisterPage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                Password <span className="text-emerald-400">*</span>
+                Password <span className="text-blue-400">*</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -162,7 +162,7 @@ const RegisterPage = () => {
                   onChange={handleChange}
                   placeholder="Min 6 chars"
                   required
-                  className="w-full pl-9 pr-8 py-2 bg-slate-950/70 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all duration-200"
+                  className="w-full pl-9 pr-8 py-2 bg-slate-950/70 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200"
                 />
                 <button
                   type="button"
@@ -177,7 +177,7 @@ const RegisterPage = () => {
 
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                Confirm Password <span className="text-emerald-400">*</span>
+                Confirm Password <span className="text-blue-400">*</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -190,7 +190,7 @@ const RegisterPage = () => {
                   onChange={handleChange}
                   placeholder="Confirm password"
                   required
-                  className="w-full pl-9 pr-8 py-2 bg-slate-950/70 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all duration-200"
+                  className="w-full pl-9 pr-8 py-2 bg-slate-950/70 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200"
                 />
                 <button
                   type="button"
@@ -216,7 +216,7 @@ const RegisterPage = () => {
           <button
             type="submit"
             disabled={loading || !!success}
-            className="group w-full py-3.5 mt-3 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-400 to-green-500 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-black text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/30 flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed select-none btn-micro-press active:scale-[0.98]"
+            className="group w-full py-3.5 mt-3 rounded-xl bg-blue-600 hover:from-blue-400 hover:to-cyan-300 text-slate-950 font-black text-sm uppercase tracking-wider shadow-lg shadow-blue-500/30 flex items-center justify-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed select-none btn-micro-press active:scale-[0.98]"
           >
             {loading ? (
               <span className="flex items-center">
@@ -237,11 +237,11 @@ const RegisterPage = () => {
         </form>
 
         {/* Footer Link to Login */}
-        <div className="mt-5 pt-4 border-t border-emerald-800/60 text-center text-xs text-emerald-200/80 relative z-10">
+        <div className="mt-5 pt-4 border-t border-blue-800/60 text-center text-xs text-blue-200/80 relative z-10">
           Already registered in the official registry?{' '}
           <Link
             to="/login"
-            className="font-black text-emerald-300 hover:text-white ml-1 underline decoration-emerald-400/60 hover:decoration-white transition-all"
+            className="font-black text-blue-300 hover:text-white ml-1 underline decoration-blue-400/60 hover:decoration-white transition-all"
           >
             Sign In to Locker Room
           </Link>

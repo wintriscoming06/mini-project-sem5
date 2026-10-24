@@ -183,7 +183,7 @@ const ManageTournament = () => {
             <Button 
               variant="secondary" 
               onClick={() => navigate('/my-tournaments')}
-              className="bg-emerald-950/80 text-emerald-200 border-emerald-500/50 hover:bg-emerald-900"
+              className="bg-blue-950/80 text-blue-200 border-blue-500/50 hover:bg-blue-900"
               icon={<ArrowLeft className="w-4 h-4 mr-1" />}
             >
               Tournaments
@@ -200,12 +200,12 @@ const ManageTournament = () => {
           </>
         }
       >
-        <div className="flex items-center space-x-2 text-xs font-bold text-emerald-200 mt-2">
-          <span className="px-2.5 py-1 rounded-md bg-emerald-950/90 border border-emerald-400/40 text-emerald-300">
+        <div className="flex items-center space-x-2 text-xs font-bold text-blue-200 mt-2">
+          <span className="px-2.5 py-1 rounded-md bg-blue-950/90 border border-blue-400/40 text-blue-300">
             {tournament.ageGroup || 'Open Age'}
           </span>
           <span>•</span>
-          <span className="px-2.5 py-1 rounded-md bg-emerald-950/90 border border-emerald-400/40 text-emerald-300">
+          <span className="px-2.5 py-1 rounded-md bg-blue-950/90 border border-blue-400/40 text-blue-300">
             {tournament.genderCategory || 'All Genders'}
           </span>
           <span>•</span>
@@ -216,7 +216,7 @@ const ManageTournament = () => {
       {error && <Alert type="error" message={error} onClose={() => setError(null)} />}
 
       {/* Football-styled Tabs */}
-      <div className="flex border-b border-slate-200 dark:border-emerald-950/40 space-x-1 sm:space-x-3 overflow-x-auto">
+      <div className="flex border-b border-slate-200 dark:border-blue-950/40 space-x-1 sm:space-x-3 overflow-x-auto">
         {tabs.map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -226,7 +226,7 @@ const ManageTournament = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center space-x-2 py-3 px-4 font-semibold text-sm border-b-2 transition-all whitespace-nowrap ${
                 isActive 
-                  ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400' 
+                  ? 'border-blue-500 text-blue-600 dark:text-blue-400' 
                   : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >
@@ -245,7 +245,7 @@ const ManageTournament = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card className="md:col-span-2 p-6">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center">
-                <StadiumIcon className="w-5 h-5 mr-2 text-emerald-500" />
+                <StadiumIcon className="w-5 h-5 mr-2 text-blue-500" />
                 Tournament Parameters
               </h3>
               <div className="space-y-3 text-sm divide-y divide-slate-100 dark:divide-slate-800">
@@ -276,7 +276,7 @@ const ManageTournament = () => {
               <Card className="p-5">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Registered Teams</span>
-                  <Shield className="w-5 h-5 text-emerald-500" />
+                  <Shield className="w-5 h-5 text-blue-500" />
                 </div>
                 <div className="text-3xl font-black text-slate-900 dark:text-white">{teams.length}</div>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Ready for matchday scheduling</p>
@@ -337,7 +337,7 @@ const ManageTournament = () => {
                         <tr key={app.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
                           <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">
                             <div className="flex items-center space-x-3">
-                              <div className="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-xs">
+                              <div className="w-8 h-8 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs">
                                 {app.player?.name?.[0] || 'P'}
                               </div>
                               <div>
@@ -354,7 +354,7 @@ const ManageTournament = () => {
                                 <Button 
                                   size="sm" 
                                   variant="outline" 
-                                  className="text-emerald-600 border-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/40"
+                                  className="text-blue-600 border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40"
                                   onClick={() => handleApplicationDecision(app.id, 'ACCEPTED')}
                                 >
                                   <Check size={14} className="mr-1" /> Accept
@@ -395,7 +395,7 @@ const ManageTournament = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {teams.length === 0 ? (
-                <div className="col-span-full p-12 text-center text-slate-400 bg-white dark:bg-[#0b1e2d] rounded-2xl border border-dashed border-slate-300 dark:border-slate-800">
+                <div className="col-span-full p-12 text-center text-slate-400 bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800">
                   <Shield className="w-10 h-10 mx-auto text-slate-300 dark:text-slate-600 mb-2" />
                   <p className="font-semibold">No teams created yet.</p>
                   <p className="text-xs mt-1">Create teams to assemble rosters from accepted tournament applicants.</p>
@@ -405,7 +405,7 @@ const ManageTournament = () => {
                   <Card key={team.id} className="p-5">
                     <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
                       <div className="flex items-center space-x-2">
-                        <Shield className="w-5 h-5 text-emerald-500" />
+                        <Shield className="w-5 h-5 text-blue-500" />
                         <h3 className="font-bold text-base text-slate-900 dark:text-white">{team.name}</h3>
                       </div>
                       <Button size="sm" variant="outline" onClick={() => { setSelectedTeamId(team.id); setShowAddMemberModal(true); }}>
@@ -466,7 +466,7 @@ const ManageTournament = () => {
                       matches.map(match => (
                         <tr key={match.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
                           <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">
-                            <span className="text-emerald-600 dark:text-emerald-400">{match.homeTeam?.name || 'TBD'}</span>
+                            <span className="text-blue-600 dark:text-blue-400">{match.homeTeam?.name || 'TBD'}</span>
                             <span className="mx-2 text-slate-400">vs</span>
                             <span className="text-blue-600 dark:text-blue-400">{match.awayTeam?.name || 'TBD'}</span>
                           </td>
@@ -477,7 +477,7 @@ const ManageTournament = () => {
                           </td>
                           <td className="px-6 py-4 text-right">
                             <Link to={`/organizer/matches/${match.id}/scoring`}>
-                              <Button size="sm" variant="outline" className="border-emerald-500/40 text-emerald-600 dark:text-emerald-400">
+                              <Button size="sm" variant="outline" className="border-blue-500/40 text-blue-600 dark:text-blue-400">
                                 Match Desk
                               </Button>
                             </Link>
@@ -504,8 +504,8 @@ const ManageTournament = () => {
                 key={status} 
                 className={`px-4 py-2 text-xs font-bold rounded-xl border transition-all ${
                   newStatus === status 
-                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-md' 
-                    : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-emerald-500'
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-md' 
+                    : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-blue-500'
                 }`}
                 onClick={() => setNewStatus(status)}
               >
@@ -544,7 +544,7 @@ const ManageTournament = () => {
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1">Home Team</label>
               <select 
-                className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:ring-emerald-500"
+                className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:ring-blue-500"
                 value={matchData.homeTeamId}
                 onChange={e => setMatchData({...matchData, homeTeamId: e.target.value})}
                 required
@@ -556,7 +556,7 @@ const ManageTournament = () => {
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1">Away Team</label>
               <select 
-                className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:ring-emerald-500"
+                className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:ring-blue-500"
                 value={matchData.awayTeamId}
                 onChange={e => setMatchData({...matchData, awayTeamId: e.target.value})}
                 required
@@ -591,7 +591,7 @@ const ManageTournament = () => {
         <form onSubmit={handleAddMember} className="space-y-4 py-2">
           <p className="text-xs text-slate-500 dark:text-slate-400">Select an accepted tournament player to add to this squad roster:</p>
           <select 
-            className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:ring-emerald-500"
+            className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:ring-blue-500"
             value={selectedPlayerId}
             onChange={e => setSelectedPlayerId(e.target.value)}
             required

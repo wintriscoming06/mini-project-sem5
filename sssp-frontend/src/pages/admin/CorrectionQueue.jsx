@@ -49,7 +49,7 @@ export default function CorrectionQueue() {
 
   const getStatusIcon = (status) => {
     switch(status) {
-      case 'APPROVED': return <CheckCircle className="w-4 h-4 text-emerald-500" />;
+      case 'APPROVED': return <CheckCircle className="w-4 h-4 text-blue-500" />;
       case 'REJECTED': return <XCircle className="w-4 h-4 text-rose-500" />;
       default: return <Clock className="w-4 h-4 text-amber-500" />;
     }
@@ -57,7 +57,7 @@ export default function CorrectionQueue() {
 
   const getStatusBadge = (status) => {
     switch(status) {
-      case 'APPROVED': return <span className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-xs font-bold">APPROVED</span>;
+      case 'APPROVED': return <span className="bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded text-xs font-bold">APPROVED</span>;
       case 'REJECTED': return <span className="bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 px-2 py-0.5 rounded text-xs font-bold">REJECTED</span>;
       default: return <span className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded text-xs font-bold">PENDING</span>;
     }
@@ -67,7 +67,7 @@ export default function CorrectionQueue() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-6 bg-white dark:bg-[#0b1e2d] rounded-2xl border border-slate-200 dark:border-emerald-950/40 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-blue-950/40 shadow-sm">
         <div>
           <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center">
             <AlertCircle className="w-7 h-7 mr-3 text-amber-500" /> Match Data Correction Queue
@@ -89,7 +89,7 @@ export default function CorrectionQueue() {
               onClick={() => setFilter(f)} 
               className={`text-xs font-bold px-4 py-2 rounded-xl transition-all ${
                 filter === f 
-                  ? 'bg-emerald-600 text-white shadow-md' 
+                  ? 'bg-blue-600 text-white shadow-md' 
                   : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
@@ -113,7 +113,7 @@ export default function CorrectionQueue() {
               {filteredCorrections.length === 0 ? (
                 <tr>
                   <td colSpan="5" className="px-6 py-12 text-center text-slate-400">
-                    <CheckCircle className="w-8 h-8 mx-auto text-emerald-500 mb-2" />
+                    <CheckCircle className="w-8 h-8 mx-auto text-blue-500 mb-2" />
                     No {filter.toLowerCase()} corrections found.
                   </td>
                 </tr>
@@ -136,7 +136,7 @@ export default function CorrectionQueue() {
                         <div className="flex items-center space-x-2 mt-1">
                           <span className="line-through text-rose-500 font-bold">{c.oldValue || '0'}</span>
                           <span className="text-slate-400">→</span>
-                          <span className="font-bold text-emerald-600 dark:text-emerald-400 text-sm">{c.newValue}</span>
+                          <span className="font-bold text-blue-600 dark:text-blue-400 text-sm">{c.newValue}</span>
                         </div>
                       </div>
                     </td>
@@ -173,12 +173,12 @@ export default function CorrectionQueue() {
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div><span className="text-slate-400 block">Match</span> <span className="font-semibold text-slate-900 dark:text-white">{selectedCorrection.matchTitle}</span></div>
                 <div><span className="text-slate-400 block">Player</span> <span className="font-semibold text-slate-900 dark:text-white">{selectedCorrection.player}</span></div>
-                <div><span className="text-slate-400 block">Target Metric</span> <span className="font-semibold text-emerald-600 dark:text-emerald-400 uppercase">{selectedCorrection.targetField}</span></div>
+                <div><span className="text-slate-400 block">Target Metric</span> <span className="font-semibold text-blue-600 dark:text-blue-400 uppercase">{selectedCorrection.targetField}</span></div>
                 <div><span className="text-slate-400 block">Submitted</span> <span className="text-slate-700 dark:text-slate-300">{selectedCorrection.createdAt ? new Date(selectedCorrection.createdAt).toLocaleString() : '-'}</span></div>
               </div>
             </div>
 
-            <div className="flex justify-center items-center space-x-8 p-4 bg-white dark:bg-[#06131b] border border-slate-200 dark:border-slate-800 rounded-xl">
+            <div className="flex justify-center items-center space-x-8 p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl">
               <div className="text-center">
                 <span className="block text-xs uppercase tracking-wider text-slate-400 mb-1">Current Logged</span>
                 <span className="text-2xl font-black text-rose-500 line-through">{selectedCorrection.oldValue || '0'}</span>
@@ -186,7 +186,7 @@ export default function CorrectionQueue() {
               <div className="text-slate-400 font-bold text-xl">→</div>
               <div className="text-center">
                 <span className="block text-xs uppercase tracking-wider text-slate-400 mb-1">Claimed Stat</span>
-                <span className="text-2xl font-black text-emerald-500">{selectedCorrection.newValue}</span>
+                <span className="text-2xl font-black text-blue-500">{selectedCorrection.newValue}</span>
               </div>
             </div>
 
@@ -204,7 +204,7 @@ export default function CorrectionQueue() {
                   <textarea 
                     value={adminNote}
                     onChange={(e) => setAdminNote(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-white focus:ring-emerald-500"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-white focus:ring-blue-500"
                     rows="2"
                     placeholder="State justification for approval or rejection..."
                   />

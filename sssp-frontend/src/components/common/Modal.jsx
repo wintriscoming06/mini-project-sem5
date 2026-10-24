@@ -20,7 +20,7 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
           onClick={onClose} 
         />
 
-        <div className={`inline-block w-full ${sizes[size]} p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-[#0b1e2d] border border-slate-200 dark:border-emerald-900/40 rounded-xl shadow-2xl relative z-10`}>
+        <div className={`inline-block w-full ${sizes[size]} p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-slate-900 border border-slate-200 dark:border-blue-900/40 rounded-xl shadow-2xl relative z-10`}>
           <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
             <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">{title}</h3>
             <button 

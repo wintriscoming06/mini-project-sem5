@@ -7,9 +7,9 @@ const StatusBadge = ({ status, label }) => {
   let colorClasses = 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700';
 
   if (['ACTIVE', 'ACCEPTED', 'COMPLETED', 'APPROVED', 'FULL', 'HIGH'].includes(normalizedStatus)) {
-    colorClasses = 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/60';
+    colorClasses = 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800/60';
   } else if (['LIVE'].includes(normalizedStatus)) {
-    colorClasses = 'bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border-emerald-500/40 animate-pulse';
+    colorClasses = 'bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-300 border-blue-500/40 animate-pulse';
   } else if (['PENDING', 'ONGOING', 'SCHEDULED', 'PROVISIONAL', 'MEDIUM'].includes(normalizedStatus)) {
     colorClasses = 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800/60';
   } else if (['REJECTED', 'CANCELLED', 'LOW'].includes(normalizedStatus)) {
@@ -23,7 +23,7 @@ const StatusBadge = ({ status, label }) => {
   return (
     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${colorClasses}`}>
       {normalizedStatus === 'LIVE' && (
-        <span className="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500 animate-ping" />
+        <span className="w-1.5 h-1.5 mr-1.5 rounded-full bg-blue-500 animate-pulse" />
       )}
       {displayLabel}
     </span>

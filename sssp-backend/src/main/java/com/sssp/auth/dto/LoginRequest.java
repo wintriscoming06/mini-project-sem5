@@ -1,5 +1,6 @@
 package com.sssp.auth.dto;
 
+import com.sssp.common.enums.UserRole;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,4 +16,5 @@ public class LoginRequest {
     private String identifier;
     @NotBlank
     private String password;
+    private UserRole role;
 }

@@ -70,8 +70,8 @@ const MyApplications = () => {
 
       {error && <Alert type="error" message={error} />}
 
-      <Card className="relative overflow-hidden border-2 border-emerald-900/30">
-        <div className="h-1.5 bg-gradient-to-r from-emerald-600 via-emerald-400 to-green-600 -mx-6 -mt-6 mb-6" />
+      <Card className="relative overflow-hidden border-2 border-blue-900/30">
+        <div className="h-1.5 bg-blue-600 -mx-6 -mt-6 mb-6" />
         <div className="absolute inset-0 goal-net-texture opacity-10 pointer-events-none" />
         {applications.length === 0 ? (
           <EmptyState 
@@ -83,7 +83,7 @@ const MyApplications = () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
-              <thead className="bg-slate-50 dark:bg-[#071622] text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">
+              <thead className="bg-slate-50 dark:bg-slate-900 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">
                 <tr>
                   <th className="px-5 py-3.5 text-left">Tournament Competition</th>
                   <th className="px-5 py-3.5 text-left">Applied Date</th>
@@ -96,7 +96,7 @@ const MyApplications = () => {
                   <tr key={app.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
                     <td className="px-5 py-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center flex-shrink-0">
+                        <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center flex-shrink-0">
                           <TrophyIcon className="w-4 h-4" />
                         </div>
                         <div>

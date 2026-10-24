@@ -5,7 +5,7 @@ import EmptyState from './EmptyState';
 const DataTable = ({ columns, data, loading, emptyMessage = 'No data available' }) => {
   if (loading) {
     return (
-      <div className="flex justify-center p-8 bg-white dark:bg-[#0b1e2d] rounded-xl border border-slate-200 dark:border-emerald-900/30">
+      <div className="flex justify-center p-8 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-blue-900/30">
         <LoadingSpinner />
       </div>
     );
@@ -18,9 +18,9 @@ const DataTable = ({ columns, data, loading, emptyMessage = 'No data available' 
   }
 
   return (
-    <div className="overflow-x-auto bg-white dark:bg-[#0b1e2d] rounded-xl shadow-sm border border-slate-200 dark:border-emerald-900/30">
+    <div className="overflow-x-auto bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-blue-900/30">
       <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
-        <thead className="bg-slate-50 dark:bg-[#071622]">
+        <thead className="bg-slate-50 dark:bg-slate-900">
           <tr>
             {columns.map((col, idx) => (
               <th
@@ -33,7 +33,7 @@ const DataTable = ({ columns, data, loading, emptyMessage = 'No data available' 
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white dark:bg-[#0b1e2d] divide-y divide-slate-100 dark:divide-slate-800/70">
+        <tbody className="bg-white dark:bg-slate-900 divide-y divide-slate-100 dark:divide-slate-800/70">
           {data.map((row, rowIndex) => (
             <tr key={rowIndex} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
               {columns.map((col, colIndex) => (

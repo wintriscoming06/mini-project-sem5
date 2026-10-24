@@ -25,10 +25,10 @@ const Sidebar = () => {
         { path: '/matches', label: 'Fixtures & Scores', icon: StadiumIcon },
       ];
     }
-    if (hasRole('SCOUT')) {
+    if (hasRole('SCOUT') || hasRole('COACH')) {
       return [
-        { path: '/dashboard', label: 'Tactical Desk', icon: LayoutDashboard },
-        { path: '/search', label: 'Scout Talent', icon: ScoutTargetIcon },
+        { path: '/dashboard', label: hasRole('COACH') ? 'Squad & Tactics' : 'Tactical Desk', icon: LayoutDashboard },
+        { path: '/search', label: hasRole('COACH') ? 'Player Scouting' : 'Scout Talent', icon: ScoutTargetIcon },
         { path: '/shortlist', label: 'Shortlist', icon: Users },
         { path: '/alerts', label: 'Alerts Feed', icon: Bell },
       ];
@@ -46,7 +46,7 @@ const Sidebar = () => {
   const links = getLinks();
 
   return (
-    <div className="w-64 bg-white dark:bg-[#0b1e2d] border-r border-slate-200 dark:border-emerald-950/40 h-full min-h-[calc(100vh-4rem)] p-4 shadow-sm hidden md:block">
+    <div className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-blue-950/40 h-full min-h-[calc(100vh-4rem)] p-4 shadow-sm hidden md:block">
       <ul className="space-y-2">
         {links.map((link) => {
           const Icon = link.icon;
@@ -57,7 +57,7 @@ const Sidebar = () => {
                 to={link.path}
                 className={`flex items-center space-x-3 px-4 py-2.5 rounded-xl transition-colors font-medium text-sm ${
                   isActive 
-                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/20' 
+                    ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold border border-blue-500/20' 
                     : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >

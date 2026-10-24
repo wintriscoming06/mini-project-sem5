@@ -58,9 +58,9 @@ export default function ScoutAlerts() {
 
   const getReasonIcon = (reason) => {
     switch(reason) {
-      case 'NEW_ELIGIBILITY': return <CheckCircle2 className="w-5 h-5 text-emerald-500" />;
+      case 'NEW_ELIGIBILITY': return <CheckCircle2 className="w-5 h-5 text-blue-500" />;
       case 'THRESHOLD_CROSSING': return <AlertTriangle className="w-5 h-5 text-amber-500" />;
-      case 'CONFIRMED_MATCH': return <Info className="w-5 h-5 text-teal-500" />;
+      case 'CONFIRMED_MATCH': return <Info className="w-5 h-5 text-cyan-500" />;
       default: return <Bell className="w-5 h-5 text-sky-500" />;
     }
   };
@@ -104,19 +104,19 @@ export default function ScoutAlerts() {
       {error && <Alert type="error" message={error} />}
 
       {/* Filter Tabs & Alert List */}
-      <div className="relative bg-white dark:bg-[#0b1e2d] border border-slate-200 dark:border-emerald-900/40 rounded-2xl shadow-sm overflow-hidden">
+      <div className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-blue-900/40 rounded-2xl shadow-sm overflow-hidden">
         {/* Pitch Grass Top Trim */}
-        <div className="h-1.5 bg-gradient-to-r from-emerald-600 via-emerald-400 to-green-600" />
+        <div className="h-1.5 bg-blue-600" />
         {/* Goal Net Texture */}
         <div className="absolute inset-0 goal-net-texture opacity-10 pointer-events-none" />
-        <div className="border-b border-slate-100 dark:border-slate-800 p-3 bg-slate-50 dark:bg-[#071622] flex gap-2">
+        <div className="border-b border-slate-100 dark:border-slate-800 p-3 bg-slate-50 dark:bg-slate-900 flex gap-2">
           {['ALL', 'UNREAD', 'READ'].map(f => (
             <button 
               key={f}
               onClick={() => setFilter(f)} 
               className={`text-xs font-bold px-3.5 py-1.5 rounded-lg transition-colors ${
                 filter === f 
-                  ? 'bg-teal-600 text-white shadow-sm' 
+                  ? 'bg-cyan-600 text-white shadow-sm' 
                   : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800'
               }`}
             >
@@ -137,7 +137,7 @@ export default function ScoutAlerts() {
               <div 
                 key={alert.id} 
                 className={`p-5 flex flex-col md:flex-row gap-4 transition-colors ${
-                  !alert.read ? 'bg-teal-50/40 dark:bg-teal-950/20' : 'hover:bg-slate-50/60 dark:hover:bg-slate-800/40'
+                  !alert.read ? 'bg-cyan-50/40 dark:bg-cyan-950/20' : 'hover:bg-slate-50/60 dark:hover:bg-slate-800/40'
                 }`}
               >
                 <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800/80 h-fit self-start">
@@ -150,10 +150,10 @@ export default function ScoutAlerts() {
                       {alert.playerName}
                     </h3>
                     <StatusBadge status="INFO" label={alert.triggerReason} />
-                    {!alert.read && <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />}
+                    {!alert.read && <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />}
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-300 mb-2">
-                    Triggered by tactical filter: <span className="font-bold text-teal-600 dark:text-teal-400">"{alert.filterName || 'Automated Monitor'}"</span>
+                    Triggered by tactical filter: <span className="font-bold text-cyan-600 dark:text-cyan-400">"{alert.filterName || 'Automated Monitor'}"</span>
                   </p>
                   <span className="flex items-center text-[10px] text-slate-400">
                     <Clock className="w-3 h-3 mr-1" /> {new Date(alert.createdAt).toLocaleString()}
@@ -173,7 +173,7 @@ export default function ScoutAlerts() {
                       variant="ghost" 
                       size="sm"
                       onClick={() => handleMarkRead(alert.id)}
-                      className="text-xs text-teal-600 dark:text-teal-400"
+                      className="text-xs text-cyan-600 dark:text-cyan-400"
                     >
                       Mark Read
                     </Button>

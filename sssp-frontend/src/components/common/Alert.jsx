@@ -7,14 +7,14 @@ const Alert = ({ type = 'info', message, dismissible = true, onClose }) => {
   if (!isVisible || !message) return null;
 
   const styles = {
-    success: 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-200 border-emerald-200 dark:border-emerald-800/60',
+    success: 'bg-blue-50 dark:bg-blue-950/50 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-800/60',
     error: 'bg-rose-50 dark:bg-rose-950/50 text-rose-800 dark:text-rose-200 border-rose-200 dark:border-rose-800/60',
     warning: 'bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-200 border-amber-200 dark:border-amber-800/60',
     info: 'bg-sky-50 dark:bg-sky-950/50 text-sky-800 dark:text-sky-200 border-sky-200 dark:border-sky-800/60'
   };
 
   const icons = {
-    success: <CheckCircle className="h-5 w-5 text-emerald-500 flex-shrink-0" />,
+    success: <CheckCircle className="h-5 w-5 text-blue-500 flex-shrink-0" />,
     error: <XCircle className="h-5 w-5 text-rose-500 flex-shrink-0" />,
     warning: <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0" />,
     info: <Info className="h-5 w-5 text-sky-500 flex-shrink-0" />

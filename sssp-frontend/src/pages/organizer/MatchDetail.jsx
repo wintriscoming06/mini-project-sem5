@@ -73,7 +73,7 @@ const MatchDetail = () => {
       <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
         <button 
           onClick={() => navigate('/matches')} 
-          className="inline-flex items-center text-xs font-semibold text-slate-400 hover:text-emerald-500 transition-colors"
+          className="inline-flex items-center text-xs font-semibold text-slate-400 hover:text-blue-500 transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-1" /> Back to Fixtures
         </button>
@@ -96,7 +96,7 @@ const MatchDetail = () => {
       {error && <Alert type="error" message={error} onClose={() => setError(null)} />}
 
       {/* Stadium Match Scoreboard Arena */}
-      <div className="relative overflow-hidden rounded-3xl border-2 border-emerald-500/50 pitch-turf-stripes text-white shadow-2xl p-6 sm:p-10">
+      <div className="relative overflow-hidden rounded-3xl border-2 border-blue-500/50 pitch-turf-stripes text-white shadow-2xl p-6 sm:p-10">
         {/* Stadium Floodlights Glow */}
         <div className="absolute -top-24 inset-x-0 h-48 pointer-events-none opacity-60 stadium-glow" />
         {/* Goal Net Background Texture */}
@@ -106,19 +106,19 @@ const MatchDetail = () => {
 
         <div className="relative z-10">
           <div className="flex justify-between items-center mb-6 text-xs">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-400/50 backdrop-blur-md font-bold text-emerald-300">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-950/80 border border-blue-400/50 backdrop-blur-md font-bold text-blue-300">
+              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
               <span>{match.status}</span>
             </div>
             
-            <div className="flex items-center gap-4 text-emerald-100/90 font-medium bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-500/30">
+            <div className="flex items-center gap-4 text-blue-100/90 font-medium bg-blue-950/60 px-3 py-1 rounded-full border border-blue-500/30">
               <span className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-teal-300" /> 
+                <Clock className="w-3.5 h-3.5 text-cyan-300" /> 
                 {new Date(match.date).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
               </span>
               {match.venue && (
                 <span className="flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5 text-emerald-300" /> {match.venue}
+                  <MapPin className="w-3.5 h-3.5 text-blue-300" /> {match.venue}
                 </span>
               )}
             </div>
@@ -127,7 +127,7 @@ const MatchDetail = () => {
           <div className="flex items-center justify-between max-w-2xl mx-auto my-6">
             {/* Home Club */}
             <div className="text-center w-2/5 space-y-2">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-950/90 border-2 border-emerald-400/50 mx-auto flex items-center justify-center font-black text-2xl text-emerald-300 shadow-xl backdrop-blur-md">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-blue-950/90 border-2 border-blue-400/50 mx-auto flex items-center justify-center font-black text-2xl text-blue-300 shadow-xl backdrop-blur-md">
                 {match.homeTeam?.name?.charAt(0) || 'H'}
               </div>
               <h2 className="text-base sm:text-xl font-extrabold tracking-tight truncate text-white drop-shadow-md">{match.homeTeam?.name || 'Home Club'}</h2>
@@ -147,7 +147,7 @@ const MatchDetail = () => {
                 <div className="text-2xl sm:text-4xl font-extrabold text-white/80 drop-shadow">VS</div>
               )}
               {match.confirmed && (
-                <span className="mt-2 text-[10px] font-black uppercase tracking-widest text-emerald-300 bg-emerald-900/60 px-3 py-0.5 rounded-full inline-block border border-emerald-400/50">
+                <span className="mt-2 text-[10px] font-black uppercase tracking-widest text-blue-300 bg-blue-900/60 px-3 py-0.5 rounded-full inline-block border border-blue-400/50">
                   Certified Final
                 </span>
               )}
@@ -155,7 +155,7 @@ const MatchDetail = () => {
             
             {/* Away Club */}
             <div className="text-center w-2/5 space-y-2">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-950/90 border-2 border-teal-400/50 mx-auto flex items-center justify-center font-black text-2xl text-teal-300 shadow-xl backdrop-blur-md">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-blue-950/90 border-2 border-cyan-400/50 mx-auto flex items-center justify-center font-black text-2xl text-cyan-300 shadow-xl backdrop-blur-md">
                 {match.awayTeam?.name?.charAt(0) || 'A'}
               </div>
               <h2 className="text-base sm:text-xl font-extrabold tracking-tight truncate text-white drop-shadow-md">{match.awayTeam?.name || 'Away Club'}</h2>
@@ -172,7 +172,7 @@ const MatchDetail = () => {
             onClick={() => setActiveTab(tab.id)}
             className={`py-3 px-5 font-bold text-xs rounded-t-lg border-b-2 transition-colors whitespace-nowrap ${
               activeTab === tab.id 
-                ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-emerald-50/40 dark:bg-emerald-950/20' 
+                ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-50/40 dark:bg-blue-950/20' 
                 : 'border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
@@ -185,7 +185,7 @@ const MatchDetail = () => {
       <div className="space-y-4">
         
         {activeTab === 'events' && (
-          <div className="bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-blue-900/30 overflow-hidden">
             {events.length === 0 ? (
               <div className="p-12 text-center text-xs text-slate-400">No events recorded for this match yet.</div>
             ) : (
@@ -207,7 +207,7 @@ const MatchDetail = () => {
 
         {activeTab === 'participations' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 p-5 space-y-3">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-blue-900/30 p-5 space-y-3">
               <h3 className="font-extrabold text-sm text-slate-900 dark:text-white pb-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                 <span>{match.homeTeam?.name} Lineup</span>
                 <span className="text-xs font-semibold text-slate-400">Home Roster</span>
@@ -225,7 +225,7 @@ const MatchDetail = () => {
               </ul>
             </div>
 
-            <div className="bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 p-5 space-y-3">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-blue-900/30 p-5 space-y-3">
               <h3 className="font-extrabold text-sm text-slate-900 dark:text-white pb-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                 <span>{match.awayTeam?.name} Lineup</span>
                 <span className="text-xs font-semibold text-slate-400">Away Roster</span>
@@ -246,10 +246,10 @@ const MatchDetail = () => {
         )}
 
         {activeTab === 'stats' && (
-          <div className="bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-blue-900/30 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-xs">
-                <thead className="bg-slate-50 dark:bg-[#071622] text-slate-500 dark:text-slate-400 uppercase font-semibold">
+                <thead className="bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 uppercase font-semibold">
                   <tr>
                     <th className="px-5 py-3 text-left">Player Athlete</th>
                     <th className="px-5 py-3 text-center">Goals</th>
@@ -265,8 +265,8 @@ const MatchDetail = () => {
                     stats.map((stat, idx) => (
                       <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
                         <td className="px-5 py-3.5 font-bold text-slate-900 dark:text-white">{stat.player?.name}</td>
-                        <td className="px-5 py-3.5 text-center font-extrabold text-emerald-600 dark:text-emerald-400 stat-number">{stat.goals || 0}</td>
-                        <td className="px-5 py-3.5 text-center font-extrabold text-teal-600 dark:text-teal-400 stat-number">{stat.assists || 0}</td>
+                        <td className="px-5 py-3.5 text-center font-extrabold text-blue-600 dark:text-blue-400 stat-number">{stat.goals || 0}</td>
+                        <td className="px-5 py-3.5 text-center font-extrabold text-cyan-600 dark:text-cyan-400 stat-number">{stat.assists || 0}</td>
                         <td className="px-5 py-3.5 text-center font-semibold text-amber-500 stat-number">{stat.yellowCards || 0}</td>
                         <td className="px-5 py-3.5 text-center font-semibold text-rose-500 stat-number">{stat.redCards || 0}</td>
                       </tr>
@@ -279,7 +279,7 @@ const MatchDetail = () => {
         )}
 
         {activeTab === 'corrections' && match.confirmed && (
-          <div className="bg-white dark:bg-[#0b1e2d] rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-900/30 p-6 space-y-3">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-blue-900/30 p-6 space-y-3">
             <h3 className="font-extrabold text-base text-slate-900 dark:text-white">Official Result Correction Process</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
               Once certified, match score sheets feed directly into the GPI analytical engine. For official post-match appeals or score corrections, contact SSSP League Administration.
