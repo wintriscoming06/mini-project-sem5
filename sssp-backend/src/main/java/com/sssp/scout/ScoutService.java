@@ -428,7 +428,13 @@ public class ScoutService {
         }
 
         ScoutProfile scoutProfile = scoutProfileRepository.findByUserId(scout.getId())
-                .orElseThrow(() -> new BadRequestException("Please complete your scout profile with a valid mobile contact number before sending requests"));
+                .orElseGet(() -> scoutProfileRepository.save(
+                        ScoutProfile.builder()
+                                .user(scout)
+                                .organization("Independent Scout")
+                                .affiliation("Pro Scouting Network")
+                                .build()
+                ));
 
         String phone = scoutProfile.getPhoneNumber();
         if (phone == null || phone.isBlank()) {
@@ -436,6 +442,7 @@ public class ScoutService {
         }
 
         User player = userRepository.findById(playerId)
+                .or(() -> playerProfileRepository.findById(playerId).map(PlayerProfile::getUser))
                 .orElseThrow(() -> new ResourceNotFoundException("Player not found with ID: " + playerId));
         if (player.getRole() != UserRole.PLAYER) {
             throw new BadRequestException("Target user is not a player");

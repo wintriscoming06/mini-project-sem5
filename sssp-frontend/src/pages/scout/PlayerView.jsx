@@ -141,7 +141,8 @@ export default function PlayerView() {
     setSendingContact(true);
     setContactError(null);
     try {
-      await scoutService.sendContactRequest(id, { message: contactMessage.trim() });
+      const targetPlayerUserId = p.userId || p.id || id;
+      await scoutService.sendContactRequest(targetPlayerUserId, { message: contactMessage.trim() });
       setContactSuccess("Scouting contact request sent successfully! The player can now view your inquiry and mobile number.");
       setContactMessage('');
       setTimeout(() => {
