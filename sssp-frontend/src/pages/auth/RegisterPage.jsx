@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, User, UserPlus, Eye, EyeOff } from 'lucide-react';
+import { Lock, User, AtSign, UserPlus, Eye, EyeOff } from 'lucide-react';
 import { authService, getErrorMessage } from '../../services/api';
 import { Alert, ClassicSoccerBall } from '../../components/common';
 import AuthLayout from '../../components/auth/AuthLayout';
@@ -8,8 +8,8 @@ import RoleSelectDropdown from '../../components/auth/RoleSelectDropdown';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
+    fullName: '',
     username: '',
-    email: '',
     password: '',
     confirmPassword: '',
     role: 'PLAYER',
@@ -53,8 +53,15 @@ const RegisterPage = () => {
     setLoading(true);
 
     try {
-      const { confirmPassword, ...registerPayload } = formData;
-      await authService.register(registerPayload);
+      const { confirmPassword, fullName, ...registerPayload } = formData;
+      // Derive valid fallback email if not provided, ensuring seamless API compatibility
+      const sanitizedUsername = formData.username.trim().toLowerCase().replace(/[^a-z0-9._-]/g, '');
+      const payloadWithEmail = {
+        ...registerPayload,
+        username: formData.username.trim(),
+        email: `${sanitizedUsername || 'user'}@sssp.org`,
+      };
+      await authService.register(payloadWithEmail);
       setSuccess('Registration successful! Redirecting to login...');
       setTimeout(() => {
         navigate('/login');
@@ -88,7 +95,7 @@ const RegisterPage = () => {
             </span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 mt-1 font-medium">
-            Register your official player or scouting credentials in SSSP
+            Register your official credentials in SSSP
           </p>
         </div>
 
@@ -98,42 +105,42 @@ const RegisterPage = () => {
 
         {/* Registration Form */}
         <form onSubmit={handleSubmit} className="space-y-3.5 relative z-10">
-          {/* Full Name / Username */}
+          {/* Full Name */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-              Full Name / Username <span className="text-blue-400">*</span>
+              Full Name <span className="text-blue-400">*</span>
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                 <User className="w-4 h-4" />
               </div>
               <input
-                name="username"
+                name="fullName"
                 type="text"
-                value={formData.username}
+                value={formData.fullName}
                 onChange={handleChange}
-                placeholder="Enter your name or username"
+                placeholder="Enter your full name"
                 required
                 className="w-full pl-10 pr-4 py-2 bg-slate-950/70 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200"
               />
             </div>
           </div>
 
-          {/* Email Address */}
+          {/* Username */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-              Email Address <span className="text-blue-400">*</span>
+              Username <span className="text-blue-400">*</span>
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <Mail className="w-4 h-4" />
+                <AtSign className="w-4 h-4" />
               </div>
               <input
-                name="email"
-                type="email"
-                value={formData.email}
+                name="username"
+                type="text"
+                value={formData.username}
                 onChange={handleChange}
-                placeholder="Enter your email address"
+                placeholder="Enter your username (for signing in)"
                 required
                 className="w-full pl-10 pr-4 py-2 bg-slate-950/70 border border-slate-700 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200"
               />
