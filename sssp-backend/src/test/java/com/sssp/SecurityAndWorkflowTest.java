@@ -54,12 +54,10 @@ public class SecurityAndWorkflowTest {
     void testAdminSelfRegistrationProhibited() {
         RegisterRequest req = RegisterRequest.builder()
                 .username("malicious_admin")
-                .email("admin@sssp.com")
                 .password("secret123")
                 .role(UserRole.ADMIN)
                 .build();
 
-        when(userRepository.existsByEmail("admin@sssp.com")).thenReturn(false);
         when(userRepository.existsByUsername("malicious_admin")).thenReturn(false);
 
         BadRequestException ex = assertThrows(BadRequestException.class, () -> authService.register(req));

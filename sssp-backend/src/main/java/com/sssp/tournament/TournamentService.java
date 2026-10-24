@@ -277,7 +277,6 @@ public class TournamentService {
         playerMap.put("id", a.getPlayer().getId());
         playerMap.put("username", a.getPlayer().getUsername());
         playerMap.put("name", a.getPlayer().getUsername());
-        playerMap.put("email", a.getPlayer().getEmail());
 
         return ApplicationResponse.builder()
                 .id(a.getId())

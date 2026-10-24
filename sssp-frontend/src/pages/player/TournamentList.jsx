@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, MapPin, Calendar, Users, Filter, CheckCircle, Trophy } from 'lucide-react';
+import { Search, MapPin, Calendar, Users, Trophy, Filter } from 'lucide-react';
 import { tournamentService } from '../../services/api';
 import { 
   LoadingSpinner, Alert, Button, StatusBadge, EmptyState, 
@@ -9,7 +9,6 @@ import {
 
 const TournamentList = () => {
   const [tournaments, setTournaments] = useState([]);
-  const [myApplications, setMyApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,22 +22,13 @@ const TournamentList = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [tournamentsRes, appsRes] = await Promise.all([
-        tournamentService.getAll().catch(() => ({ data: [] })),
-        tournamentService.getMyApplications().catch(() => ({ data: [] }))
-      ]);
+      const tournamentsRes = await tournamentService.getAll().catch(() => ({ data: [] }));
       setTournaments(tournamentsRes.data || []);
-      setMyApplications(appsRes.data || []);
     } catch (err) {
       setError('Failed to load tournaments.');
     } finally {
       setLoading(false);
     }
-  };
-
-  const getApplicationStatus = (tournamentId) => {
-    const app = myApplications.find(a => a.tournamentId === tournamentId);
-    return app ? app.status : null;
   };
 
   const filteredTournaments = tournaments.filter(t => {
@@ -61,18 +51,8 @@ const TournamentList = () => {
         stats={[
           { label: "AVAILABLE", value: tournaments.length },
           { label: "OPEN", value: tournaments.filter(t => t.status === 'OPEN').length },
-          { label: "MY ENTRIES", value: myApplications.length },
           { label: "FORMATS", value: "11v11 / 7v7" }
         ]}
-        actionButtons={
-          <Button 
-            variant="secondary" 
-            onClick={() => navigate('/my-applications')}
-            className="bg-blue-950/80 text-blue-200 border-blue-500/50 hover:bg-blue-900"
-          >
-            Track My Applications ({myApplications.length})
-          </Button>
-        }
       />
 
       {error && <Alert type="error" message={error} />}
@@ -113,9 +93,7 @@ const TournamentList = () => {
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredTournaments.map((t) => {
-            const appStatus = getApplicationStatus(t.id);
-            return (
+          {filteredTournaments.map((t) => (
               <div 
                 key={t.id} 
                 onClick={() => navigate(`/tournaments/${t.id}`)}
@@ -143,8 +121,8 @@ const TournamentList = () => {
                       </div>
                     </div>
                     <StatusBadge 
-                      status={t.status === 'OPEN' ? 'ACTIVE' : t.status === 'ONGOING' ? 'LIVE' : 'COMPLETED'} 
-                      label={t.status} 
+                      status={t.status} 
+                      label={t.status === 'REGISTRATION_CLOSED' ? 'REGISTRATION CLOSED' : t.status} 
                     />
                   </div>
                   
@@ -166,31 +144,22 @@ const TournamentList = () => {
 
                 <div className="px-6 py-4 bg-slate-50/80 dark:bg-slate-900 border-t border-blue-100 dark:border-blue-950/80 flex items-center justify-between text-xs relative z-10">
                   <div>
-                    <span className="text-slate-400 dark:text-blue-300/60 block text-[10px] uppercase font-bold">Registration Deadline</span>
+                    <span className="text-slate-400 dark:text-blue-300/60 block text-[10px] uppercase font-bold">Start Date</span>
                     <span className="font-black text-slate-800 dark:text-white stat-number">
-                      {new Date(t.registrationDeadline).toLocaleDateString()}
+                      {new Date(t.startDate).toLocaleDateString()}
                     </span>
                   </div>
 
-                  {appStatus ? (
-                    <span className="inline-flex items-center font-black text-blue-600 dark:text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/30">
-                      <CheckCircle className="w-3.5 h-3.5 mr-1" /> Entered
-                    </span>
-                  ) : t.status === 'OPEN' ? (
-                    <Button 
-                      size="sm" 
-                      variant="primary"
-                      onClick={(e) => { e.stopPropagation(); navigate(`/tournaments/${t.id}`); }}
-                    >
-                      Apply Roster
-                    </Button>
-                  ) : (
-                    <span className="text-slate-400 font-bold">Closed</span>
-                  )}
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={(e) => { e.stopPropagation(); navigate(`/tournaments/${t.id}`); }}
+                  >
+                    View Details
+                  </Button>
                 </div>
               </div>
-            );
-          })}
+          ))}
         </div>
       )}
     </div>

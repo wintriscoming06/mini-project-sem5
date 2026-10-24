@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Accepts either login({ identifier, password, role }) or login(identifier, password, role).
-  // Backend returns a flat AuthResponse: { token, type, userId, username, email, role, evaluatorPermission }.
+  // Backend returns a flat AuthResponse: { token, type, userId, username, role, evaluatorPermission }.
   const login = async (identifierOrData, maybePassword, maybeRole) => {
     let payload;
     if (typeof identifierOrData === 'object' && identifierOrData !== null) {

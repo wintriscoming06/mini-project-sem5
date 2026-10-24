@@ -54,14 +54,11 @@ const RegisterPage = () => {
 
     try {
       const { confirmPassword, fullName, ...registerPayload } = formData;
-      // Derive valid fallback email if not provided, ensuring seamless API compatibility
-      const sanitizedUsername = formData.username.trim().toLowerCase().replace(/[^a-z0-9._-]/g, '');
-      const payloadWithEmail = {
+      const payload = {
         ...registerPayload,
         username: formData.username.trim(),
-        email: `${sanitizedUsername || 'user'}@sssp.org`,
       };
-      await authService.register(payloadWithEmail);
+      await authService.register(payload);
       setSuccess('Registration successful! Redirecting to login...');
       setTimeout(() => {
         navigate('/login');

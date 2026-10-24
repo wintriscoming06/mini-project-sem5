@@ -82,18 +82,17 @@ public class InputValidationAndBoundaryTest {
     }
 
     @Test
-    @DisplayName("Security Boundary: Duplicate email or username rejects registration with clean message")
+    @DisplayName("Security Boundary: Duplicate username rejects registration with clean message")
     void testDuplicateRegistrationCleanRejection() {
         RegisterRequest req = RegisterRequest.builder()
                 .username("existing_user")
-                .email("used@sssp.com")
                 .password("password123")
                 .role(UserRole.PLAYER)
                 .build();
 
-        when(userRepository.existsByEmail("used@sssp.com")).thenReturn(true);
+        when(userRepository.existsByUsername("existing_user")).thenReturn(true);
 
         BadRequestException ex = assertThrows(BadRequestException.class, () -> authService.register(req));
-        assertEquals("Email is already in use", ex.getMessage());
+        assertEquals("Username is already taken", ex.getMessage());
     }
 }

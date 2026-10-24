@@ -27,7 +27,6 @@ const Navbar = () => {
       return [
         { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
         { path: '/tournaments', label: 'Tournaments', icon: Trophy },
-        { path: '/my-applications', label: 'Applications', icon: Users },
         { path: '/player/stats', label: 'Match Stats', icon: BarChart2 },
         { path: '/player/card-studio', label: 'Card Studio', icon: FootballIcon },
         { path: '/profile', label: 'GPI Profile', icon: User }
@@ -36,9 +35,7 @@ const Navbar = () => {
     if (hasRole('ORGANIZER')) {
       return [
         { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-        { path: '/my-tournaments', label: 'Tournaments', icon: Trophy },
-        { path: '/tournaments/create', label: 'New Tournament', icon: FilePlus },
-        { path: '/matches', label: 'Matches & Scoring', icon: Calendar }
+        { path: '/my-tournaments', label: 'Tournaments', icon: Trophy }
       ];
     }
     if (hasRole('SCOUT')) {

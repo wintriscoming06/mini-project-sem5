@@ -16,7 +16,6 @@ public class AuthResponse {
     private String type = "Bearer";
     private Long userId;
     private String username;
-    private String email;
     private UserRole role;
     private boolean evaluatorPermission;
 }

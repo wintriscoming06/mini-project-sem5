@@ -13,7 +13,6 @@ const Sidebar = () => {
       return [
         { path: '/dashboard', label: 'Match Dashboard', icon: LayoutDashboard },
         { path: '/tournaments', label: 'Tournaments', icon: TrophyIcon },
-        { path: '/my-applications', label: 'My Applications', icon: Users },
         { path: '/player/stats', label: 'Match Stats', icon: WhistleIcon },
         { path: '/player/card-studio', label: 'Card Studio', icon: FootballIcon },
       ];
@@ -21,8 +20,7 @@ const Sidebar = () => {
     if (hasRole('ORGANIZER')) {
       return [
         { path: '/dashboard', label: 'Match Operations', icon: LayoutDashboard },
-        { path: '/my-tournaments', label: 'Competitions', icon: TrophyIcon },
-        { path: '/matches', label: 'Fixtures & Scores', icon: StadiumIcon },
+        { path: '/my-tournaments', label: 'Competitions', icon: TrophyIcon }
       ];
     }
     if (hasRole('SCOUT')) {

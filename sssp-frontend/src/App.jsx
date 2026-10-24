@@ -14,7 +14,6 @@ import PlayerDashboard from './pages/player/PlayerDashboard';
 import PlayerProfile from './pages/player/PlayerProfile';
 import TournamentList from './pages/player/TournamentList';
 import TournamentDetail from './pages/player/TournamentDetail';
-import MyApplications from './pages/player/MyApplications';
 import PlayerStats from './pages/player/PlayerStats';
 import CustomizeCard from './pages/player/CustomizeCard';
 
@@ -68,7 +67,6 @@ function App() {
         {/* PLAYER ROUTES */}
         <Route path="/tournaments" element={<ProtectedRoute roles={['PLAYER']}><TournamentList /></ProtectedRoute>} />
         <Route path="/tournaments/:id" element={<ProtectedRoute roles={['PLAYER']}><TournamentDetail /></ProtectedRoute>} />
-        <Route path="/my-applications" element={<ProtectedRoute roles={['PLAYER']}><MyApplications /></ProtectedRoute>} />
         <Route path="/player/stats" element={<ProtectedRoute roles={['PLAYER']}><PlayerStats /></ProtectedRoute>} />
         <Route path="/player/card-studio" element={<ProtectedRoute roles={['PLAYER']}><CustomizeCard /></ProtectedRoute>} />
         <Route path="/player/customize-card" element={<Navigate to="/player/card-studio" replace />} />

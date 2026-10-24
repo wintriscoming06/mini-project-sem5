@@ -15,8 +15,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RegisterRequest {
     @NotBlank
-    private String email;
-    @NotBlank
     private String username;
     @NotBlank
     @Size(min = 6)

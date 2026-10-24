@@ -71,7 +71,6 @@ public class AdminService {
         UserResponse res = new UserResponse();
         res.setId(u.getId());
         res.setUsername(u.getUsername());
-        res.setEmail(u.getEmail());
         res.setRole(u.getRole());
         res.setActive(u.isActive());
         res.setEvaluatorPermission(u.isEvaluatorPermission());

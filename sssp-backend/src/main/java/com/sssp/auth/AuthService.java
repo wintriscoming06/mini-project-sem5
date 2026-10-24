@@ -55,9 +55,6 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new BadRequestException("Email is already in use");
-        }
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new BadRequestException("Username is already taken");
         }
@@ -67,7 +64,6 @@ public class AuthService {
 
         User user = new User();
         user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRole());
         user.setActive(true);
@@ -97,7 +93,6 @@ public class AuthService {
                 .type("Bearer")
                 .userId(savedUser.getId())
                 .username(savedUser.getUsername())
-                .email(savedUser.getEmail())
                 .role(savedUser.getRole())
                 .evaluatorPermission(savedUser.isEvaluatorPermission())
                 .build();
@@ -125,7 +120,6 @@ public class AuthService {
                 .type("Bearer")
                 .userId(user.getId())
                 .username(user.getUsername())
-                .email(user.getEmail())
                 .role(user.getRole())
                 .evaluatorPermission(user.isEvaluatorPermission())
                 .build();
@@ -137,7 +131,6 @@ public class AuthService {
         return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
-                .email(user.getEmail())
                 .role(user.getRole())
                 .active(user.isActive())
                 .evaluatorPermission(user.isEvaluatorPermission())
