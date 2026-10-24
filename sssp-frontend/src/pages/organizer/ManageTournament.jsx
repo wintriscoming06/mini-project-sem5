@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { tournamentService, matchService, playerService } from '../../services/api';
-import { ArrowLeft, Users, Settings, Plus, Check, X, Shield, Edit3 } from 'lucide-react';
+import { ArrowLeft, Settings, Plus, Shield, Edit3 } from 'lucide-react';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import StatusBadge from '../../components/common/StatusBadge';
@@ -18,7 +18,6 @@ const ManageTournament = () => {
   
   const [activeTab, setActiveTab] = useState('overview');
   const [tournament, setTournament] = useState(null);
-  const [applications, setApplications] = useState([]);
   const [teams, setTeams] = useState([]);
   const [matches, setMatches] = useState([]);
   const [allPlayers, setAllPlayers] = useState([]);
@@ -53,7 +52,6 @@ const ManageTournament = () => {
   
   const tabs = [
     { id: 'overview', label: 'Overview', icon: TrophyIcon },
-    { id: 'applications', label: 'Applications', icon: Users },
     { id: 'teams', label: 'Squads & Teams', icon: Shield },
     { id: 'matches', label: 'Match Schedule', icon: FootballIcon }
   ];
@@ -67,22 +65,12 @@ const ManageTournament = () => {
       setLoading(true);
       const res = await tournamentService.getById(id);
       setTournament(res.data);
-      if (activeTab === 'applications') fetchApplications();
       if (activeTab === 'teams') fetchTeams();
       if (activeTab === 'matches') fetchMatches();
     } catch (err) {
       setError("Failed to load tournament data.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fetchApplications = async () => {
-    try {
-      const res = await tournamentService.getApplications(id);
-      setApplications(res.data || []);
-    } catch (err) {
-      console.error(err);
     }
   };
 
@@ -110,7 +98,6 @@ const ManageTournament = () => {
   };
 
   useEffect(() => {
-    if (activeTab === 'applications') fetchApplications();
     if (activeTab === 'teams') fetchTeams();
     if (activeTab === 'matches') fetchMatches();
   }, [activeTab]);
@@ -151,16 +138,6 @@ const ManageTournament = () => {
       fetchTournamentData();
     } catch (err) {
       setError(err?.response?.data?.message || "Failed to update tournament specifications.");
-    }
-  };
-
-  const handleApplicationDecision = async (applicationId, status) => {
-    try {
-      await tournamentService.decideApplication(id, applicationId, status);
-      fetchApplications();
-    } catch (err) {
-      console.error(err);
-      setError("Failed to decide application.");
     }
   };
 
@@ -221,7 +198,7 @@ const ManageTournament = () => {
         badgeText={`TOURNAMENT STATUS: ${tournament.status}`}
         stats={[
           { label: "SQUADS", value: teams.length },
-          { label: "APPLICANTS", value: applications.length },
+          { label: "PLAYERS", value: allPlayers.length },
           { label: "FIXTURES", value: matches.length },
           { label: "FORMAT", value: tournament.format || "11v11" }
         ]}
@@ -340,15 +317,6 @@ const ManageTournament = () => {
 
               <Card className="p-5">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Applicants</span>
-                  <Users className="w-5 h-5 text-blue-500" />
-                </div>
-                <div className="text-3xl font-black text-slate-900 dark:text-white">{applications.length}</div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Players registered for tournament</p>
-              </Card>
-
-              <Card className="p-5">
-                <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Scheduled Matches</span>
                   <FootballIcon className="w-5 h-5 text-amber-500" />
                 </div>
@@ -356,90 +324,6 @@ const ManageTournament = () => {
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Official fixtures created</p>
               </Card>
             </div>
-          </div>
-        )}
-
-        {/* APPLICATIONS TAB */}
-        {activeTab === 'applications' && (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">Player Applications</h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Review and verify player entry requests</p>
-              </div>
-            </div>
-
-            <Card className="overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-                  <thead className="text-xs text-slate-500 dark:text-slate-400 uppercase bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800">
-                    <tr>
-                      <th className="px-6 py-3 font-semibold">Applicant / Player</th>
-                      <th className="px-6 py-3 font-semibold">Date Applied</th>
-                      <th className="px-6 py-3 font-semibold">Status</th>
-                      <th className="px-6 py-3 text-right font-semibold">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                    {applications.length === 0 ? (
-                      <tr>
-                        <td colSpan="4" className="px-6 py-12 text-center text-slate-400">
-                          <Users className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-2" />
-                          No applications submitted yet.
-                        </td>
-                      </tr>
-                    ) : (
-                      applications.map(app => {
-                        const displayName = app.playerName || app.player?.name || app.player?.username || 'Tournament Player';
-                        const displayInitial = (displayName[0] || 'P').toUpperCase();
-                        const displayDate = app.appliedAt || app.createdAt;
-                        return (
-                          <tr key={app.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
-                            <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">
-                              <div className="flex items-center space-x-3">
-                                <div className="w-8 h-8 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs">
-                                  {displayInitial}
-                                </div>
-                                <div>
-                                  <div>{displayName}</div>
-                                  <div className="text-xs font-normal text-slate-400">{app.player?.email || `@${app.playerName || displayName.toLowerCase()}`}</div>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 text-xs">{displayDate ? new Date(displayDate).toLocaleDateString() : 'Recent'}</td>
-                            <td className="px-6 py-4"><StatusBadge status={app.status} size="sm" /></td>
-                            <td className="px-6 py-4 text-right">
-                              {app.status === 'PENDING' ? (
-                                <div className="flex justify-end gap-2">
-                                  <Button 
-                                    size="sm" 
-                                    variant="outline" 
-                                    className="text-blue-600 border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40"
-                                    onClick={() => handleApplicationDecision(app.id, 'ACCEPTED')}
-                                  >
-                                    <Check size={14} className="mr-1" /> Accept
-                                  </Button>
-                                  <Button 
-                                    size="sm" 
-                                    variant="outline" 
-                                    className="text-rose-600 border-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40"
-                                    onClick={() => handleApplicationDecision(app.id, 'REJECTED')}
-                                  >
-                                    <X size={14} className="mr-1" /> Reject
-                                  </Button>
-                                </div>
-                              ) : (
-                                <span className="text-xs text-slate-400 italic">Decision Recorded</span>
-                              )}
-                            </td>
-                          </tr>
-                        );
-                      })
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </Card>
           </div>
         )}
 
@@ -749,7 +633,7 @@ const ManageTournament = () => {
       {/* Add Member Modal */}
       <Modal isOpen={showAddMemberModal} onClose={() => setShowAddMemberModal(false)} title="Assign Player to Squad Roster">
         <form onSubmit={handleAddMember} className="space-y-4 py-2">
-          <p className="text-xs text-slate-500 dark:text-slate-400">Select a player to add to this squad roster (from tournament applications or registered players):</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Select a player to add to this squad roster:</p>
           <select 
             className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:ring-blue-500"
             value={selectedPlayerId}
@@ -757,27 +641,12 @@ const ManageTournament = () => {
             required
           >
             <option value="">Select Player</option>
-            {/* Accepted Applicants */}
-            {applications.filter(a => a.status === 'ACCEPTED').length > 0 && (
-              <optgroup label="Accepted Applicants">
-                {applications.filter(a => a.status === 'ACCEPTED').map(a => {
-                  const pId = a.playerId || a.player?.id;
-                  const pName = a.playerName || a.player?.name || a.player?.username || `Player #${pId}`;
-                  return <option key={`app-${a.id}`} value={pId}>{pName} (Applicant)</option>;
-                })}
-              </optgroup>
-            )}
-            {/* All Registered Players */}
-            {allPlayers.length > 0 && (
-              <optgroup label="Registered Players">
-                {allPlayers.map(p => {
-                  const pId = p.userId || p.id;
-                  const pName = p.fullName || p.username || `Player #${pId}`;
-                  const pos = p.primaryPosition ? ` • ${p.primaryPosition}` : '';
-                  return <option key={`player-${pId}`} value={pId}>{pName}{pos}</option>;
-                })}
-              </optgroup>
-            )}
+            {allPlayers.map(p => {
+              const pId = p.userId || p.id;
+              const pName = p.fullName || p.username || `Player #${pId}`;
+              const pos = p.primaryPosition ? ` • ${p.primaryPosition}` : '';
+              return <option key={`player-${pId}`} value={pId}>{pName}{pos}</option>;
+            })}
           </select>
           <div className="flex justify-end gap-2 mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
             <Button type="button" variant="outline" onClick={() => setShowAddMemberModal(false)}>Cancel</Button>
