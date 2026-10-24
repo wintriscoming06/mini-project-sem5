@@ -20,6 +20,7 @@ export default function PlayerSearch() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [results, setResults] = useState([]);
+  const [shortlistedIds, setShortlistedIds] = useState(new Set());
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [filterName, setFilterName] = useState('');
 
@@ -46,8 +47,13 @@ export default function PlayerSearch() {
         ...filters,
         position: filters.positions.length ? filters.positions.join(',') : undefined,
       };
-      const response = await scoutService.searchPlayers(searchParams);
-      setResults(response.data || []);
+      const [searchRes, shortlistRes] = await Promise.all([
+        scoutService.searchPlayers(searchParams),
+        scoutService.getShortlist().catch(() => ({ data: [] }))
+      ]);
+      setResults(searchRes.data || []);
+      const slList = Array.isArray(shortlistRes.data) ? shortlistRes.data : [];
+      setShortlistedIds(new Set(slList.map(item => String(item.playerId || item.id))));
     } catch (err) {
       setError('Failed to query player talent database.');
     } finally {
@@ -92,12 +98,23 @@ export default function PlayerSearch() {
     }
   };
 
-  const handleAddToShortlist = async (playerId) => {
+  const handleToggleShortlist = async (playerId) => {
+    const idStr = String(playerId);
+    const isCurrentlyShortlisted = shortlistedIds.has(idStr);
     try {
-      await scoutService.addToShortlist(playerId);
-      fetchResults();
+      if (isCurrentlyShortlisted) {
+        await scoutService.removeFromShortlist(playerId);
+        setShortlistedIds(prev => {
+          const next = new Set(prev);
+          next.delete(idStr);
+          return next;
+        });
+      } else {
+        await scoutService.addToShortlist(playerId);
+        setShortlistedIds(prev => new Set(prev).add(idStr));
+      }
     } catch (err) {
-      setError('Failed to add prospect to shortlist.');
+      setError(isCurrentlyShortlisted ? 'Failed to remove from shortlist.' : 'Failed to add prospect to shortlist.');
     }
   };
 
@@ -326,6 +343,8 @@ export default function PlayerSearch() {
                 const clubTheme = getClubTheme(playerTeam);
                 const customBadgeUrl = getStoredClubBadge(playerId);
 
+                const isShortlisted = shortlistedIds.has(String(playerId));
+
                 return (
                   <div 
                     key={playerId} 
@@ -449,11 +468,15 @@ export default function PlayerSearch() {
                           Tactical Dossier
                         </Link>
                         <button 
-                          onClick={() => handleAddToShortlist(playerId)} 
-                          className="p-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-amber-400 hover:border-amber-400/50 hover:bg-amber-400/10 transition-colors"
-                          title="Add to Shortlist"
+                          onClick={() => handleToggleShortlist(playerId)} 
+                          className={`p-2 rounded-xl border transition-all ${
+                            isShortlisted
+                              ? 'bg-amber-400 text-slate-950 border-amber-400 shadow-sm'
+                              : 'border-slate-200 dark:border-slate-700 text-slate-400 hover:text-amber-400 hover:border-amber-400/50 hover:bg-amber-400/10'
+                          }`}
+                          title={isShortlisted ? "Remove from Shortlist" : "Add to Shortlist"}
                         >
-                          <Star className="w-4 h-4" />
+                          <Star className={`w-4 h-4 ${isShortlisted ? 'fill-amber-400 text-amber-500 stroke-[2.5]' : ''}`} />
                         </button>
                       </div>
                     </div>
@@ -467,7 +490,11 @@ export default function PlayerSearch() {
       </div>
 
       {isFilterModalOpen && (
-        <Modal title="Save Tactical Filter Preset" onClose={() => setIsFilterModalOpen(false)}>
+        <Modal 
+          isOpen={true} 
+          title="Save Tactical Filter Preset" 
+          onClose={() => setIsFilterModalOpen(false)}
+        >
           <div className="space-y-4">
             <div>
               <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-300 mb-1">

@@ -700,6 +700,7 @@ export default function PlayerView() {
       {/* ======================================================== */}
       {isContactModalOpen && (
         <Modal 
+          isOpen={true}
           title="Send Scouting Contact Request" 
           onClose={() => {
             setIsContactModalOpen(false);
