@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { tournamentService, matchService } from '../../services/api';
-import { ArrowLeft, Users, Settings, Plus, Check, X, Shield } from 'lucide-react';
+import { ArrowLeft, Users, Settings, Plus, Check, X, Shield, Edit3 } from 'lucide-react';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import StatusBadge from '../../components/common/StatusBadge';
@@ -111,11 +111,13 @@ const ManageTournament = () => {
 
   const handleStatusUpdate = async () => {
     try {
+      setError(null);
       await tournamentService.updateStatus(id, newStatus);
       setShowStatusModal(false);
+      setNewStatus('');
       fetchTournamentData();
     } catch (err) {
-      setError(err?.response?.data?.message || "Failed to update status.");
+      setError(err?.response?.data?.message || err?.message || "Failed to update status.");
     }
   };
 
@@ -219,29 +221,31 @@ const ManageTournament = () => {
         ]}
         actionButtons={
           <>
-            <Button 
-              variant="secondary" 
+            <button 
+              type="button"
               onClick={() => navigate('/my-tournaments')}
-              className="bg-blue-950/80 text-blue-200 border-blue-500/50 hover:bg-blue-900"
-              icon={<ArrowLeft className="w-4 h-4 mr-1" />}
+              className="inline-flex items-center justify-center font-medium rounded-lg text-sm px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors"
             >
-              Tournaments
-            </Button>
-            <Button 
-              variant="secondary" 
-              className="bg-blue-900/60 text-white border-blue-400/50 hover:bg-blue-800/80"
+              <ArrowLeft className="w-4 h-4 mr-1.5" />
+              <span>Tournaments</span>
+            </button>
+            <button 
+              type="button"
               onClick={openEditModal}
+              className="inline-flex items-center justify-center font-medium rounded-lg text-sm px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white shadow-sm transition-colors"
             >
-              Edit Details
-            </Button>
+              <Edit3 className="w-4 h-4 mr-1.5" />
+              <span>Edit Details</span>
+            </button>
             {availableStatuses.length > 0 && (
-              <Button 
-                variant="primary" 
-                icon={<Settings className="w-4 h-4" />} 
+              <button 
+                type="button"
                 onClick={() => setShowStatusModal(true)}
+                className="inline-flex items-center justify-center font-medium rounded-lg text-sm px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm transition-colors"
               >
-                Advance Status
-              </Button>
+                <Settings className="w-4 h-4 mr-1.5" />
+                <span>Advance Status</span>
+              </button>
             )}
           </>
         }
