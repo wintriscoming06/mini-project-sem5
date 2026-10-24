@@ -27,8 +27,10 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -111,6 +113,18 @@ public class ScoutService {
         }
 
         // Players that have a GPI record; players without one are excluded by any GPI / match-count filter.
+        // Optimization: Batch fetch latest GPI records for all candidates in one round-trip (O(M) lookup, eliminating N+1 queries).
+        List<Long> playerIds = profiles.stream().map(p -> p.getUser().getId()).collect(Collectors.toList());
+        Map<Long, GPIRecord> latestGpiMap = new HashMap<>();
+        if (!playerIds.isEmpty()) {
+            List<GPIRecord> batchRecords = gpiRecordRepository.findLatestByPlayerIds(playerIds);
+            for (GPIRecord rec : batchRecords) {
+                if (rec.getPlayer() != null) {
+                    latestGpiMap.put(rec.getPlayer().getId(), rec);
+                }
+            }
+        }
+
         Set<Long> playersWithGpi = new HashSet<>();
         List<PlayerSearchResponse> responses = new ArrayList<>();
         for (PlayerProfile p : profiles) {
@@ -130,7 +144,7 @@ public class ScoutService {
             res.setPhotoUrl(p.getPhotoUrl());
             res.setAge(p.getDateOfBirth() != null ? Period.between(p.getDateOfBirth(), LocalDate.now()).getYears() : 0);
 
-            GPIRecord gpi = gpiRecordRepository.findTopByPlayerIdOrderByComputedAtDesc(playerId).orElse(null);
+            GPIRecord gpi = latestGpiMap.get(playerId);
             if (gpi != null) {
                 playersWithGpi.add(playerId);
                 res.setGpi(gpi.getGpi());
