@@ -23,7 +23,6 @@ const AnimatedStat = ({ value, decimals = 0, duration = 800 }) => {
 
 export default function ScoutProfile() {
   const { user } = useAuth();
-  const fileInputRef = useRef(null);
   const badgeInputRef = useRef(null);
 
   const scoutKey = user?.id || user?.userId || user?.username || 'current_scout';
@@ -369,14 +368,7 @@ export default function ScoutProfile() {
 
       </div>
 
-      {/* Hidden File Inputs */}
-      <input 
-        ref={fileInputRef} 
-        type="file" 
-        accept="image/*" 
-        className="hidden" 
-        onChange={handlePhotoUpload} 
-      />
+      {/* Hidden File Input for Club Crest */}
       <input 
         ref={badgeInputRef} 
         type="file" 
