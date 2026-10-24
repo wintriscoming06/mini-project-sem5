@@ -21,6 +21,7 @@ public interface PlayerMatchStatisticsRepository extends JpaRepository<PlayerMat
     List<PlayerMatchStatistics> findByPlayerIdOrderByCreatedAtDesc(Long playerId);
     List<PlayerMatchStatistics> findByTournamentId(Long tournamentId);
     Optional<PlayerMatchStatistics> findByTournamentIdAndPlayerId(Long tournamentId, Long playerId);
+    Optional<PlayerMatchStatistics> findByMatchIdAndPlayerId(Long matchId, Long playerId);
     List<PlayerMatchStatistics> findByMatchTournamentId(Long tournamentId);
     Optional<PlayerMatchStatistics> findByPlayerIdAndMatchTournamentId(Long playerId, Long tournamentId);
 }

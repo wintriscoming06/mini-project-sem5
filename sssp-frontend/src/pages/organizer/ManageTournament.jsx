@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { tournamentService } from '../../services/api';
 import { 
-  ArrowLeft, Plus, Shield, Trophy, Users, BarChart3, 
-  Trash2, Edit3, Calendar, MapPin, CheckCircle, Search, AlertCircle 
+  ArrowLeft, Plus, Shield, Users, BarChart3, 
+  Trash2, Edit3, Calendar, MapPin, Search, CheckCircle2, Award
 } from 'lucide-react';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
@@ -24,9 +24,10 @@ const ManageTournament = () => {
   const [teams, setTeams] = useState([]);
   const [matches, setMatches] = useState([]);
   const [stats, setStats] = useState([]);
-  const [playersList, setPlayersList] = useState([]);
+  const [allRegisteredPlayers, setAllRegisteredPlayers] = useState([]);
 
   const [loading, setLoading] = useState(true);
+  const [certifying, setCertifying] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -53,6 +54,7 @@ const ManageTournament = () => {
   // Player Stats Form (exact GPI input fields)
   const initialStatsForm = {
     id: null,
+    matchId: null,
     playerId: '',
     teamId: '',
     position: 'CM',
@@ -80,21 +82,20 @@ const ManageTournament = () => {
   const tabs = [
     { id: 'overview', label: 'Tournament Info', icon: TrophyIcon },
     { id: 'teams', label: 'Teams & Squad Lineups', icon: Shield },
-    { id: 'matches', label: 'Fixtures & Scores', icon: FootballIcon },
-    { id: 'stats', label: 'Player Stats & GPI Engine', icon: BarChart3 }
+    { id: 'matches', label: 'Fixtures & Scores', icon: FootballIcon }
   ];
 
   useEffect(() => {
     fetchTournament();
-    loadPlayers();
+    loadRegisteredPlayers();
   }, [id]);
 
   useEffect(() => {
     if (activeTab === 'teams') fetchTeams();
-    if (activeTab === 'matches') fetchMatches();
-    if (activeTab === 'stats') {
-      fetchStats();
+    if (activeTab === 'matches') {
+      fetchMatches();
       fetchTeams();
+      fetchStats();
     }
   }, [activeTab, id]);
 
@@ -138,10 +139,10 @@ const ManageTournament = () => {
     }
   };
 
-  const loadPlayers = async (q = '') => {
+  const loadRegisteredPlayers = async (q = '') => {
     try {
       const res = await tournamentService.searchPlayers(q);
-      setPlayersList(res.data || []);
+      setAllRegisteredPlayers(res.data || []);
     } catch (err) {
       console.error(err);
     }
@@ -182,7 +183,7 @@ const ManageTournament = () => {
       await tournamentService.addTeamMember(id, selectedTeamId, selectedPlayerId);
       setShowAddMemberModal(false);
       setSelectedPlayerId('');
-      setSuccess('Player assigned to team squad');
+      setSuccess('Player added to squad lineup');
       fetchTeams();
     } catch (err) {
       setError(err?.response?.data?.message || err.message || 'Failed to add squad player');
@@ -215,18 +216,36 @@ const ManageTournament = () => {
     }
   };
 
-  const handleUpdateScore = async (e) => {
+  const handleSaveScoreDraft = async (e) => {
     e.preventDefault();
     if (!selectedMatch) return;
     try {
       setError(null);
       await tournamentService.updateMatchScore(id, selectedMatch.id, scoreForm);
-      setShowScoreModal(false);
-      setSelectedMatch(null);
-      setSuccess('Match score certified and completed');
+      setSuccess('Scoreline draft saved.');
       fetchMatches();
     } catch (err) {
-      setError(err?.response?.data?.message || err.message || 'Failed to update score');
+      setError(err?.response?.data?.message || err.message || 'Failed to save score');
+    }
+  };
+
+  const handleCertifyMatch = async () => {
+    if (!selectedMatch) return;
+    try {
+      setCertifying(true);
+      setError(null);
+      // Ensure current score form is saved first
+      await tournamentService.updateMatchScore(id, selectedMatch.id, scoreForm);
+      // Certify match: locks score and triggers GPI recalculation
+      const res = await tournamentService.certifyMatch(id, selectedMatch.id);
+      setSelectedMatch(res.data);
+      setSuccess('Official Match Certification Complete! GPI engine has recalculated ratings for all players, and match statistics are published.');
+      fetchMatches();
+      fetchStats();
+    } catch (err) {
+      setError(err?.response?.data?.message || err.message || 'Failed to certify match');
+    } finally {
+      setCertifying(false);
     }
   };
 
@@ -234,10 +253,13 @@ const ManageTournament = () => {
     e.preventDefault();
     try {
       setError(null);
-      await tournamentService.savePlayerStats(id, statsForm);
+      await tournamentService.savePlayerStats(id, {
+        ...statsForm,
+        matchId: selectedMatch?.id
+      });
       setShowStatsModal(false);
       setStatsForm(initialStatsForm);
-      setSuccess('Player stats saved and GPI automatically recalculated');
+      setSuccess('Player performance stats saved successfully.');
       fetchStats();
     } catch (err) {
       setError(err?.response?.data?.message || err.message || 'Failed to save stats');
@@ -245,20 +267,62 @@ const ManageTournament = () => {
   };
 
   const handleDeleteStats = async (statsId) => {
-    if (!window.confirm('Delete this player tournament stats entry? This will recalculate the player GPI.')) return;
+    if (!window.confirm('Delete this player stats entry?')) return;
     try {
       setError(null);
       await tournamentService.deletePlayerStats(id, statsId);
-      setSuccess('Stats entry deleted and GPI updated');
+      setSuccess('Stats entry deleted.');
       fetchStats();
     } catch (err) {
       setError(err?.response?.data?.message || err.message || 'Failed to delete stats');
     }
   };
 
+  // Helper: Get players participating in the selected match's teams
+  const getMatchEligiblePlayers = () => {
+    if (!selectedMatch) return [];
+    const homeTeam = teams.find(t => t.id === selectedMatch.homeTeamId);
+    const awayTeam = teams.find(t => t.id === selectedMatch.awayTeamId);
+
+    const eligible = [];
+    if (homeTeam && homeTeam.members) {
+      homeTeam.members.forEach(m => {
+        eligible.push({
+          playerId: m.playerId,
+          username: m.playerName || m.name,
+          teamId: homeTeam.id,
+          teamName: homeTeam.name
+        });
+      });
+    }
+    if (awayTeam && awayTeam.members) {
+      awayTeam.members.forEach(m => {
+        eligible.push({
+          playerId: m.playerId,
+          username: m.playerName || m.name,
+          teamId: awayTeam.id,
+          teamName: awayTeam.name
+        });
+      });
+    }
+    return eligible;
+  };
+
+  const openAddStatsForMatch = () => {
+    const eligible = getMatchEligiblePlayers();
+    setStatsForm({
+      ...initialStatsForm,
+      matchId: selectedMatch?.id,
+      teamId: selectedMatch?.homeTeamId || '',
+      playerId: eligible.length > 0 ? eligible[0].playerId : ''
+    });
+    setShowStatsModal(true);
+  };
+
   const openEditStats = (item) => {
     setStatsForm({
       id: item.id,
+      matchId: item.matchId || selectedMatch?.id,
       playerId: item.playerId,
       teamId: item.teamId || '',
       position: item.position || 'CM',
@@ -289,7 +353,7 @@ const ManageTournament = () => {
 
   return (
     <div className="space-y-6">
-      {/* Back button */}
+      {/* Top Bar */}
       <div className="flex items-center justify-between">
         <button 
           onClick={() => navigate('/my-tournaments')} 
@@ -362,10 +426,6 @@ const ManageTournament = () => {
                 <span>{tournament.startDate || 'TBA'} — {tournament.endDate || 'TBA'}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
-                <span className="font-semibold text-slate-400">Registration Deadline</span>
-                <span>{tournament.registrationDeadline || 'TBA'}</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
                 <span className="font-semibold text-slate-400">Age & Gender Category</span>
                 <span>{tournament.ageGroup || 'Open'} / {tournament.genderCategory || 'All'}</span>
               </div>
@@ -376,12 +436,11 @@ const ManageTournament = () => {
             </div>
           </Card>
 
-          <Card title="Offline Operations Guide" subtitle="How this tournament functions">
+          <Card title="How It Works" subtitle="Offline workflow summary">
             <div className="space-y-3 text-xs text-slate-600 dark:text-slate-400">
-              <p>1. <strong>Offline Entry:</strong> Players apply directly with you offline. There are no online application queues.</p>
-              <p>2. <strong>Squad Roster:</strong> Register participating teams and link registered players to each squad in the <em>Teams & Squad Lineups</em> tab.</p>
-              <p>3. <strong>Match Fixtures:</strong> Schedule match ties and certify official scorelines in the <em>Fixtures & Scores</em> tab.</p>
-              <p>4. <strong>Player Stats & GPI:</strong> Feed match data and individual statistics in the <em>Player Stats & GPI Engine</em> tab. Every entry or edit triggers instant GPI recalculation.</p>
+              <p>1. <strong>Offline Registration:</strong> Players apply directly with you offline. No online application queues exist.</p>
+              <p>2. <strong>Squad Lineups:</strong> Register your tournament teams in <em>Teams & Squad Lineups</em> and assign signed-up players to each squad by their unique username.</p>
+              <p>3. <strong>Data Feed & Official Certification:</strong> In <em>Fixtures & Scores</em>, schedule matches between teams and click <strong>"Edit Score & Players Data"</strong>. Enter match scores and player performances, then hit <strong>"Certify Match & Recalculate GPI"</strong> to officially lock results and update player ratings.</p>
             </div>
           </Card>
         </div>
@@ -393,7 +452,7 @@ const ManageTournament = () => {
           <div className="flex justify-between items-center">
             <div>
               <h3 className="text-base font-extrabold text-slate-900 dark:text-white">Registered Teams & Squads</h3>
-              <p className="text-xs text-slate-400">Create teams and attach participating players to team rosters</p>
+              <p className="text-xs text-slate-400">Create participating teams and assign registered players to team rosters</p>
             </div>
             <Button size="sm" variant="primary" icon={<Plus className="w-4 h-4" />} onClick={() => setShowTeamModal(true)}>
               Register Team
@@ -436,7 +495,9 @@ const ManageTournament = () => {
                       <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
                         {team.members.map((m) => (
                           <div key={m.id} className="flex items-center justify-between py-1.5 px-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 text-xs">
-                            <span className="font-semibold text-slate-800 dark:text-slate-200">{m.playerName || m.name}</span>
+                            <span className="font-semibold text-slate-800 dark:text-slate-200">
+                              {m.playerName || m.name}
+                            </span>
                             <button
                               onClick={() => handleRemoveTeamMember(team.id, m.playerId)}
                               className="text-slate-400 hover:text-rose-500 transition-colors"
@@ -456,13 +517,13 @@ const ManageTournament = () => {
         </div>
       )}
 
-      {/* TAB 3: FIXTURES & SCORES */}
+      {/* TAB 3: FIXTURES & SCORES (WITH EMBEDDED PLAYER STATS FEED) */}
       {activeTab === 'matches' && (
         <div className="space-y-6">
           <div className="flex justify-between items-center">
             <div>
               <h3 className="text-base font-extrabold text-slate-900 dark:text-white">Tournament Match Fixtures</h3>
-              <p className="text-xs text-slate-400">Schedule ties between teams and record official scores</p>
+              <p className="text-xs text-slate-400">Schedule ties between teams and click "Edit Score & Players Data" to feed match results, save stats, and certify official match results.</p>
             </div>
             <Button 
               size="sm" 
@@ -483,7 +544,7 @@ const ManageTournament = () => {
             <div className="p-10 text-center bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
               <FootballIcon className="w-10 h-10 text-slate-400 mx-auto mb-2" />
               <p className="text-sm font-bold text-slate-600 dark:text-slate-300">No match fixtures scheduled</p>
-              <p className="text-xs text-slate-400 mt-1">Schedule games to feed official match results.</p>
+              <p className="text-xs text-slate-400 mt-1">Schedule games to feed official match results and player stats.</p>
             </div>
           ) : (
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-blue-900/40 overflow-hidden">
@@ -510,10 +571,13 @@ const ManageTournament = () => {
                         <div className="text-[11px] text-slate-400">{m.venue || 'Stadium'}</div>
                       </td>
                       <td className="px-5 py-3.5">
-                        <StatusBadge status={m.status} />
+                        <StatusBadge 
+                          status={m.confirmed ? 'COMPLETED' : m.status} 
+                          label={m.confirmed ? 'CERTIFIED' : m.status} 
+                        />
                       </td>
                       <td className="px-5 py-3.5 font-black text-base stat-number text-slate-900 dark:text-white">
-                        {m.status === 'COMPLETED' ? `${m.homeScore ?? 0} - ${m.awayScore ?? 0}` : '—'}
+                        {m.homeScore != null && m.awayScore != null ? `${m.homeScore} - ${m.awayScore}` : '—'}
                       </td>
                       <td className="px-5 py-3.5 text-right">
                         <Button 
@@ -525,7 +589,7 @@ const ManageTournament = () => {
                             setShowScoreModal(true);
                           }}
                         >
-                          {m.status === 'COMPLETED' ? 'Edit Score' : 'Enter Score'}
+                          {m.confirmed ? 'View Certified Match Data' : 'Edit Score & Players Data'}
                         </Button>
                       </td>
                     </tr>
@@ -534,98 +598,79 @@ const ManageTournament = () => {
               </table>
             </div>
           )}
-        </div>
-      )}
 
-      {/* TAB 4: PLAYER STATS & GPI ENGINE FEED */}
-      {activeTab === 'stats' && (
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-            <div>
-              <h3 className="text-base font-extrabold text-slate-900 dark:text-white">Player Match Statistics & GPI Feed</h3>
-              <p className="text-xs text-slate-400">Enter per-player statistics required by the GPI calculation engine. Saving or deleting immediately recalculates player GPI.</p>
-            </div>
-            <Button 
-              size="sm" 
-              variant="primary" 
-              icon={<Plus className="w-4 h-4" />} 
-              onClick={() => { setStatsForm(initialStatsForm); setShowStatsModal(true); }}
-            >
-              Add Player Stats
-            </Button>
-          </div>
-
-          {stats.length === 0 ? (
-            <div className="p-10 text-center bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
-              <BarChart3 className="w-10 h-10 text-slate-400 mx-auto mb-2" />
-              <p className="text-sm font-bold text-slate-600 dark:text-slate-300">No player statistics entered yet</p>
-              <p className="text-xs text-slate-400 mt-1">Add participating player stats to populate leaderboards and scout GPI ratings.</p>
-            </div>
-          ) : (
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-blue-900/40 overflow-x-auto">
-              <table className="w-full text-xs text-left">
-                <thead className="bg-slate-50 dark:bg-slate-800 text-slate-400 text-[10px] uppercase font-bold tracking-wider border-b border-slate-100 dark:border-slate-800">
-                  <tr>
-                    <th className="px-4 py-3">Player</th>
-                    <th className="px-4 py-3">Team</th>
-                    <th className="px-4 py-3">Pos</th>
-                    <th className="px-4 py-3">Mins</th>
-                    <th className="px-4 py-3">Goals</th>
-                    <th className="px-4 py-3">Assists</th>
-                    <th className="px-4 py-3">Shots (OT)</th>
-                    <th className="px-4 py-3">Passes</th>
-                    <th className="px-4 py-3">Key Pass</th>
-                    <th className="px-4 py-3">Dribbles</th>
-                    <th className="px-4 py-3">Tackles</th>
-                    <th className="px-4 py-3">Duels</th>
-                    <th className="px-4 py-3">Cards</th>
-                    <th className="px-4 py-3 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                  {stats.map((s) => (
-                    <tr key={s.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
-                      <td className="px-4 py-3 font-bold text-slate-900 dark:text-white">
-                        {s.playerName || s.playerUsername}
-                      </td>
-                      <td className="px-4 py-3 text-slate-500">{s.teamName || '—'}</td>
-                      <td className="px-4 py-3">
-                        <span className="font-bold text-blue-500">{s.position}</span>
-                      </td>
-                      <td className="px-4 py-3">{s.minutesPlayed}'</td>
-                      <td className="px-4 py-3 font-bold text-emerald-500">{s.goals}</td>
-                      <td className="px-4 py-3 font-bold text-blue-500">{s.assists}</td>
-                      <td className="px-4 py-3">{s.shots} ({s.shotsOnTarget})</td>
-                      <td className="px-4 py-3">{s.passesCompleted}/{s.passesAttempted}</td>
-                      <td className="px-4 py-3">{s.keyPasses}</td>
-                      <td className="px-4 py-3">{s.dribblesCompleted}/{s.dribblesAttempted}</td>
-                      <td className="px-4 py-3">{s.tackles}</td>
-                      <td className="px-4 py-3">{s.duelsWon}</td>
-                      <td className="px-4 py-3">
-                        {s.yellowCards > 0 && <span className="text-amber-500 font-bold mr-1">{s.yellowCards}Y</span>}
-                        {s.redCards > 0 && <span className="text-rose-500 font-bold">{s.redCards}R</span>}
-                        {s.yellowCards === 0 && s.redCards === 0 && '—'}
-                      </td>
-                      <td className="px-4 py-3 text-right space-x-1.5 whitespace-nowrap">
-                        <button
-                          onClick={() => openEditStats(s)}
-                          className="p-1 text-slate-400 hover:text-blue-500 transition-colors"
-                          title="Edit stats"
-                        >
-                          <Edit3 className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteStats(s.id)}
-                          className="p-1 text-slate-400 hover:text-rose-500 transition-colors"
-                          title="Delete stats"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </td>
+          {/* OVERVIEW TABLE OF ALL RECORDED PLAYER STATS IN THIS TOURNAMENT */}
+          {stats.length > 0 && (
+            <div className="mt-8 space-y-3">
+              <div className="flex justify-between items-center">
+                <h4 className="text-sm font-extrabold text-slate-900 dark:text-white">
+                  Recorded Tournament Player Stats ({stats.length})
+                </h4>
+                <span className="text-[11px] text-slate-400">GPI recalculation completes when matches are certified</span>
+              </div>
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-blue-900/40 overflow-x-auto">
+                <table className="w-full text-xs text-left">
+                  <thead className="bg-slate-50 dark:bg-slate-800 text-slate-400 text-[10px] uppercase font-bold tracking-wider border-b border-slate-100 dark:border-slate-800">
+                    <tr>
+                      <th className="px-4 py-3">Player (Username)</th>
+                      <th className="px-4 py-3">Team</th>
+                      <th className="px-4 py-3">Pos</th>
+                      <th className="px-4 py-3">Mins</th>
+                      <th className="px-4 py-3">Goals</th>
+                      <th className="px-4 py-3">Assists</th>
+                      <th className="px-4 py-3">Shots (OT)</th>
+                      <th className="px-4 py-3">Passes</th>
+                      <th className="px-4 py-3">Key Pass</th>
+                      <th className="px-4 py-3">Dribbles</th>
+                      <th className="px-4 py-3">Tackles</th>
+                      <th className="px-4 py-3">Cards</th>
+                      <th className="px-4 py-3 text-right">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {stats.map((s) => (
+                      <tr key={s.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                        <td className="px-4 py-3 font-bold text-slate-900 dark:text-white">
+                          {s.playerUsername || s.playerName}
+                        </td>
+                        <td className="px-4 py-3 text-slate-500">{s.teamName || '—'}</td>
+                        <td className="px-4 py-3">
+                          <span className="font-bold text-blue-500">{s.position}</span>
+                        </td>
+                        <td className="px-4 py-3">{s.minutesPlayed}'</td>
+                        <td className="px-4 py-3 font-bold text-emerald-500">{s.goals}</td>
+                        <td className="px-4 py-3 font-bold text-blue-500">{s.assists}</td>
+                        <td className="px-4 py-3">{s.shots} ({s.shotsOnTarget})</td>
+                        <td className="px-4 py-3">{s.passesCompleted}/{s.passesAttempted}</td>
+                        <td className="px-4 py-3">{s.keyPasses}</td>
+                        <td className="px-4 py-3">{s.dribblesCompleted}/{s.dribblesAttempted}</td>
+                        <td className="px-4 py-3">{s.tackles}</td>
+                        <td className="px-4 py-3">
+                          {s.yellowCards > 0 && <span className="text-amber-500 font-bold mr-1">{s.yellowCards}Y</span>}
+                          {s.redCards > 0 && <span className="text-rose-500 font-bold">{s.redCards}R</span>}
+                          {s.yellowCards === 0 && s.redCards === 0 && '—'}
+                        </td>
+                        <td className="px-4 py-3 text-right space-x-1.5 whitespace-nowrap">
+                          <button
+                            onClick={() => openEditStats(s)}
+                            className="p-1 text-slate-400 hover:text-blue-500 transition-colors"
+                            title="Edit stats"
+                          >
+                            <Edit3 className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteStats(s.id)}
+                            className="p-1 text-slate-400 hover:text-rose-500 transition-colors"
+                            title="Delete stats"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>
@@ -675,12 +720,12 @@ const ManageTournament = () => {
         </form>
       </Modal>
 
-      {/* MODAL 3: ADD MEMBER TO SQUAD */}
+      {/* MODAL 3: ADD MEMBER TO SQUAD (Username displayed) */}
       <Modal isOpen={showAddMemberModal} onClose={() => setShowAddMemberModal(false)} title="Add Player to Squad Lineup">
         <form onSubmit={handleAddTeamMember} className="space-y-4">
           <div>
             <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Search Registered Players
+              Search Registered Players by Username
             </label>
             <div className="relative mb-2">
               <Search className="w-3.5 h-3.5 absolute left-3 top-3 text-slate-400" />
@@ -690,7 +735,7 @@ const ManageTournament = () => {
                 value={playerSearchQuery}
                 onChange={(e) => {
                   setPlayerSearchQuery(e.target.value);
-                  loadPlayers(e.target.value);
+                  loadRegisteredPlayers(e.target.value);
                 }}
                 className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900"
               />
@@ -701,10 +746,10 @@ const ManageTournament = () => {
               className="w-full p-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 font-semibold"
               required
             >
-              <option value="">Select a player...</option>
-              {playersList.map((p) => (
+              <option value="">Select player by username...</option>
+              {allRegisteredPlayers.map((p) => (
                 <option key={p.id} value={p.id}>
-                  {p.name || p.username} ({p.username}) - {p.position || 'CM'}
+                  {p.username}
                 </option>
               ))}
             </select>
@@ -771,63 +816,186 @@ const ManageTournament = () => {
         </form>
       </Modal>
 
-      {/* MODAL 5: ENTER SCORE */}
-      <Modal isOpen={showScoreModal} onClose={() => setShowScoreModal(false)} title="Certify Final Match Scoreline">
-        <form onSubmit={handleUpdateScore} className="space-y-4">
-          <div className="flex items-center justify-center space-x-4 py-4">
-            <div className="text-center">
-              <label className="block text-xs font-bold text-slate-400 mb-1">
-                {selectedMatch?.homeTeamName || 'Home'}
-              </label>
-              <input
-                type="number"
-                min="0"
-                value={scoreForm.homeScore}
-                onChange={(e) => setScoreForm({ ...scoreForm, homeScore: parseInt(e.target.value) || 0 })}
-                className="w-20 text-center text-2xl font-black p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900"
-              />
+      {/* MODAL 5: EDIT SCORE, FEED PLAYERS DATA & CERTIFY MATCH */}
+      <Modal 
+        isOpen={showScoreModal} 
+        onClose={() => setShowScoreModal(false)} 
+        title={`Match Operations: ${selectedMatch?.homeTeamName || 'Home'} vs ${selectedMatch?.awayTeamName || 'Away'}`}
+      >
+        <div className="space-y-6">
+          {/* Status banner */}
+          {selectedMatch?.confirmed ? (
+            <div className="flex items-center space-x-2 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
+              <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+              <span>Certified Official Match. Results and player GPI calculations are certified and published.</span>
             </div>
-            <span className="text-xl font-black text-slate-400">—</span>
-            <div className="text-center">
-              <label className="block text-xs font-bold text-slate-400 mb-1">
-                {selectedMatch?.awayTeamName || 'Away'}
-              </label>
-              <input
-                type="number"
-                min="0"
-                value={scoreForm.awayScore}
-                onChange={(e) => setScoreForm({ ...scoreForm, awayScore: parseInt(e.target.value) || 0 })}
-                className="w-20 text-center text-2xl font-black p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900"
-              />
+          ) : (
+            <div className="flex items-center space-x-2 p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs">
+              <Award className="w-4 h-4 flex-shrink-0" />
+              <span>Enter match score and squad player statistics, then certify the match to trigger GPI recalculation.</span>
             </div>
+          )}
+
+          {/* Scoreline */}
+          <form onSubmit={handleSaveScoreDraft} className="space-y-4">
+            <div className="flex items-center justify-center space-x-6 py-1">
+              <div className="text-center">
+                <label className="block text-xs font-extrabold text-blue-500 mb-1">
+                  {selectedMatch?.homeTeamName || 'Home'}
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={scoreForm.homeScore}
+                  onChange={(e) => setScoreForm({ ...scoreForm, homeScore: parseInt(e.target.value) || 0 })}
+                  className="w-20 text-center text-2xl font-black p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900"
+                />
+              </div>
+              <span className="text-2xl font-black text-slate-400">—</span>
+              <div className="text-center">
+                <label className="block text-xs font-extrabold text-blue-500 mb-1">
+                  {selectedMatch?.awayTeamName || 'Away'}
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={scoreForm.awayScore}
+                  onChange={(e) => setScoreForm({ ...scoreForm, awayScore: parseInt(e.target.value) || 0 })}
+                  className="w-20 text-center text-2xl font-black p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900"
+                />
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <Button variant="outline" size="xs" type="submit">
+                Save Score Draft
+              </Button>
+            </div>
+          </form>
+
+          {/* SQUAD PLAYERS DATA FEED FOR THIS FIXTURE */}
+          <div className="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-3">
+            <div className="flex justify-between items-center">
+              <div>
+                <h4 className="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">
+                  Fixture Squad Players ({getMatchEligiblePlayers().length})
+                </h4>
+                <p className="text-[11px] text-slate-400">Add or edit individual performances before certifying</p>
+              </div>
+              <Button 
+                size="xs" 
+                variant="primary" 
+                icon={<Plus className="w-3.5 h-3.5" />} 
+                onClick={openAddStatsForMatch}
+                disabled={getMatchEligiblePlayers().length === 0}
+              >
+                Add Player Performance
+              </Button>
+            </div>
+
+            {getMatchEligiblePlayers().length === 0 ? (
+              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-600 dark:text-amber-400">
+                Neither team has players added to its squad lineup yet. Go to <strong>Teams & Squad Lineups</strong> to assign players to these teams first.
+              </div>
+            ) : (
+              <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                {getMatchEligiblePlayers().map(p => {
+                  const playerStat = stats.find(s => s.playerId === p.playerId);
+                  return (
+                    <div key={`${p.teamId}-${p.playerId}`} className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-xs">
+                      <div>
+                        <span className="font-extrabold text-slate-900 dark:text-white mr-2">{p.username}</span>
+                        <span className="text-[10px] text-blue-500 font-semibold bg-blue-500/10 px-1.5 py-0.5 rounded">
+                          {p.teamName}
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        {playerStat ? (
+                          <>
+                            <span className="text-[11px] font-bold text-emerald-500">
+                              Stats Saved ({playerStat.goals}G, {playerStat.assists}A, {playerStat.minutesPlayed}')
+                            </span>
+                            <Button size="xs" variant="outline" onClick={() => openEditStats(playerStat)}>
+                              Edit Data
+                            </Button>
+                          </>
+                        ) : (
+                          <Button 
+                            size="xs" 
+                            variant="primary" 
+                            onClick={() => {
+                              setStatsForm({
+                                ...initialStatsForm,
+                                matchId: selectedMatch?.id,
+                                teamId: p.teamId,
+                                playerId: p.playerId
+                              });
+                              setShowStatsModal(true);
+                            }}
+                          >
+                            + Enter Data
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
-          <div className="flex justify-end space-x-2 pt-2">
-            <Button variant="ghost" type="button" onClick={() => setShowScoreModal(false)}>Cancel</Button>
-            <Button variant="primary" type="submit">Certify Score</Button>
+
+          {/* FINAL CERTIFICATION ACTION */}
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-500/20 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div>
+              <h5 className="text-xs font-bold text-slate-900 dark:text-white">Official Certification & GPI Recalculation</h5>
+              <p className="text-[11px] text-slate-400">Lock the scoreline and trigger the GPI engine to update all player ratings.</p>
+            </div>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleCertifyMatch}
+              disabled={certifying}
+              icon={<Award className="w-4 h-4 mr-1" />}
+            >
+              {certifying ? 'Certifying...' : selectedMatch?.confirmed ? 'Re-Certify & Recalculate GPI' : 'Certify Match & Recalculate GPI'}
+            </Button>
           </div>
-        </form>
+
+          <div className="flex justify-end pt-2 border-t border-slate-100 dark:border-slate-800">
+            <Button variant="ghost" onClick={() => setShowScoreModal(false)}>Close</Button>
+          </div>
+        </div>
       </Modal>
 
-      {/* MODAL 6: ENTER / EDIT PLAYER STATS (GPI ENGINE) */}
+      {/* MODAL 6: ENTER / EDIT PLAYER STATS (Filtered to this match fixture's teams) */}
       <Modal 
         isOpen={showStatsModal} 
         onClose={() => setShowStatsModal(false)} 
-        title={statsForm.id ? "Edit Player Tournament Stats" : "Feed Player Tournament Stats (GPI Calculation)"}
+        title={statsForm.id ? "Edit Player Performance Data" : "Add Player Performance Data"}
       >
         <form onSubmit={handleSaveStats} className="space-y-4 max-h-[75vh] overflow-y-auto pr-1">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[11px] font-bold text-slate-400 mb-1">Player *</label>
+              <label className="block text-[11px] font-bold text-slate-400 mb-1">Player Username *</label>
               <select
                 value={statsForm.playerId}
-                onChange={(e) => setStatsForm({ ...statsForm, playerId: e.target.value })}
-                className="w-full p-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 font-semibold"
+                onChange={(e) => {
+                  const pid = e.target.value;
+                  const found = getMatchEligiblePlayers().find(p => String(p.playerId) === String(pid));
+                  setStatsForm({ 
+                    ...statsForm, 
+                    playerId: pid,
+                    teamId: found ? found.teamId : statsForm.teamId 
+                  });
+                }}
+                className="w-full p-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 font-bold"
                 required
                 disabled={!!statsForm.id}
               >
-                <option value="">Select registered player...</option>
-                {playersList.map((p) => (
-                  <option key={p.id} value={p.id}>{p.name || p.username} ({p.username})</option>
+                <option value="">Select player username...</option>
+                {getMatchEligiblePlayers().map((p) => (
+                  <option key={p.playerId} value={p.playerId}>
+                    {p.username} ({p.teamName})
+                  </option>
                 ))}
               </select>
             </div>
@@ -838,8 +1006,8 @@ const ManageTournament = () => {
                 onChange={(e) => setStatsForm({ ...statsForm, teamId: e.target.value })}
                 className="w-full p-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900"
               >
-                <option value="">Select team (optional)...</option>
-                {teams.map((t) => (
+                <option value="">Select team...</option>
+                {teams.filter(t => t.id === selectedMatch?.homeTeamId || t.id === selectedMatch?.awayTeamId).map((t) => (
                   <option key={t.id} value={t.id}>{t.name}</option>
                 ))}
               </select>
@@ -885,7 +1053,7 @@ const ManageTournament = () => {
 
           {/* Stats numeric fields */}
           <div className="border-t border-slate-100 dark:border-slate-800 pt-3">
-            <span className="text-[10px] uppercase font-bold text-blue-500 block mb-2">Per-Match Gameplay Statistics</span>
+            <span className="text-[10px] uppercase font-bold text-blue-500 block mb-2">Gameplay Statistics</span>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5">
               {[
                 { label: 'Minutes Played', field: 'minutesPlayed', min: 0 },
@@ -922,7 +1090,7 @@ const ManageTournament = () => {
           <div className="flex justify-end space-x-2 pt-3 border-t border-slate-100 dark:border-slate-800">
             <Button variant="ghost" type="button" onClick={() => setShowStatsModal(false)}>Cancel</Button>
             <Button variant="primary" type="submit" disabled={!statsForm.playerId}>
-              Save & Recalculate GPI
+              Save Performance Data
             </Button>
           </div>
         </form>

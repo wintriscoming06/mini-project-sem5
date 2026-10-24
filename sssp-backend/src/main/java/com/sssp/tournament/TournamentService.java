@@ -2,6 +2,7 @@ package com.sssp.tournament;
 
 import com.sssp.alert.Notification;
 import com.sssp.alert.NotificationRepository;
+import com.sssp.common.enums.MatchStatus;
 import com.sssp.common.enums.UserRole;
 import com.sssp.common.exception.BadRequestException;
 import com.sssp.common.exception.ResourceNotFoundException;
@@ -15,6 +16,7 @@ import com.sssp.match.dto.MatchResponse;
 import com.sssp.player.PlayerProfile;
 import com.sssp.player.PlayerProfileRepository;
 import com.sssp.stats.PlayerMatchStatistics;
+import com.sssp.stats.StatsService;
 import com.sssp.stats.repository.PlayerMatchStatisticsRepository;
 import com.sssp.team.Team;
 import com.sssp.team.TeamMembership;
@@ -33,9 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,6 +51,7 @@ public class TournamentService {
     private final UserRepository userRepository;
     private final PlayerProfileRepository playerProfileRepository;
     private final GPIService gpiService;
+    private final StatsService statsService;
     private final NotificationRepository notificationRepository;
 
     // ==================== TOURNAMENTS ====================
@@ -140,7 +141,6 @@ public class TournamentService {
 
     public void deleteTournament(Long id, String username) {
         Tournament tournament = getOwnedTournament(id, username);
-        // Clean up tournament stats and recalculate players
         List<PlayerMatchStatistics> statsList = playerMatchStatisticsRepository.findByTournamentId(id);
         for (PlayerMatchStatistics stat : statsList) {
             Long playerId = stat.getPlayer() != null ? stat.getPlayer().getId() : null;
@@ -217,6 +217,8 @@ public class TournamentService {
         match.setAwayTeam(awayTeam);
         match.setMatchDateTime(request.getMatchDateTime());
         match.setVenue(request.getVenue() != null ? request.getVenue() : tournament.getVenue());
+        match.setStatus(MatchStatus.SCHEDULED);
+        match.setConfirmed(false);
 
         return mapToMatchResponse(matchRepository.save(match));
     }
@@ -238,12 +240,58 @@ public class TournamentService {
 
         match.setHomeScore(request.getHomeScore());
         match.setAwayScore(request.getAwayScore());
-        match.setStatus(com.sssp.common.enums.MatchStatus.COMPLETED);
 
         return mapToMatchResponse(matchRepository.save(match));
     }
 
-    // ==================== PLAYER TOURNAMENT STATS & GPI ====================
+    /**
+     * Official Certification: Certifies the match and scoreline, locks results,
+     * and triggers GPI recalculation and stats aggregation for all participating players.
+     */
+    public MatchResponse certifyMatch(Long tournamentId, Long matchId, String username) {
+        Tournament tournament = getOwnedTournament(tournamentId, username);
+        User organizer = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new ResourceNotFoundException("Match not found with ID: " + matchId));
+
+        if (!match.getTournament().getId().equals(tournament.getId())) {
+            throw new BadRequestException("Match does not belong to this tournament");
+        }
+
+        match.setStatus(MatchStatus.COMPLETED);
+        match.setConfirmed(true);
+        match.setConfirmedAt(LocalDateTime.now());
+        match.setConfirmedBy(organizer);
+
+        Match savedMatch = matchRepository.save(match);
+
+        // Find all player stats attached to this match or tournament and trigger GPI engine
+        List<PlayerMatchStatistics> matchStats = playerMatchStatisticsRepository.findByMatchId(matchId);
+        if (matchStats.isEmpty()) {
+            // Also link any stats with matching tournament
+            matchStats = playerMatchStatisticsRepository.findByTournamentId(tournamentId);
+        }
+
+        Set<Long> affectedPlayerIds = new HashSet<>();
+        for (PlayerMatchStatistics s : matchStats) {
+            if (s.getPlayer() != null) {
+                affectedPlayerIds.add(s.getPlayer().getId());
+            }
+        }
+
+        for (Long playerId : affectedPlayerIds) {
+            gpiService.recalculatePlayerGPI(playerId);
+            try {
+                statsService.aggregatePerformanceHistory(playerId);
+            } catch (Exception ignored) {}
+        }
+
+        return mapToMatchResponse(savedMatch);
+    }
+
+    // ==================== PLAYER TOURNAMENT STATS (FEED DATA) ====================
 
     public List<TournamentPlayerStatsResponse> getTournamentStats(Long tournamentId) {
         return playerMatchStatisticsRepository.findByTournamentId(tournamentId).stream()
@@ -251,14 +299,12 @@ public class TournamentService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Saves or updates player performance data.
+     * Note: Does NOT prematurely recalculate overall GPI until official match certification.
+     */
     public TournamentPlayerStatsResponse addOrUpdateTournamentPlayerStats(Long tournamentId, TournamentPlayerStatsRequest request, String username) {
         Tournament tournament = getOwnedTournament(tournamentId, username);
-
-        // Validation rule: Stats entry is allowed only on or after the tournament date (startDate or endDate)
-        LocalDate allowedDate = tournament.getStartDate() != null ? tournament.getStartDate() : tournament.getEndDate();
-        if (allowedDate != null && LocalDate.now().isBefore(allowedDate)) {
-            throw new BadRequestException("Stats entry is allowed only on or after the tournament start date (" + allowedDate + ").");
-        }
 
         User player = userRepository.findById(request.getPlayerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Player not found with ID: " + request.getPlayerId()));
@@ -266,16 +312,22 @@ public class TournamentService {
         Team team = request.getTeamId() != null
                 ? teamRepository.findById(request.getTeamId()).orElse(null) : null;
 
-        // One stats record per player per tournament
-        PlayerMatchStatistics stat = playerMatchStatisticsRepository
-                .findByTournamentIdAndPlayerId(tournamentId, request.getPlayerId())
-                .orElseGet(() -> {
-                    PlayerMatchStatistics newStat = new PlayerMatchStatistics();
-                    newStat.setTournament(tournament);
-                    newStat.setPlayer(player);
-                    return newStat;
-                });
+        Match match = request.getMatchId() != null
+                ? matchRepository.findById(request.getMatchId()).orElse(null) : null;
 
+        // One stats record per player per tournament (or match)
+        PlayerMatchStatistics stat = null;
+        if (match != null) {
+            stat = playerMatchStatisticsRepository.findByMatchIdAndPlayerId(match.getId(), request.getPlayerId()).orElse(null);
+        }
+        if (stat == null) {
+            stat = playerMatchStatisticsRepository.findByTournamentIdAndPlayerId(tournamentId, request.getPlayerId())
+                    .orElseGet(PlayerMatchStatistics::new);
+        }
+
+        stat.setTournament(tournament);
+        stat.setMatch(match);
+        stat.setPlayer(player);
         stat.setTeam(team);
         stat.setMatchDate(tournament.getEndDate() != null ? tournament.getEndDate() : tournament.getStartDate());
         stat.setCompetition(tournament.getName());
@@ -301,13 +353,18 @@ public class TournamentService {
         stat.setYellowCards(request.getYellowCards());
         stat.setRedCards(request.getRedCards());
 
-        // Performance score
+        // Performance score for this record
         stat.setPerformanceScore(GPIEngine.matchPerformanceScore(stat));
 
         PlayerMatchStatistics saved = playerMatchStatisticsRepository.save(stat);
 
-        // Recalculate player GPI
-        gpiService.recalculatePlayerGPI(player.getId());
+        // If the match was already certified, refresh GPI immediately
+        if (match != null && match.isConfirmed()) {
+            gpiService.recalculatePlayerGPI(player.getId());
+            try {
+                statsService.aggregatePerformanceHistory(player.getId());
+            } catch (Exception ignored) {}
+        }
 
         return mapToStatsResponse(saved);
     }
@@ -326,6 +383,9 @@ public class TournamentService {
 
         // Recalculate player GPI
         gpiService.recalculatePlayerGPI(playerId);
+        try {
+            statsService.aggregatePerformanceHistory(playerId);
+        } catch (Exception ignored) {}
     }
 
     // ==================== PLAYER SEARCH FOR ORGANIZERS ====================
@@ -431,6 +491,7 @@ public class TournamentService {
                 .id(s.getId())
                 .tournamentId(s.getTournament() != null ? s.getTournament().getId() : null)
                 .tournamentName(s.getTournament() != null ? s.getTournament().getName() : s.getCompetition())
+                .matchId(s.getMatch() != null ? s.getMatch().getId() : null)
                 .playerId(s.getPlayer() != null ? s.getPlayer().getId() : null)
                 .playerUsername(s.getPlayer() != null ? s.getPlayer().getUsername() : null)
                 .playerName(s.getPlayer() != null ? s.getPlayer().getUsername() : null)

@@ -86,6 +86,7 @@ export const tournamentService = {
   getTournamentMatches: (tournamentId) => api.get(`/tournaments/${tournamentId}/matches`),
   createTournamentMatch: (tournamentId, data) => api.post(`/tournaments/${tournamentId}/matches`, data),
   updateMatchScore: (tournamentId, matchId, data) => api.put(`/tournaments/${tournamentId}/matches/${matchId}/score`, data),
+  certifyMatch: (tournamentId, matchId) => api.post(`/tournaments/${tournamentId}/matches/${matchId}/certify`),
 
   // Player Stats feed (GPI Input)
   getTournamentStats: (tournamentId) => api.get(`/tournaments/${tournamentId}/stats`),

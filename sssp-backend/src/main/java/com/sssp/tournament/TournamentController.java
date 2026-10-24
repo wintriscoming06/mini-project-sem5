@@ -142,6 +142,15 @@ public class TournamentController {
         return ResponseEntity.ok(tournamentService.updateMatchScore(id, matchId, request, userDetails.getUsername()));
     }
 
+    @PostMapping("/tournaments/{id}/matches/{matchId}/certify")
+    @PreAuthorize("hasRole('ORGANIZER')")
+    public ResponseEntity<MatchResponse> certifyMatch(
+            @PathVariable Long id,
+            @PathVariable Long matchId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(tournamentService.certifyMatch(id, matchId, userDetails.getUsername()));
+    }
+
     // ==================== PLAYER STATS (GPI INPUT FEED) ====================
 
     @GetMapping("/tournaments/{id}/stats")

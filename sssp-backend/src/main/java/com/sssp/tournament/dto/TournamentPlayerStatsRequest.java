@@ -16,6 +16,8 @@ public class TournamentPlayerStatsRequest {
     @NotNull(message = "Player ID is required")
     private Long playerId;
 
+    private Long matchId;
+
     private Long teamId;
 
     private String position; // ST, CM, CB, etc.

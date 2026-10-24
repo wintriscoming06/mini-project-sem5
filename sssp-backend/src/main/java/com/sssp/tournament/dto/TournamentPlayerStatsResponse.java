@@ -14,6 +14,7 @@ public class TournamentPlayerStatsResponse {
     private Long id;
     private Long tournamentId;
     private String tournamentName;
+    private Long matchId;
     private Long playerId;
     private String playerUsername;
     private String playerName;
