@@ -8,7 +8,7 @@ import {
   getStoredClubBadge, calculateAge 
 } from '../../utils/clubTheme';
 
-const POSITIONS = ['GK', 'CB', 'LB', 'RB', 'DM', 'CM', 'AM', 'LW', 'RW', 'ST'];
+const POSITIONS = ['GK', 'CB', 'LB', 'RB', 'DM', 'CM', 'AM', 'LM', 'RM', 'LW', 'RW', 'ST', 'CF'];
 const AGE_GROUPS = ['U13', 'U15', 'U17', 'U19', 'U21', 'Open'];
 
 export default function PlayerSearch() {

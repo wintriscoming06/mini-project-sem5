@@ -83,13 +83,15 @@ public class ScoutService {
                     String clean = pos.trim();
                     if (clean.equalsIgnoreCase(playerPos)) return true;
                     if (p.getPositionCategory() != null && clean.equalsIgnoreCase(p.getPositionCategory().name())) return true;
-                    // Tactical role alias equivalence: DM <-> CDM, AM <-> CAM
+                    // Tactical role alias equivalence: DM <-> CDM, AM <-> CAM, ST <-> CF
                     if ("DM".equalsIgnoreCase(clean) && "CDM".equalsIgnoreCase(playerPos)) return true;
                     if ("CDM".equalsIgnoreCase(clean) && "DM".equalsIgnoreCase(playerPos)) return true;
                     if ("AM".equalsIgnoreCase(clean) && "CAM".equalsIgnoreCase(playerPos)) return true;
                     if ("CAM".equalsIgnoreCase(clean) && "AM".equalsIgnoreCase(playerPos)) return true;
                     if ("ST".equalsIgnoreCase(clean) && "CF".equalsIgnoreCase(playerPos)) return true;
                     if ("CF".equalsIgnoreCase(clean) && "ST".equalsIgnoreCase(playerPos)) return true;
+                    // Midfield wide equivalences if queried as MID
+                    if ("MID".equalsIgnoreCase(clean) && ("LM".equalsIgnoreCase(playerPos) || "RM".equalsIgnoreCase(playerPos) || "CM".equalsIgnoreCase(playerPos) || "DM".equalsIgnoreCase(playerPos) || "AM".equalsIgnoreCase(playerPos))) return true;
                 }
                 return false;
             }).collect(Collectors.toList());

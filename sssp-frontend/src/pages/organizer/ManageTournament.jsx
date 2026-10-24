@@ -1020,7 +1020,7 @@ const ManageTournament = () => {
                 onChange={(e) => setStatsForm({ ...statsForm, position: e.target.value })}
                 className="w-full p-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 font-bold"
               >
-                {['ST', 'CF', 'LW', 'RW', 'CAM', 'CM', 'CDM', 'LM', 'RM', 'LB', 'RB', 'CB', 'GK'].map(pos => (
+                {['GK', 'CB', 'LB', 'RB', 'DM', 'CDM', 'CM', 'AM', 'CAM', 'LM', 'RM', 'LW', 'RW', 'ST', 'CF'].map(pos => (
                   <option key={pos} value={pos}>{pos}</option>
                 ))}
               </select>
