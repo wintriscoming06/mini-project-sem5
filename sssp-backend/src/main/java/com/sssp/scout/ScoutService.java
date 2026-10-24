@@ -229,6 +229,12 @@ public class ScoutService {
         note.setPlayer(player);
         note.setNote(request.getNote());
         note.setNotedAt(LocalDateTime.now());
+
+        // Also update the note on the scout's shortlist entry if present
+        scoutShortlistRepository.findByScoutIdAndPlayerId(scout.getId(), playerId).ifPresent(sl -> {
+            sl.setNote(request.getNote());
+            scoutShortlistRepository.save(sl);
+        });
         
         return mapToScoutNoteResponse(scoutNoteRepository.save(note));
     }

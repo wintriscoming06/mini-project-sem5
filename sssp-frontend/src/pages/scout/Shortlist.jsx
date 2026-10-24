@@ -34,8 +34,10 @@ export default function Shortlist() {
   const handleRemove = async () => {
     if (!deleteId) return;
     try {
-      await scoutService.removeFromShortlist(deleteId);
-      setShortlist(shortlist.filter(item => item.id !== deleteId));
+      const itemToDelete = shortlist.find(item => item.id === deleteId);
+      const targetPlayerId = itemToDelete ? itemToDelete.playerId : deleteId;
+      await scoutService.removeFromShortlist(targetPlayerId);
+      setShortlist(shortlist.filter(item => item.id !== deleteId && item.playerId !== targetPlayerId));
       setDeleteId(null);
     } catch (err) {
       setError('Failed to remove prospect from shortlist');
@@ -44,8 +46,9 @@ export default function Shortlist() {
   };
 
   const handleSaveNote = async () => {
+    if (!noteModal.playerId) return;
     try {
-      await scoutService.addNote(noteModal.playerId, noteModal.currentNote);
+      await scoutService.addNote(noteModal.playerId, { note: noteModal.currentNote });
       setShortlist(shortlist.map(item => 
         item.playerId === noteModal.playerId ? { ...item, note: noteModal.currentNote } : item
       ));
