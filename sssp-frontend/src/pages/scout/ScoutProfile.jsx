@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { scoutService } from '../../services/api';
 import { 
-  User, Shield, Award, MapPin, Calendar, Globe, Compass, 
-  Edit2, Camera, RefreshCw, CheckCircle2, Bookmark, Eye, 
-  Activity, Save, X, Sparkles, Building, Briefcase, FileText,
-  Search, Check
+  Shield, Award, MapPin, Calendar, Globe, Compass, 
+  Edit2, Camera, RefreshCw, CheckCircle2, Bookmark, 
+  Activity, Sparkles, Building, FileText,
+  Check
 } from 'lucide-react';
 import { Button, Alert, LoadingSpinner, PitchMarkings } from '../../components/common';
 import { 

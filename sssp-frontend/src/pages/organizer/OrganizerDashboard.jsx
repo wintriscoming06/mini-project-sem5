@@ -3,8 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { tournamentService, matchService } from '../../services/api';
 import { 
-  Trophy, Calendar, Users, CheckCircle, Plus, ArrowRight, 
-  BarChart3, Activity, Shield, MapPin, ChevronRight, Clock 
+  Users, Plus, ArrowRight, MapPin, Clock 
 } from 'lucide-react';
 import { 
   StatsCard, Card, StatusBadge, LoadingSpinner, Alert, 

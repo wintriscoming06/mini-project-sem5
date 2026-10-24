@@ -114,20 +114,6 @@ export default function PlayerSearch() {
     }
   };
 
-  const renderGPIBadge = (gpi) => {
-    const val = Number(gpi || 0);
-    let colorClass = 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700';
-    if (val >= 80) colorClass = 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-500/40';
-    else if (val >= 65) colorClass = 'bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 border-cyan-500/40';
-    else if (val >= 50) colorClass = 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-500/40';
-
-    return (
-      <span className={`px-2 py-0.5 rounded-lg text-xs font-black border ${colorClass} stat-number`}>
-        GPI {val ? val.toFixed(1) : 'N/A'}
-      </span>
-    );
-  };
-
   return (
     <div className="space-y-6">
       

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Trophy, Target, TrendingUp, BarChart3, Calendar, 
-  ArrowRight, Shield, Award, Activity 
+  Trophy, Target, BarChart3, Calendar, 
+  ArrowRight 
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { playerService, getErrorMessage } from '../../services/api';

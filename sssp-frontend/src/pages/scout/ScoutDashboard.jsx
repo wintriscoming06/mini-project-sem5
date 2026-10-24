@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
-  Search, Star, Bell, Eye, Filter, UserCheck, ChevronRight, 
-  AlertCircle, GitCompare, Shield, Target, Compass
+  Search, Star, Bell, Filter, ChevronRight, 
+  GitCompare
 } from 'lucide-react';
 import { scoutService } from '../../services/api';
-import { useAuth } from '../../context/AuthContext';
 import { 
-  LoadingSpinner, Alert, StatsCard, Card, StatusBadge, Button, 
+  LoadingSpinner, Alert, StatsCard, Card, Button, 
   ScoutTargetIcon, ClassicSoccerBall, PitchHero 
 } from '../../components/common';
 
 export default function ScoutDashboard() {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

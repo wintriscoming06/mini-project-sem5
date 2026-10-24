@@ -3,7 +3,6 @@ import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, X, GitCompare } from 'lucide-react';
 import { playerService, scoutService } from '../../services/api';
 import { LoadingSpinner, Alert, Button, StatusBadge, FootballIcon, PitchHero } from '../../components/common';
-import SVGRadarChart from '../../components/auth/SVGRadarChart';
 
 export default function PlayerComparison() {
   const location = useLocation();

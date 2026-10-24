@@ -11,7 +11,7 @@ import { FootballIcon, ClassicSoccerBall } from '../common/FootballIcons';
 
 const Navbar = () => {
   const { user, logout, hasRole } = useAuth();
-  const { theme, toggleTheme, isDark } = useTheme();
+  const { toggleTheme, isDark } = useTheme();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);

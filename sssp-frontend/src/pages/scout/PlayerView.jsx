@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { playerService, scoutService } from '../../services/api';
 import { 
-  User, Activity, Star, Award, MapPin, Calendar, ClipboardList, 
-  Send, Edit, Bookmark, ArrowLeft, Shield, CheckCircle2, GitCompare,
+  User, Activity, ClipboardList, 
+  Send, Edit, Bookmark, ArrowLeft, CheckCircle2, GitCompare,
   Ruler, Scale, Shirt, Footprints, Globe, Trophy
 } from 'lucide-react';
 import { LoadingSpinner, Alert, Button, StatusBadge, PitchMarkings } from '../../components/common';

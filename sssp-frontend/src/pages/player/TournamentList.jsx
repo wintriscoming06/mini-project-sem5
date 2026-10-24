@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Search, MapPin, Calendar, Users, Filter, CheckCircle, Trophy } from 'lucide-react';
 import { tournamentService } from '../../services/api';
 import { 
-  LoadingSpinner, Alert, Card, Button, StatusBadge, EmptyState, 
-  TrophyIcon, PitchHero, ClassicSoccerBall 
+  LoadingSpinner, Alert, Button, StatusBadge, EmptyState, 
+  TrophyIcon, PitchHero 
 } from '../../components/common';
 
 const TournamentList = () => {

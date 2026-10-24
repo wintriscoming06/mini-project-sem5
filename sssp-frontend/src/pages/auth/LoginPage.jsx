@@ -84,7 +84,7 @@ const LoginPage = () => {
     const animationDelay = isReduced ? 0 : 480;
 
     try {
-      const [loginRes] = await Promise.all([
+      await Promise.all([
         login(identifier, password),
         new Promise((resolve) => setTimeout(resolve, animationDelay))
       ]);

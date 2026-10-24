@@ -3,7 +3,7 @@ import PlayerShowcase from './PlayerShowcase';
 import ScoutShowcase from './ScoutShowcase';
 import OrganizerShowcase from './OrganizerShowcase';
 import { 
-  ClassicSoccerBall, PitchMarkings, TournamentStadiumBackdrop
+  TournamentStadiumBackdrop
 } from '../common';
 
 const ROLES = [
