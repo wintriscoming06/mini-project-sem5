@@ -54,7 +54,7 @@ public class InputValidationAndBoundaryTest {
         req.setPassword("somePassword");
         req.setRole(UserRole.PLAYER);
 
-        when(userRepository.findByUsernameOrEmail(hostileIdentifier, hostileIdentifier))
+        when(userRepository.findByUsername(hostileIdentifier))
                 .thenReturn(Optional.empty());
 
         BadRequestException ex = assertThrows(BadRequestException.class, () -> authService.login(req));
@@ -74,7 +74,7 @@ public class InputValidationAndBoundaryTest {
         req.setPassword("password123");
         req.setRole(UserRole.SCOUT); // Trying to log in to scout portal with player credentials
 
-        when(userRepository.findByUsernameOrEmail("forward10", "forward10"))
+        when(userRepository.findByUsername("forward10"))
                 .thenReturn(Optional.of(playerUser));
 
         BadRequestException ex = assertThrows(BadRequestException.class, () -> authService.login(req));

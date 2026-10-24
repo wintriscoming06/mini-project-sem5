@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
+import { User, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { getErrorMessage } from '../../services/api';
 import { Alert, ClassicSoccerBall } from '../../components/common';
@@ -235,15 +235,15 @@ const LoginPage = () => {
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
-          {/* Email or Username */}
+          {/* Username */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-1.5 flex items-center justify-between">
-              <span>{activeRole === 'PLAYER' ? 'Player ID / Email or Username' : `${currentTheme.name} ID / Email or Username`}</span>
+              <span>{activeRole === 'PLAYER' ? 'Player Username' : `${currentTheme.name} Username`}</span>
               <span className={currentTheme.accentColor}>*</span>
             </label>
             <div className="relative">
               <div className={`absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none ${currentTheme.accentColor}`}>
-                <Mail className="w-4 h-4" />
+                <User className="w-4 h-4" />
               </div>
               <input
                 type="text"
@@ -251,12 +251,12 @@ const LoginPage = () => {
                 onChange={(e) => setIdentifier(e.target.value)}
                 placeholder={
                   activeRole === 'PLAYER' 
-                    ? 'e.g. cr7@sssp.org or player username' 
+                    ? 'Enter your player username' 
                     : activeRole === 'COACH'
-                    ? 'e.g. coach@sssp.org or coach username'
+                    ? 'Enter your coach username'
                     : activeRole === 'SCOUT' 
-                    ? 'e.g. scout@sssp.org or scout username' 
-                    : 'e.g. organizer@sssp.org'
+                    ? 'Enter your scout username' 
+                    : 'Enter your organizer username'
                 }
                 required
                 className={`w-full pl-10 pr-4 py-2.5 bg-black/40 border border-slate-700/60 rounded-xl text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 ${currentTheme.inputRing} transition-all duration-200`}
@@ -270,16 +270,6 @@ const LoginPage = () => {
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-200">
                 Password <span className={currentTheme.accentColor}>*</span>
               </label>
-              <a
-                href="#forgot"
-                onClick={(e) => {
-                  e.preventDefault();
-                  alert('Tactical password reset link has been dispatched to your email.');
-                }}
-                className={`text-xs ${currentTheme.accentColor} hover:underline font-semibold transition-colors`}
-              >
-                Forgot password?
-              </a>
             </div>
             <div className="relative">
               <div className={`absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none ${currentTheme.accentColor}`}>

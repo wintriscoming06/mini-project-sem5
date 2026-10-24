@@ -104,7 +104,7 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
-        User user = userRepository.findByUsernameOrEmail(request.getIdentifier(), request.getIdentifier())
+        User user = userRepository.findByUsername(request.getIdentifier())
                 .orElseThrow(() -> new BadRequestException("User not found with the given credentials"));
 
         Authentication authentication = authenticationManager.authenticate(
