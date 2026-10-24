@@ -29,7 +29,7 @@ const Navbar = () => {
         { path: '/tournaments', label: 'Tournaments', icon: Trophy },
         { path: '/player/stats', label: 'Match Stats', icon: BarChart2 },
         { path: '/player/card-studio', label: 'Card Studio', icon: FootballIcon },
-        { path: '/profile', label: 'GPI Profile', icon: User }
+        { path: '/profile', label: 'Profile', icon: User }
       ];
     }
     if (hasRole('ORGANIZER')) {

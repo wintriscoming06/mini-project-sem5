@@ -78,12 +78,18 @@ public class ScoutService {
         if (request.getPosition() != null && !request.getPosition().isEmpty()) {
             String[] posTokens = request.getPosition().split(",");
             profiles = profiles.stream().filter(p -> {
+                String playerPos = p.getPrimaryPosition() != null ? p.getPrimaryPosition().trim() : "";
                 for (String pos : posTokens) {
                     String clean = pos.trim();
-                    if (clean.equalsIgnoreCase(p.getPrimaryPosition()) || 
-                       (p.getPositionCategory() != null && clean.equalsIgnoreCase(p.getPositionCategory().name()))) {
-                        return true;
-                    }
+                    if (clean.equalsIgnoreCase(playerPos)) return true;
+                    if (p.getPositionCategory() != null && clean.equalsIgnoreCase(p.getPositionCategory().name())) return true;
+                    // Tactical role alias equivalence: DM <-> CDM, AM <-> CAM
+                    if ("DM".equalsIgnoreCase(clean) && "CDM".equalsIgnoreCase(playerPos)) return true;
+                    if ("CDM".equalsIgnoreCase(clean) && "DM".equalsIgnoreCase(playerPos)) return true;
+                    if ("AM".equalsIgnoreCase(clean) && "CAM".equalsIgnoreCase(playerPos)) return true;
+                    if ("CAM".equalsIgnoreCase(clean) && "AM".equalsIgnoreCase(playerPos)) return true;
+                    if ("ST".equalsIgnoreCase(clean) && "CF".equalsIgnoreCase(playerPos)) return true;
+                    if ("CF".equalsIgnoreCase(clean) && "ST".equalsIgnoreCase(playerPos)) return true;
                 }
                 return false;
             }).collect(Collectors.toList());

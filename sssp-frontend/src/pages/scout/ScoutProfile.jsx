@@ -10,7 +10,7 @@ import {
 import { Button, Alert, LoadingSpinner, PitchMarkings } from '../../components/common';
 import { 
   getClubTheme, ClubCrest, ClubWatermark, CoachSilhouette, 
-  PRESET_COACHES, PRESET_CLUBS, 
+  PRESET_CLUBS, 
   getStoredScoutDossier, saveStoredScoutDossier, 
   getStoredClubBadge, saveStoredClubBadge 
 } from '../../utils/clubTheme';
@@ -97,28 +97,6 @@ export default function ScoutProfile() {
   }, [scoutKey]);
 
   // Handle Preset Coach Persona Selection
-  const applyPresetCoach = (preset) => {
-    const updated = {
-      ...formData,
-      name: preset.name,
-      title: preset.title,
-      organization: preset.club,
-      photoUrl: preset.photo,
-      license: preset.license,
-      territory: preset.territory,
-      specialization: preset.specialization,
-      experience: preset.experience,
-      location: preset.location
-    };
-    setFormData(updated);
-    if (!isEditing) {
-      setDossier(updated);
-      saveStoredScoutDossier(scoutKey, updated);
-      setSuccess(`Applied ${preset.name} scout persona.`);
-      setTimeout(() => setSuccess(null), 3000);
-    }
-  };
-
   // Photo Cutout Upload with Auto Background Removal
   const handlePhotoUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -497,58 +475,6 @@ export default function ScoutProfile() {
         className="hidden" 
         onChange={handleBadgeUpload} 
       />
-
-      {/* ======================================================== */}
-      {/* 2. LEGENDARY COACH / SCOUT PERSONA PRESETS BAR */}
-      {/* ======================================================== */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-blue-950/40 shadow-sm">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center space-x-2">
-            <Sparkles className="w-4 h-4 text-amber-500" />
-            <h3 className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-200">
-              Quick Coach / Scout Personas
-            </h3>
-          </div>
-          <span className="text-[11px] text-slate-400">
-            Click to preview professional coaching identities
-          </span>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-          {PRESET_COACHES.map(preset => {
-            const isSelected = activeData.photoUrl === preset.photo;
-            return (
-              <button
-                key={preset.id}
-                type="button"
-                onClick={() => applyPresetCoach(preset)}
-                className={`relative flex items-center p-2.5 rounded-xl border text-left card-elevate hover:-translate-y-1 hover:shadow-md transition-all duration-200 ease-out ${
-                  isSelected 
-                    ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-950/40 ring-2 ring-cyan-500/20' 
-                    : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 hover:border-slate-300 dark:hover:border-slate-700'
-                }`}
-              >
-                <div className="w-10 h-10 rounded-lg overflow-hidden bg-slate-800 flex-shrink-0 mr-2.5 border border-white/10">
-                  <img src={preset.photo} alt={preset.name} className="w-full h-full object-cover object-top" />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-xs font-black text-slate-900 dark:text-white truncate">
-                    {preset.name}
-                  </div>
-                  <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                    {preset.club}
-                  </div>
-                </div>
-                {isSelected && (
-                  <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-cyan-500 text-white flex items-center justify-center">
-                    <Check className="w-2.5 h-2.5 stroke-[3]" />
-                  </div>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
 
       {/* ======================================================== */}
       {/* 3. EDIT DOSSIER FORM (WHEN EDITING) */}

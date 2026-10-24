@@ -114,7 +114,7 @@ export const matchService = {
 export const scoutService = {
   searchPlayers: (params) => api.get('/scouts/players/search', { params }),
   getShortlist: () => api.get('/scouts/shortlist'),
-  addToShortlist: (playerId, data) => api.post(`/scouts/players/${playerId}/shortlist`, data),
+  addToShortlist: (playerId, data = {}) => api.post(`/scouts/players/${playerId}/shortlist`, data),
   removeFromShortlist: (playerId) => api.delete(`/scouts/players/${playerId}/shortlist`),
   saveFilter: (data) => api.post('/scouts/filters', data),
   getFilters: () => api.get('/scouts/filters'),

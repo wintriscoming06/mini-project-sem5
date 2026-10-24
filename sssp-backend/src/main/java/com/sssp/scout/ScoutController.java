@@ -33,8 +33,11 @@ public class ScoutController {
 
     @PostMapping("/players/{playerId}/shortlist")
     public ShortlistResponse addToShortlist(@PathVariable Long playerId,
-                                            @RequestBody ShortlistRequest request,
+                                            @RequestBody(required = false) ShortlistRequest request,
                                             @AuthenticationPrincipal UserDetails userDetails) {
+        if (request == null) {
+            request = new ShortlistRequest();
+        }
         return scoutService.addToShortlist(playerId, request, userDetails.getUsername());
     }
 
