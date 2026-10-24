@@ -677,7 +677,8 @@ const ManageTournament = () => {
                           </button>
                         </td>
                       </tr>
-                    ))}
+                    );
+                  })}
                   </tbody>
                 </table>
               </div>

@@ -329,9 +329,25 @@ public class TournamentService {
         stat.setMatch(match);
         stat.setPlayer(player);
         stat.setTeam(team);
-        stat.setMatchDate(tournament.getEndDate() != null ? tournament.getEndDate() : tournament.getStartDate());
+        stat.setMatchDate(match != null && match.getMatchDateTime() != null 
+                ? match.getMatchDateTime().toLocalDate() 
+                : (tournament.getEndDate() != null ? tournament.getEndDate() : tournament.getStartDate()));
         stat.setCompetition(tournament.getName());
-        stat.setOpponent(team != null ? team.getName() : "Tournament Fixture");
+        
+        // Determine opponent
+        String opponentName = "Tournament Fixture";
+        if (match != null && match.getHomeTeam() != null && match.getAwayTeam() != null) {
+            if (team != null && team.getId().equals(match.getHomeTeam().getId())) {
+                opponentName = match.getAwayTeam().getName();
+            } else if (team != null && team.getId().equals(match.getAwayTeam().getId())) {
+                opponentName = match.getHomeTeam().getName();
+            } else {
+                opponentName = match.getHomeTeam().getName() + " vs " + match.getAwayTeam().getName();
+            }
+        } else if (team != null) {
+            opponentName = team.getName();
+        }
+        stat.setOpponent(opponentName);
         stat.setPosition(request.getPosition() != null ? request.getPosition() : "CM");
         stat.setStars(request.getStars() != null ? request.getStars() : 3);
 

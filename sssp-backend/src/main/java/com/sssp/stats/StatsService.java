@@ -229,11 +229,13 @@ public class StatsService {
         r.setPlayerName(s.getPlayer() != null ? s.getPlayer().getUsername() : null);
         r.setMatchId(s.getMatch() != null ? s.getMatch().getId() : null);
         
-        String desc = s.getCompetition();
-        if (s.getOpponent() != null && !s.getOpponent().isBlank()) {
-            desc = desc != null ? "vs " + s.getOpponent() + " (" + desc + ")" : "vs " + s.getOpponent();
-        } else if (desc == null) {
-            desc = "Match #" + (s.getMatch() != null ? s.getMatch().getId() : s.getId());
+        String desc = null;
+        if (s.getMatch() != null && s.getMatch().getHomeTeam() != null && s.getMatch().getAwayTeam() != null) {
+            desc = s.getMatch().getHomeTeam().getName() + " vs " + s.getMatch().getAwayTeam().getName();
+        } else if (s.getOpponent() != null && !s.getOpponent().isBlank()) {
+            desc = s.getCompetition() != null ? "vs " + s.getOpponent() + " (" + s.getCompetition() + ")" : "vs " + s.getOpponent();
+        } else {
+            desc = s.getCompetition() != null ? s.getCompetition() : "Match #" + (s.getMatch() != null ? s.getMatch().getId() : s.getId());
         }
         r.setMatchDescription(desc);
         r.setDate(s.getMatchDate() != null ? s.getMatchDate().toString() : (s.getCreatedAt() != null ? s.getCreatedAt().toLocalDate().toString() : null));
@@ -245,6 +247,8 @@ public class StatsService {
 
         r.setGoals(s.getGoals());
         r.setAssists(s.getAssists());
+        r.setShots(s.getShots());
+        r.setShotsOnTarget(s.getShotsOnTarget());
         r.setYellowCards(s.getYellowCards());
         r.setRedCards(s.getRedCards());
         r.setMinutesPlayed(s.getMinutesPlayed());

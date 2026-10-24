@@ -131,12 +131,12 @@ public class PlayerController {
 
     @GetMapping("/me/matches")
     @PreAuthorize("hasRole('PLAYER')")
-    public ResponseEntity<Map<String, Object>> getMyMatches(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<MatchPlayerRecordResponse>> getMyMatches(@AuthenticationPrincipal UserDetails userDetails) {
         Long playerId = playerService.getUserIdForUsername(userDetails.getUsername());
         List<MatchPlayerRecordResponse> matches = matchService != null
                 ? matchService.getPlayerMatches(playerId, userDetails.getUsername())
                 : List.of();
-        return ResponseEntity.ok(Map.of("matches", matches));
+        return ResponseEntity.ok(matches);
     }
 
     @GetMapping("/me/performance")
@@ -180,14 +180,14 @@ public class PlayerController {
     }
 
     @GetMapping("/{id}/matches")
-    public ResponseEntity<Map<String, Object>> getPlayerMatches(
+    public ResponseEntity<List<MatchPlayerRecordResponse>> getPlayerMatches(
             @PathVariable Long id,
             @AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails != null ? userDetails.getUsername() : null;
         List<MatchPlayerRecordResponse> matches = matchService != null
                 ? matchService.getPlayerMatches(id, username != null ? username : "")
                 : List.of();
-        return ResponseEntity.ok(Map.of("matches", matches));
+        return ResponseEntity.ok(matches);
     }
 
     @GetMapping("/{id}/performance")

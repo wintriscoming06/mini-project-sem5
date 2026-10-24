@@ -6,7 +6,7 @@ import {
   Send, Edit, Bookmark, ArrowLeft, CheckCircle2,
   Ruler, Scale, Shirt, Footprints, Globe, Trophy, Mail, Phone, AlertCircle
 } from 'lucide-react';
-import { LoadingSpinner, Alert, Button, StatusBadge, PitchMarkings, Modal } from '../../components/common';
+import { LoadingSpinner, Alert, Button, StatusBadge, PitchMarkings, Modal, MatchDetailModal } from '../../components/common';
 import SVGRadarChart from '../../components/auth/SVGRadarChart';
 import { useAuth } from '../../context/AuthContext';
 import { 
@@ -39,6 +39,9 @@ export default function PlayerView() {
   const [contactSuccess, setContactSuccess] = useState(null);
   const [contactError, setContactError] = useState(null);
   const [scoutProfileInfo, setScoutProfileInfo] = useState(null);
+
+  // Selected match for detailed modal
+  const [selectedMatchDetail, setSelectedMatchDetail] = useState(null);
 
   useEffect(() => {
     if (!id || id === 'undefined' || id === 'null') {
@@ -176,7 +179,14 @@ export default function PlayerView() {
       }
 
       const targetPlayerUserId = p.userId || p.id || id;
-      await scoutService.sendContactRequest(targetPlayerUserId, { message: contactMessage.trim() });
+      const scoutKey = user?.id || user?.userId || user?.username || 'current_scout';
+      const localDossier = getStoredScoutDossier(scoutKey);
+      const scoutFullName = localDossier?.name || user?.name || user?.username || 'Senior Scout';
+
+      await scoutService.sendContactRequest(targetPlayerUserId, { 
+        message: contactMessage.trim(),
+        scoutName: scoutFullName
+      });
       setContactSuccess("Scouting contact request sent successfully! The player can now view your inquiry and mobile number.");
       setContactMessage('');
       setTimeout(() => {
@@ -574,13 +584,22 @@ export default function PlayerView() {
                     <th className="px-4 py-3 text-center">Goals</th>
                     <th className="px-4 py-3 text-center">Assists</th>
                     <th className="px-4 py-3 text-center">Discipline</th>
+                    <th className="px-4 py-3 text-right">Details</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {s.length > 0 ? s.map((m, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
-                      <td className="px-4 py-3 font-semibold text-slate-900 dark:text-white">
-                        {m.matchDescription || m.title || `Fixture #${m.matchId || idx + 1}`}
+                    <tr 
+                      key={idx} 
+                      onClick={() => setSelectedMatchDetail(m)}
+                      className="hover:bg-blue-500/10 dark:hover:bg-slate-800/60 cursor-pointer transition-colors group"
+                      title="Click to view complete organiser match performance data"
+                    >
+                      <td className="px-4 py-3 font-semibold text-slate-900 dark:text-white group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors">
+                        <div className="flex items-center space-x-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-500 opacity-60 group-hover:scale-125 transition-transform" />
+                          <span>{m.matchDescription || m.title || `Fixture #${m.matchId || idx + 1}`}</span>
+                        </div>
                       </td>
                       <td className="px-4 py-3 text-center stat-number text-slate-600 dark:text-slate-300">{m.minutesPlayed ?? m.minutes ?? '-'}′</td>
                       <td className="px-4 py-3 text-center font-bold text-blue-600 dark:text-blue-400 stat-number">{m.goals || 0}</td>
@@ -588,15 +607,20 @@ export default function PlayerView() {
                       <td className="px-4 py-3 text-center">
                         {(m.yellowCards > 0 || m.redCards > 0) ? (
                           <div className="flex justify-center space-x-1">
-                            {m.yellowCards > 0 && <span className="w-2.5 h-3.5 bg-amber-400 rounded-sm inline-block" />}
-                            {m.redCards > 0 && <span className="w-2.5 h-3.5 bg-rose-500 rounded-sm inline-block" />}
+                            {m.yellowCards > 0 && <span className="w-2.5 h-3.5 bg-amber-400 rounded-sm inline-block shadow-sm" />}
+                            {m.redCards > 0 && <span className="w-2.5 h-3.5 bg-rose-500 rounded-sm inline-block shadow-sm" />}
                           </div>
                         ) : '—'}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400 group-hover:underline">
+                          View Data →
+                        </span>
                       </td>
                     </tr>
                   )) : (
                     <tr>
-                      <td colSpan="5" className="px-4 py-8 text-center text-slate-400">
+                      <td colSpan="6" className="px-4 py-8 text-center text-slate-400">
                         No verified tournament match records on file yet.
                       </td>
                     </tr>
@@ -812,6 +836,14 @@ export default function PlayerView() {
           </div>
         </Modal>
       )}
+
+      {/* Verified Match Performance Detail Modal */}
+      <MatchDetailModal
+        isOpen={!!selectedMatchDetail}
+        onClose={() => setSelectedMatchDetail(null)}
+        match={selectedMatchDetail}
+        playerUsername={p.username || p.name}
+      />
 
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Phone, Building, Calendar, Check, Clock, Copy, AlertCircle, RefreshCw } from 'lucide-react';
+import { Mail, Phone, Building, Calendar, Check, Copy, RefreshCw } from 'lucide-react';
 import { playerService } from '../../services/api';
 import { Card, Button, LoadingSpinner, Alert, EmptyState } from '../../components/common';
 import PitchHero from '../../components/common/PitchHero';
@@ -31,6 +31,7 @@ export default function ScoutingRequests() {
     if (!phone) return;
     navigator.clipboard.writeText(phone);
     setCopiedId(id);
+    handleMarkViewed(id);
     setTimeout(() => setCopiedId(null), 2500);
   };
 
@@ -119,18 +120,13 @@ export default function ScoutingRequests() {
                 <div className="pt-2 space-y-4">
                   {/* Header: Scout info + Status Badge */}
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-11 h-11 rounded-2xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-black text-lg border border-cyan-500/20 shadow-sm">
-                        {req.scoutName ? req.scoutName.charAt(0).toUpperCase() : 'S'}
-                      </div>
-                      <div>
-                        <h3 className="font-extrabold text-slate-900 dark:text-white text-base leading-tight">
-                          {req.scoutName}
-                        </h3>
-                        <div className="flex items-center text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
-                          <Building className="w-3 h-3 mr-1 text-slate-400" />
-                          <span className="truncate max-w-[200px]">{req.scoutOrganization || 'Independent Scout'}</span>
-                        </div>
+                    <div>
+                      <h3 className="font-extrabold text-slate-900 dark:text-white text-base leading-tight">
+                        {req.scoutName}
+                      </h3>
+                      <div className="flex items-center text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+                        <Building className="w-3 h-3 mr-1 text-slate-400" />
+                        <span className="truncate max-w-[200px]">{req.scoutOrganization || 'Independent Scout'}</span>
                       </div>
                     </div>
 
@@ -184,28 +180,6 @@ export default function ScoutingRequests() {
                         {isCopied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
                       </button>
                     </div>
-                  </div>
-
-                  {/* Action Buttons: Call Scout & Mark Viewed */}
-                  <div className="flex items-center gap-2 pt-1">
-                    <a
-                      href={`tel:${req.scoutContactNumber}`}
-                      onClick={() => handleMarkViewed(req.id)}
-                      className="flex-1 inline-flex items-center justify-center font-bold text-xs py-2.5 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white shadow-sm transition-all"
-                    >
-                      <Phone className="w-3.5 h-3.5 mr-1.5" /> Call Scout
-                    </a>
-
-                    {isPending && (
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        onClick={() => handleMarkViewed(req.id)}
-                        className="text-xs"
-                      >
-                        Mark Viewed
-                      </Button>
-                    )}
                   </div>
                 </div>
               </Card>

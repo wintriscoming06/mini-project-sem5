@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ContactRequestCreateRequest {
     private String message;
+    private String scoutName;
 }

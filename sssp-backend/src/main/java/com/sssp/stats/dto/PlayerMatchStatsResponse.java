@@ -23,6 +23,8 @@ public class PlayerMatchStatsResponse {
     private Double performanceScore;
     private int goals;
     private int assists;
+    private int shots;
+    private int shotsOnTarget;
     private int yellowCards;
     private int redCards;
     private Integer minutesPlayed;

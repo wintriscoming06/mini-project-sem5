@@ -8,7 +8,7 @@ import { useAuth } from '../../context/AuthContext';
 import { playerService, getErrorMessage } from '../../services/api';
 import { 
   LoadingSpinner, Alert, StatsCard, Card, StatusBadge, Button, 
-  PitchHero, ClassicSoccerBall 
+  PitchHero, ClassicSoccerBall, MatchDetailModal 
 } from '../../components/common';
 import SVGRadarChart from '../../components/auth/SVGRadarChart';
 
@@ -17,6 +17,7 @@ const PlayerDashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedMatchDetail, setSelectedMatchDetail] = useState(null);
   const [data, setData] = useState({
     profile: null,
     gpi: null,
@@ -188,10 +189,15 @@ const PlayerDashboard = () => {
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
                     {recentMatches.map((match, idx) => (
-                      <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                        <td className="px-4 py-3.5 font-bold text-slate-900 dark:text-white">
+                      <tr 
+                        key={idx} 
+                        onClick={() => setSelectedMatchDetail(match)}
+                        className="hover:bg-blue-500/10 dark:hover:bg-slate-800/60 cursor-pointer transition-colors group"
+                        title="Click to view full match performance data"
+                      >
+                        <td className="px-4 py-3.5 font-bold text-slate-900 dark:text-white group-hover:text-blue-500 transition-colors">
                           <div className="flex items-center space-x-2">
-                            <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />
+                            <span className="w-2 h-2 rounded-full bg-blue-500 inline-block group-hover:scale-125 transition-transform" />
                             <span>{match.matchDescription || `Fixture #${match.matchId}`}</span>
                           </div>
                         </td>
@@ -204,7 +210,10 @@ const PlayerDashboard = () => {
                         <td className="px-4 py-3.5 text-center font-black text-cyan-600 dark:text-cyan-400 stat-number">
                           {match.assists || 0}
                         </td>
-                        <td className="px-4 py-3.5 text-right">
+                        <td className="px-4 py-3.5 text-right whitespace-nowrap">
+                          <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400 group-hover:underline mr-2">
+                            View Data →
+                          </span>
                           <StatusBadge status="COMPLETED" label="Certified" />
                         </td>
                       </tr>
@@ -312,6 +321,14 @@ const PlayerDashboard = () => {
         </div>
 
       </div>
+
+      {/* Verified Match Performance Detail Modal */}
+      <MatchDetailModal
+        isOpen={!!selectedMatchDetail}
+        onClose={() => setSelectedMatchDetail(null)}
+        match={selectedMatchDetail}
+        playerUsername={profile?.fullName || user?.username}
+      />
     </div>
   );
 };

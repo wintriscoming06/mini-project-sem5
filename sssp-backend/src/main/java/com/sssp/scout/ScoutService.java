@@ -461,13 +461,17 @@ public class ScoutService {
             throw new BadRequestException("You already have an active pending contact request sent to this player");
         }
 
+        String scoutFullName = request != null && request.getScoutName() != null && !request.getScoutName().isBlank()
+                ? request.getScoutName().trim()
+                : scout.getUsername();
+
         ScoutContactRequest entity = ScoutContactRequest.builder()
                 .scout(scout)
                 .player(player)
                 .message(message)
                 .scoutContactNumber(phone)
                 .scoutOrganization(scoutProfile.getOrganization() != null ? scoutProfile.getOrganization() : "Independent Scouting")
-                .scoutName(scout.getUsername())
+                .scoutName(scoutFullName)
                 .status(ContactRequestStatus.PENDING)
                 .build();
 
