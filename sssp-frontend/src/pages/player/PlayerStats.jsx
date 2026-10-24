@@ -66,14 +66,13 @@ const PlayerStats = () => {
 
       // Harmonize logged matches and tournament participations
       const loggedMatches = (Array.isArray(playerMatchesRes?.data) ? playerMatchesRes.data : []).map(m => ({
-        matchDescription: m.opponent ? `vs ${m.opponent} (${m.competition || m.matchKind || 'Match'})` : (m.matchDescription || `Match #${m.id}`),
+        matchDescription: m.opponent ? `vs ${m.opponent} (${m.competition || 'Match'})` : (m.matchDescription || `Match #${m.id}`),
         date: m.matchDate || m.date,
         minutesPlayed: m.minutesPlayed,
         goals: m.goals,
         assists: m.assists,
         yellowCards: m.yellowCards,
         redCards: m.redCards,
-        matchKind: m.matchKind,
         performanceScore: m.performanceScore
       }));
 

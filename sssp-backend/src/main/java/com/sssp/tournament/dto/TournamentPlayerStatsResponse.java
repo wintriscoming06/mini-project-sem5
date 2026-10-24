@@ -21,7 +21,6 @@ public class TournamentPlayerStatsResponse {
     private Long teamId;
     private String teamName;
     private String position;
-    private String matchKind;
     private Integer stars;
 
     private Integer minutesPlayed;

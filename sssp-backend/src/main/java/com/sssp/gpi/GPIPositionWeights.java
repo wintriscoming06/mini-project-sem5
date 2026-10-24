@@ -114,23 +114,18 @@ public final class GPIPositionWeights {
     ));
 
     public static final Map<String, Double> MATCH_MULTIPLIERS = Map.of(
-            "FRIENDLY", 1.0,
-            "OFFICIAL_1", 1.1,
-            "OFFICIAL_2", 1.2,
-            "OFFICIAL_3", 1.3,
-            "OFFICIAL_4", 1.4,
-            "OFFICIAL_5", 1.5
+            "1", 1.1,
+            "2", 1.2,
+            "3", 1.3,
+            "4", 1.4,
+            "5", 1.5
     );
 
     public static final int MIN_COMPETITIVE_MATCHES = 10;
 
-    public static double getMultiplier(String matchKind, Integer stars) {
-        if (matchKind == null || "FRIENDLY".equalsIgnoreCase(matchKind)) {
-            return MATCH_MULTIPLIERS.get("FRIENDLY");
-        }
+    public static double getMultiplier(Integer stars) {
         int s = (stars != null && stars >= 1 && stars <= 5) ? stars : 1;
-        String key = "OFFICIAL_" + s;
-        return MATCH_MULTIPLIERS.getOrDefault(key, MATCH_MULTIPLIERS.get("OFFICIAL_1"));
+        return MATCH_MULTIPLIERS.getOrDefault(String.valueOf(s), 1.1);
     }
 
     public static Map<String, Double> getWeights(String position) {

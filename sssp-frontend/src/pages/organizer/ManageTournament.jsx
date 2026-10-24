@@ -58,7 +58,6 @@ const ManageTournament = () => {
     playerId: '',
     teamId: '',
     position: 'CM',
-    matchKind: 'OFFICIAL',
     stars: 3,
     minutesPlayed: 90,
     goals: 0,
@@ -326,7 +325,6 @@ const ManageTournament = () => {
       playerId: item.playerId,
       teamId: item.teamId || '',
       position: item.position || 'CM',
-      matchKind: item.matchKind || 'OFFICIAL',
       stars: item.stars || 3,
       minutesPlayed: item.minutesPlayed ?? 90,
       goals: item.goals ?? 0,
@@ -1025,17 +1023,6 @@ const ManageTournament = () => {
                 {['ST', 'CF', 'LW', 'RW', 'CAM', 'CM', 'CDM', 'LM', 'RM', 'LB', 'RB', 'CB', 'GK'].map(pos => (
                   <option key={pos} value={pos}>{pos}</option>
                 ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-[11px] font-bold text-slate-400 mb-1">Match Kind</label>
-              <select
-                value={statsForm.matchKind}
-                onChange={(e) => setStatsForm({ ...statsForm, matchKind: e.target.value })}
-                className="w-full p-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900"
-              >
-                <option value="OFFICIAL">OFFICIAL (Competitive)</option>
-                <option value="FRIENDLY">FRIENDLY</option>
               </select>
             </div>
             <div>

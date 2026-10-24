@@ -376,7 +376,6 @@ public class MatchService {
                 .opponent(row.getOpponent())
                 .competition(row.getCompetition())
                 .position(row.getPosition())
-                .matchKind(row.getMatchKind())
                 .stars(row.getStars())
                 .minutesPlayed(row.getMinutesPlayed())
                 .goals(row.getGoals())
@@ -431,13 +430,8 @@ public class MatchService {
         if (b.getMatchDate() == null) {
             errors.add("matchDate is required.");
         }
-        if (b.getMatchKind() == null || (!"FRIENDLY".equalsIgnoreCase(b.getMatchKind()) && !"OFFICIAL".equalsIgnoreCase(b.getMatchKind()))) {
-            errors.add("matchKind must be FRIENDLY or OFFICIAL.");
-        }
-        if ("OFFICIAL".equalsIgnoreCase(b.getMatchKind())) {
-            if (b.getStars() == null || b.getStars() < 1 || b.getStars() > 5) {
-                errors.add("stars must be 1-5 for official matches.");
-            }
+        if (b.getStars() != null && (b.getStars() < 1 || b.getStars() > 5)) {
+            errors.add("stars must be 1-5.");
         }
         if (b.getYellowCards() < 0 || b.getYellowCards() > 2) {
             errors.add("yellowCards cannot exceed 2.");

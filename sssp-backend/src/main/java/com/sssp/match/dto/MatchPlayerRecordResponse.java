@@ -20,7 +20,6 @@ public class MatchPlayerRecordResponse {
     private String opponent;
     private String competition;
     private String position;
-    private String matchKind;
     private Integer stars;
     private Integer minutesPlayed;
     private int goals;

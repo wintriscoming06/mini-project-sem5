@@ -333,7 +333,6 @@ public class TournamentService {
         stat.setCompetition(tournament.getName());
         stat.setOpponent(team != null ? team.getName() : "Tournament Fixture");
         stat.setPosition(request.getPosition() != null ? request.getPosition() : "CM");
-        stat.setMatchKind(request.getMatchKind() != null ? request.getMatchKind() : "OFFICIAL");
         stat.setStars(request.getStars() != null ? request.getStars() : 3);
 
         stat.setMinutesPlayed(request.getMinutesPlayed());
@@ -498,7 +497,6 @@ public class TournamentService {
                 .teamId(s.getTeam() != null ? s.getTeam().getId() : null)
                 .teamName(s.getTeam() != null ? s.getTeam().getName() : null)
                 .position(s.getPosition())
-                .matchKind(s.getMatchKind())
                 .stars(s.getStars())
                 .minutesPlayed(s.getMinutesPlayed())
                 .goals(s.getGoals())

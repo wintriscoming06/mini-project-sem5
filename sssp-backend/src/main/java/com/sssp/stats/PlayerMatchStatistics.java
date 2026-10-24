@@ -36,10 +36,8 @@ public class PlayerMatchStatistics extends BaseEntity implements MatchStatsInput
     private String competition;
     private String position;
 
-    @Builder.Default
-    private String matchKind = "OFFICIAL"; // FRIENDLY or OFFICIAL
+    private Integer stars; // 1 to 5
 
-    private Integer stars; // 1 to 5 for OFFICIAL
 
     @Builder.Default
     private Integer minutesPlayed = 0;

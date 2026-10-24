@@ -23,9 +23,6 @@ public class TournamentPlayerStatsRequest {
     private String position; // ST, CM, CB, etc.
 
     @Builder.Default
-    private String matchKind = "OFFICIAL"; // OFFICIAL or FRIENDLY
-
-    @Builder.Default
     private Integer stars = 3; // 1 to 5
 
     @NotNull(message = "Minutes played is required")

@@ -63,14 +63,12 @@ public class CoreBusinessLogicTest {
         match1.setMinutesPlayed(90);
         match1.setGoals(2);
         match1.setPosition("FW");
-        match1.setMatchKind("LEAGUE");
         match1.setStars(4);
 
         PlayerMatchStatistics match2 = new PlayerMatchStatistics();
         match2.setMinutesPlayed(90);
         match2.setGoals(0);
         match2.setPosition("FW");
-        match2.setMatchKind("FRIENDLY");
         match2.setStars(2);
 
         Double gpi = GPIEngine.computeGPI(List.of(match1, match2));
@@ -89,7 +87,6 @@ public class CoreBusinessLogicTest {
         match.setPassesCompleted(58);
         match.setTackles(5);
         match.setPosition("FW");
-        match.setMatchKind("TOURNAMENT");
         match.setStars(5);
 
         Map<String, Integer> attrs = GPIEngine.computePerformanceAttributes(List.of(match));
