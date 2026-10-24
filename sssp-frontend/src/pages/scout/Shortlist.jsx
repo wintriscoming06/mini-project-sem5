@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { scoutService } from '../../services/api';
-import { Star, Trash2, Edit3, Eye, Search } from 'lucide-react';
-import { LoadingSpinner, Alert, ConfirmDialog, Modal, Button, EmptyState } from '../../components/common';
+import { Star, Trash2, Eye, Search } from 'lucide-react';
+import { LoadingSpinner, Alert, ConfirmDialog, Button, EmptyState } from '../../components/common';
 import PitchHero from '../../components/common/PitchHero';
 
 export default function Shortlist() {
@@ -13,7 +13,6 @@ export default function Shortlist() {
   
   // Dialog state
   const [deleteId, setDeleteId] = useState(null);
-  const [noteModal, setNoteModal] = useState({ isOpen: false, playerId: null, currentNote: '' });
 
   const fetchShortlist = async () => {
     try {
@@ -42,19 +41,6 @@ export default function Shortlist() {
     } catch (err) {
       setError('Failed to remove prospect from shortlist');
       setDeleteId(null);
-    }
-  };
-
-  const handleSaveNote = async () => {
-    if (!noteModal.playerId) return;
-    try {
-      await scoutService.addNote(noteModal.playerId, { note: noteModal.currentNote });
-      setShortlist(shortlist.map(item => 
-        item.playerId === noteModal.playerId ? { ...item, note: noteModal.currentNote } : item
-      ));
-      setNoteModal({ isOpen: false, playerId: null, currentNote: '' });
-    } catch (err) {
-      setError('Failed to save scouting note');
     }
   };
 
@@ -170,14 +156,6 @@ export default function Shortlist() {
                         <Button 
                           variant="ghost" 
                           size="sm"
-                          onClick={() => setNoteModal({ isOpen: true, playerId: item.playerId, currentNote: item.note || '' })}
-                          title="Edit Observation Note"
-                        >
-                          <Edit3 className="w-4 h-4 text-blue-500" />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
                           onClick={() => setDeleteId(item.id)}
                           title="Remove Prospect"
                         >
@@ -203,29 +181,6 @@ export default function Shortlist() {
           confirmText="Remove"
           variant="danger"
         />
-      )}
-
-      {noteModal.isOpen && (
-        <Modal title="Scout Observation Note" onClose={() => setNoteModal({ isOpen: false, playerId: null, currentNote: '' })}>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-300 mb-1">
-                Field Observation Notes
-              </label>
-              <textarea
-                rows={4}
-                value={noteModal.currentNote}
-                onChange={(e) => setNoteModal({...noteModal, currentNote: e.target.value})}
-                placeholder="Record technical evaluation, tactical discipline, positioning notes..."
-                className="w-full p-3 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-              />
-            </div>
-            <div className="flex justify-end space-x-2 pt-2">
-              <Button variant="secondary" onClick={() => setNoteModal({ isOpen: false, playerId: null, currentNote: '' })}>Cancel</Button>
-              <Button variant="primary" onClick={handleSaveNote}>Save Note</Button>
-            </div>
-          </div>
-        </Modal>
       )}
 
     </div>
