@@ -164,7 +164,7 @@ public class PlayerController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('PLAYER') or hasRole('COACH') or hasRole('SCOUT') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('PLAYER') or hasRole('SCOUT') or hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> updateProfile(
             @PathVariable Long id,
             @RequestBody PlayerProfileRequest request,

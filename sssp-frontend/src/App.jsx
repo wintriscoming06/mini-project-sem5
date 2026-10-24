@@ -63,7 +63,7 @@ function App() {
         } />
 
         {/* SHARED / ROLE-AWARE PROFILE ROUTE */}
-        <Route path="/profile" element={<ProtectedRoute roles={['PLAYER', 'SCOUT', 'COACH']}><ProfileRouter /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute roles={['PLAYER', 'SCOUT']}><ProfileRouter /></ProtectedRoute>} />
 
         {/* PLAYER ROUTES */}
         <Route path="/tournaments" element={<ProtectedRoute roles={['PLAYER']}><TournamentList /></ProtectedRoute>} />
@@ -81,12 +81,12 @@ function App() {
         <Route path="/matches/:id" element={<ProtectedRoute roles={['ORGANIZER']}><MatchDetail /></ProtectedRoute>} />
         <Route path="/matches/:id/score" element={<ProtectedRoute roles={['ORGANIZER']}><MatchScoring /></ProtectedRoute>} />
 
-        {/* SCOUT & COACH ROUTES */}
-        <Route path="/search" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><PlayerSearch /></ProtectedRoute>} />
-        <Route path="/shortlist" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><Shortlist /></ProtectedRoute>} />
-        <Route path="/alerts" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><ScoutAlerts /></ProtectedRoute>} />
-        <Route path="/players/:id" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><PlayerView /></ProtectedRoute>} />
-        <Route path="/compare" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><PlayerComparison /></ProtectedRoute>} />
+        {/* SCOUT ROUTES */}
+        <Route path="/search" element={<ProtectedRoute roles={['SCOUT']}><PlayerSearch /></ProtectedRoute>} />
+        <Route path="/shortlist" element={<ProtectedRoute roles={['SCOUT']}><Shortlist /></ProtectedRoute>} />
+        <Route path="/alerts" element={<ProtectedRoute roles={['SCOUT']}><ScoutAlerts /></ProtectedRoute>} />
+        <Route path="/players/:id" element={<ProtectedRoute roles={['SCOUT']}><PlayerView /></ProtectedRoute>} />
+        <Route path="/compare" element={<ProtectedRoute roles={['SCOUT']}><PlayerComparison /></ProtectedRoute>} />
 
         {/* ADMIN ROUTES */}
         <Route path="/users" element={<ProtectedRoute roles={['ADMIN']}><UserManagement /></ProtectedRoute>} />
@@ -103,15 +103,8 @@ function App() {
         <Route path="/scout/shortlist" element={<Navigate to="/shortlist" replace />} />
         <Route path="/scout/alerts" element={<Navigate to="/alerts" replace />} />
         <Route path="/scout/compare" element={<Navigate to="/compare" replace />} />
-        <Route path="/scout/player/:id" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><PlayerView /></ProtectedRoute>} />
-        <Route path="/scout/players/:id" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><PlayerView /></ProtectedRoute>} />
-        <Route path="/coach/profile" element={<Navigate to="/profile" replace />} />
-        <Route path="/coach/search" element={<Navigate to="/search" replace />} />
-        <Route path="/coach/shortlist" element={<Navigate to="/shortlist" replace />} />
-        <Route path="/coach/alerts" element={<Navigate to="/alerts" replace />} />
-        <Route path="/coach/compare" element={<Navigate to="/compare" replace />} />
-        <Route path="/coach/player/:id" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><PlayerView /></ProtectedRoute>} />
-        <Route path="/coach/players/:id" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><PlayerView /></ProtectedRoute>} />
+        <Route path="/scout/player/:id" element={<ProtectedRoute roles={['SCOUT']}><PlayerView /></ProtectedRoute>} />
+        <Route path="/scout/players/:id" element={<ProtectedRoute roles={['SCOUT']}><PlayerView /></ProtectedRoute>} />
         <Route path="/organizer/tournaments/create" element={<Navigate to="/tournaments/create" replace />} />
         <Route path="/organizer/tournaments/:id" element={<ProtectedRoute roles={['ORGANIZER']}><ManageTournament /></ProtectedRoute>} />
         <Route path="/organizer/tournaments" element={<Navigate to="/my-tournaments" replace />} />
@@ -130,7 +123,7 @@ function App() {
 // Helper to route to correct profile dossier based on role
 function ProfileRouter() {
   const { user } = useAuth();
-  if (user?.role === 'SCOUT' || user?.role === 'COACH') {
+  if (user?.role === 'SCOUT') {
     return <ScoutProfile />;
   }
   return <PlayerProfile />;
@@ -142,8 +135,7 @@ function DashboardRouter() {
   switch (user?.role) {
     case 'PLAYER': return <PlayerDashboard />;
     case 'ORGANIZER': return <OrganizerDashboard />;
-    case 'SCOUT':
-    case 'COACH': return <ScoutDashboard />;
+    case 'SCOUT': return <ScoutDashboard />;
     case 'ADMIN': return <AdminDashboard />;
     default: return <Navigate to="/login" replace />;
   }

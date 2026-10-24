@@ -8,7 +8,6 @@ import {
 
 const ROLES = [
   { id: 'PLAYER', label: 'Player', icon: '⚽' },
-  { id: 'COACH', label: 'Coach', icon: '📋' },
   { id: 'SCOUT', label: 'Scout', icon: '🔎' },
   { id: 'ORGANIZER', label: 'Organizer', icon: '🏟' },
 ];
@@ -180,9 +179,9 @@ export default function AuthLayout({
         )}
 
         {/* ======================================================== */}
-        {/* DYNAMIC COACH ATMOSPHERIC BACKGROUNDS */}
+        {/* DYNAMIC SCOUT ATMOSPHERIC BACKGROUNDS */}
         {/* ======================================================== */}
-        {(activeRole === 'SCOUT' || activeRole === 'COACH') && (
+        {activeRole === 'SCOUT' && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-screen opacity-50">
             {/* 1. MOURINHO: Chelsea / Inter / Real Madrid Tactical Steel */}
             <div
@@ -438,7 +437,6 @@ export default function AuthLayout({
         {/* Center: Dynamic Role-Based Showcase */}
         <div className="relative z-20 flex-1 flex flex-col items-center justify-center py-2 sm:py-3 transition-all duration-500">
           {activeRole === 'PLAYER' && <PlayerShowcase onPlayerChange={setActivePlayerId} />}
-          {activeRole === 'COACH' && <ScoutShowcase onCoachChange={setActiveCoachId} mode="COACH" />}
           {activeRole === 'SCOUT' && <ScoutShowcase onCoachChange={setActiveCoachId} mode="SCOUT" />}
           {activeRole === 'ORGANIZER' && <OrganizerShowcase onTournamentChange={setActiveTournamentId} />}
 
@@ -453,20 +451,6 @@ export default function AuthLayout({
               </div>
               <span className="text-[10px] font-mono font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/40">
                 GPI 0–100 SCALE
-              </span>
-            </div>
-          )}
-
-          {activeRole === 'COACH' && (
-            <div className="w-full max-w-[480px] mt-3 flex items-center justify-between bg-emerald-950/95 border border-emerald-400/40 rounded-2xl p-2.5 px-4 shadow-xl backdrop-blur-md">
-              <div className="flex items-center space-x-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs font-black uppercase tracking-wider text-emerald-300">
-                  Tactical Command • Squad Strategy & Formations
-                </span>
-              </div>
-              <span className="text-[10px] font-mono font-bold text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/40">
-                TACTICAL BOARD
               </span>
             </div>
           )}

@@ -41,14 +41,14 @@ const Navbar = () => {
         { path: '/matches', label: 'Matches & Scoring', icon: Calendar }
       ];
     }
-    if (hasRole('SCOUT') || hasRole('COACH')) {
+    if (hasRole('SCOUT')) {
       return [
         { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-        { path: '/search', label: hasRole('COACH') ? 'Player Scouting' : 'Player Search', icon: Search },
+        { path: '/search', label: 'Player Search', icon: Search },
         { path: '/compare', label: 'Comparison', icon: GitCompare },
         { path: '/shortlist', label: 'Shortlist', icon: Users },
         { path: '/alerts', label: 'Alerts', icon: Shield },
-        { path: '/profile', label: hasRole('COACH') ? 'Coach Dossier' : 'Scout Dossier', icon: User }
+        { path: '/profile', label: 'Scout Dossier', icon: User }
       ];
     }
     if (hasRole('ADMIN')) {
@@ -69,8 +69,6 @@ const Navbar = () => {
     switch (role) {
       case 'PLAYER':
         return 'bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30';
-      case 'COACH':
-        return 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30';
       case 'SCOUT':
         return 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border-cyan-500/30';
       case 'ORGANIZER':
@@ -175,13 +173,13 @@ const Navbar = () => {
                         <p className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">{user.username}</p>
                       </div>
 
-                      {(hasRole('PLAYER') || hasRole('SCOUT') || hasRole('COACH')) && (
+                      {(hasRole('PLAYER') || hasRole('SCOUT')) && (
                         <Link 
                           to="/profile" 
                           onClick={() => setDropdownOpen(false)}
                           className="flex items-center px-4 py-2 text-sm hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors"
                         >
-                          <User className="w-4 h-4 mr-2.5 text-slate-400" /> {hasRole('COACH') ? 'Coach Dossier' : hasRole('SCOUT') ? 'Scout Dossier' : 'My Profile'}
+                          <User className="w-4 h-4 mr-2.5 text-slate-400" /> {hasRole('SCOUT') ? 'Scout Dossier' : 'My Profile'}
                         </Link>
                       )}
 

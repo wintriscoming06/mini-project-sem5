@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/scouts")
-@PreAuthorize("hasRole('SCOUT') or hasRole('COACH')")
+@PreAuthorize("hasRole('SCOUT')")
 public class ScoutController {
 
     private final ScoutService scoutService;

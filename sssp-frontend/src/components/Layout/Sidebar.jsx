@@ -25,10 +25,10 @@ const Sidebar = () => {
         { path: '/matches', label: 'Fixtures & Scores', icon: StadiumIcon },
       ];
     }
-    if (hasRole('SCOUT') || hasRole('COACH')) {
+    if (hasRole('SCOUT')) {
       return [
-        { path: '/dashboard', label: hasRole('COACH') ? 'Squad & Tactics' : 'Tactical Desk', icon: LayoutDashboard },
-        { path: '/search', label: hasRole('COACH') ? 'Player Scouting' : 'Scout Talent', icon: ScoutTargetIcon },
+        { path: '/dashboard', label: 'Tactical Desk', icon: LayoutDashboard },
+        { path: '/search', label: 'Scout Talent', icon: ScoutTargetIcon },
         { path: '/shortlist', label: 'Shortlist', icon: Users },
         { path: '/alerts', label: 'Alerts Feed', icon: Bell },
       ];

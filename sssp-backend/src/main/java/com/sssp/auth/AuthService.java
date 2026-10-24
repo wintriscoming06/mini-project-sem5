@@ -84,7 +84,7 @@ public class AuthService {
             OrganizerProfile organizerProfile = new OrganizerProfile();
             organizerProfile.setUser(savedUser);
             organizerProfileRepository.save(organizerProfile);
-        } else if (savedUser.getRole() == UserRole.SCOUT || savedUser.getRole() == UserRole.COACH) {
+        } else if (savedUser.getRole() == UserRole.SCOUT) {
             ScoutProfile scoutProfile = new ScoutProfile();
             scoutProfile.setUser(savedUser);
             scoutProfileRepository.save(scoutProfile);
@@ -149,7 +149,6 @@ public class AuthService {
         if (role == null) return "specified";
         switch (role) {
             case PLAYER: return "Player";
-            case COACH: return "Coach";
             case SCOUT: return "Scout";
             case ORGANIZER: return "Organizer";
             case ADMIN: return "Admin";

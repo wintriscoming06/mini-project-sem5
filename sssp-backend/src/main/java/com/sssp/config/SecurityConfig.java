@@ -72,7 +72,7 @@ public class SecurityConfig {
                 .requestMatchers("/error").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/rankings/calculate").hasRole("ADMIN")
-                .requestMatchers("/api/scouts/**").hasAnyRole("SCOUT", "COACH")
+                .requestMatchers("/api/scouts/**").hasRole("SCOUT")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)

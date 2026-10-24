@@ -24,23 +24,6 @@ const ROLE_THEMES = {
     inputRing: 'focus:ring-blue-500 focus:border-blue-500',
     focusGlow: 'shadow-blue-500/10',
   },
-  COACH: {
-    name: 'Coach',
-    icon: '📋',
-    tunnelLabel: 'TACTICAL MASTER & SQUAD COMMAND',
-    subheading: 'Access squad management, tactical boards & formation strategies',
-    actionText: 'Sign In / Coach Portal',
-    loadingText: 'Authenticating Coach Credentials...',
-    cardBorder: 'border-emerald-500/30',
-    cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
-    topTrim: 'bg-gradient-to-r from-emerald-500 via-teal-400 to-green-500',
-    buttonGrad: 'bg-emerald-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-500/30 text-white font-bold',
-    accentColor: 'text-emerald-400',
-    badgeBg: 'bg-emerald-900/60 border-emerald-400/40 text-emerald-300',
-    roleTag: 'bg-emerald-800/40 text-emerald-200 border-emerald-500/30',
-    inputRing: 'focus:ring-emerald-500 focus:border-emerald-500',
-    focusGlow: 'shadow-emerald-500/10',
-  },
   SCOUT: {
     name: 'Scout',
     icon: '🔎',
@@ -123,8 +106,8 @@ const LoginPage = () => {
         {/* Top Trim Highlight */}
         <div className={`h-2.5 ${currentTheme.topTrim} rounded-t-3xl -mx-6 -mt-6 sm:-mx-8 sm:-mt-8 mb-4 transition-all duration-500`} />
         
-        {/* Tactical Grid watermark for Coach / Scout */}
-        {(activeRole === 'SCOUT' || activeRole === 'COACH') && (
+        {/* Tactical Grid watermark for Scout */}
+        {activeRole === 'SCOUT' && (
           <div className="absolute inset-0 tactical-grid opacity-20 pointer-events-none" />
         )}
 
@@ -151,16 +134,6 @@ const LoginPage = () => {
             </div>
             {/* Target Area Goal Flare */}
             <div className="absolute top-12 right-12 w-28 h-28 rounded-full bg-blue-400/25 blur-xl animate-pulse" />
-          </div>
-        )}
-
-        {/* 2. COACH: Tactical Formation Clipboard Pulse */}
-        {motionActive === 'COACH' && (
-          <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden flex items-center justify-center bg-emerald-950/30 backdrop-blur-[2px]">
-            <div className="absolute w-32 h-32 rounded-full border-2 border-emerald-400/80 animate-ping" />
-            <div className="relative p-4 rounded-2xl bg-emerald-900/90 border border-emerald-400/70 shadow-2xl animate-bounce flex items-center justify-center">
-              <span className="text-4xl filter drop-shadow-[0_4px_12px_rgba(16,185,129,0.7)]">📋</span>
-            </div>
           </div>
         )}
 
@@ -192,7 +165,7 @@ const LoginPage = () => {
 
         {/* In-Card Role Quick Selector Pills */}
         <div className="relative z-10 flex items-center justify-between p-1 mb-5 rounded-xl bg-black/45 border border-white/10 backdrop-blur-md">
-          {['PLAYER', 'COACH', 'SCOUT', 'ORGANIZER'].map((role) => {
+          {['PLAYER', 'SCOUT', 'ORGANIZER'].map((role) => {
             const isCur = activeRole === role;
             const rConf = ROLE_THEMES[role];
             return (
@@ -252,8 +225,6 @@ const LoginPage = () => {
                 placeholder={
                   activeRole === 'PLAYER' 
                     ? 'Enter your player username' 
-                    : activeRole === 'COACH'
-                    ? 'Enter your coach username'
                     : activeRole === 'SCOUT' 
                     ? 'Enter your scout username' 
                     : 'Enter your organizer username'

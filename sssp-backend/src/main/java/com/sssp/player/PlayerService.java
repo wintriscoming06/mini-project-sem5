@@ -82,7 +82,7 @@ public class PlayerService {
         User user = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + currentUsername));
 
-        if (!user.getId().equals(userId) && user.getRole() != UserRole.ADMIN && user.getRole() != UserRole.COACH && user.getRole() != UserRole.SCOUT) {
+        if (!user.getId().equals(userId) && user.getRole() != UserRole.ADMIN && user.getRole() != UserRole.SCOUT) {
             throw new IllegalArgumentException("User does not own this profile");
         }
 
