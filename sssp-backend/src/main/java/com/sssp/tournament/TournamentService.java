@@ -224,14 +224,7 @@ public class TournamentService {
         if (!team.getTournament().getOrganizer().getUsername().equals(username)) {
             throw new IllegalArgumentException("Not authorized to add members to this team");
         }
-        
-        TournamentApplication app = tournamentApplicationRepository.findByPlayerIdAndTournamentId(request.getPlayerId(), team.getTournament().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Application not found"));
-                
-        if (app.getStatus() != ApplicationStatus.ACCEPTED) {
-            throw new IllegalArgumentException("Player application must be ACCEPTED");
-        }
-        
+
         if (teamMembershipRepository.existsByTeamIdAndPlayerId(teamId, request.getPlayerId())) {
             throw new IllegalArgumentException("Player is already in this team");
         }

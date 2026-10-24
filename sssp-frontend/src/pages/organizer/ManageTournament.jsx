@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { tournamentService, matchService } from '../../services/api';
+import { tournamentService, matchService, playerService } from '../../services/api';
 import { ArrowLeft, Users, Settings, Plus, Check, X, Shield, Edit3 } from 'lucide-react';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
@@ -21,6 +21,7 @@ const ManageTournament = () => {
   const [applications, setApplications] = useState([]);
   const [teams, setTeams] = useState([]);
   const [matches, setMatches] = useState([]);
+  const [allPlayers, setAllPlayers] = useState([]);
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -89,6 +90,11 @@ const ManageTournament = () => {
     try {
       const res = await tournamentService.getTeams(id);
       setTeams(res.data || []);
+      // Also load registered players to allow direct squad assignment
+      playerService.getAll().then(pRes => {
+        const raw = pRes.data?.players || pRes.data || [];
+        setAllPlayers(raw);
+      }).catch(() => {});
     } catch (err) {
       console.error(err);
     }
@@ -741,9 +747,9 @@ const ManageTournament = () => {
       </Modal>
 
       {/* Add Member Modal */}
-      <Modal isOpen={showAddMemberModal} onClose={() => setShowAddMemberModal(false)} title="Assign Accepted Player to Squad">
+      <Modal isOpen={showAddMemberModal} onClose={() => setShowAddMemberModal(false)} title="Assign Player to Squad Roster">
         <form onSubmit={handleAddMember} className="space-y-4 py-2">
-          <p className="text-xs text-slate-500 dark:text-slate-400">Select an accepted tournament player to add to this squad roster:</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Select a player to add to this squad roster (from tournament applications or registered players):</p>
           <select 
             className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:ring-blue-500"
             value={selectedPlayerId}
@@ -751,13 +757,27 @@ const ManageTournament = () => {
             required
           >
             <option value="">Select Player</option>
-            {applications.filter(a => a.status === 'ACCEPTED').map(a => {
-              const pId = a.playerId || a.player?.id;
-              const pName = a.playerName || a.player?.name || a.player?.username || `Player #${pId}`;
-              return (
-                <option key={a.id} value={pId}>{pName}</option>
-              );
-            })}
+            {/* Accepted Applicants */}
+            {applications.filter(a => a.status === 'ACCEPTED').length > 0 && (
+              <optgroup label="Accepted Applicants">
+                {applications.filter(a => a.status === 'ACCEPTED').map(a => {
+                  const pId = a.playerId || a.player?.id;
+                  const pName = a.playerName || a.player?.name || a.player?.username || `Player #${pId}`;
+                  return <option key={`app-${a.id}`} value={pId}>{pName} (Applicant)</option>;
+                })}
+              </optgroup>
+            )}
+            {/* All Registered Players */}
+            {allPlayers.length > 0 && (
+              <optgroup label="Registered Players">
+                {allPlayers.map(p => {
+                  const pId = p.userId || p.id;
+                  const pName = p.fullName || p.username || `Player #${pId}`;
+                  const pos = p.primaryPosition ? ` • ${p.primaryPosition}` : '';
+                  return <option key={`player-${pId}`} value={pId}>{pName}{pos}</option>;
+                })}
+              </optgroup>
+            )}
           </select>
           <div className="flex justify-end gap-2 mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
             <Button type="button" variant="outline" onClick={() => setShowAddMemberModal(false)}>Cancel</Button>

@@ -94,16 +94,21 @@ const TournamentDetail = () => {
                 <span className="text-sm font-bold text-slate-200">Application {applicationStatus}</span>
               </div>
             ) : tournament.status === 'OPEN' ? (
-              <Button 
-                variant="primary" 
-                size="lg" 
-                onClick={handleApply} 
-                disabled={applying}
-                icon={Trophy}
-              >
-                {applying ? 'Submitting Application...' : 'Apply for Tournament'}
-              </Button>
-
+              <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+                <div className="text-right sm:text-left bg-black/40 border border-white/10 px-3.5 py-2 rounded-xl text-xs text-slate-300">
+                  <span className="text-amber-400 font-bold block">Offline Registration Open</span>
+                  <span>Contact tournament organizer to join squad</span>
+                </div>
+                <Button 
+                  variant="primary" 
+                  size="md" 
+                  onClick={handleApply} 
+                  disabled={applying}
+                  icon={Trophy}
+                >
+                  {applying ? 'Submitting...' : 'Register Interest'}
+                </Button>
+              </div>
             ) : (
               <span className="text-sm text-slate-300 bg-black/40 border border-white/10 px-4 py-2 rounded-xl">Registrations Closed</span>
             )}

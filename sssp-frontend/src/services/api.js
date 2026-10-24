@@ -53,6 +53,7 @@ export const authService = {
 const playerPath = (id) => (!id || id === 'undefined' || id === 'null' ? '/players/me' : `/players/${id}`);
 
 export const playerService = {
+  getAll: (params) => api.get('/players', { params }),
   getProfile: (id) => api.get(playerPath(id)),
   updateProfile: (data, id) => api.put(playerPath(id), data),
   updateCard: (data, id) => api.put(`${playerPath(id)}/card`, data),
