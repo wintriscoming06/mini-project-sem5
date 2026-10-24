@@ -65,6 +65,8 @@ export const playerService = {
   getMatches: (id) => api.get(`${playerPath(id)}/matches`),
   logMatch: (data, id) => id ? api.post(`/matches/player/${id}`, data) : api.post('/matches', data),
   deleteMatch: (matchId) => api.delete(`/matches/${matchId}`),
+  getScoutingRequests: () => api.get('/players/me/scouting-requests'),
+  updateScoutingRequestStatus: (requestId, status) => api.patch(`/players/me/scouting-requests/${requestId}/status`, null, { params: { status } }),
 };
 
 export const tournamentService = {
@@ -123,7 +125,10 @@ export const scoutService = {
   getObservations: (playerId) => api.get(`/scouts/players/${playerId}/observations`),
   getMyObservations: () => api.get("/scouts/observations/my"),
   addNote: (playerId, data) => api.post(`/scouts/players/${playerId}/notes`, data),
-  getNotes: (playerId) => api.get(`/scouts/players/${playerId}/notes`)
+  getNotes: (playerId) => api.get(`/scouts/players/${playerId}/notes`),
+  getProfile: () => api.get('/scouts/profile'),
+  updateProfile: (data) => api.put('/scouts/profile', data),
+  sendContactRequest: (playerId, data) => api.post(`/scouts/players/${playerId}/contact-request`, data),
 };
 
 export const adminService = {

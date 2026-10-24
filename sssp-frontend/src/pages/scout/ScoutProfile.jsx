@@ -5,7 +5,7 @@ import {
   Shield, Award, MapPin, Calendar, Globe, Compass, 
   Edit2, CheckCircle2, Bookmark, 
   Activity, Sparkles, Building, FileText,
-  Check
+  Check, Phone
 } from 'lucide-react';
 import { Button, Alert, LoadingSpinner, PitchMarkings } from '../../components/common';
 import { 
@@ -32,6 +32,7 @@ export default function ScoutProfile() {
     name: user?.name || user?.username || 'Senior Scout',
     title: 'Chief Technical Scout & Recruiter',
     organization: 'Manchester City FC Academy',
+    phoneNumber: '',
     license: 'UEFA Pro License',
     territory: 'Global Elite & European U21s',
     specialization: 'Positional Play & Overloads',
@@ -61,10 +62,25 @@ export default function ScoutProfile() {
         const stored = getStoredScoutDossier(scoutKey);
         const storedBadge = getStoredClubBadge(`scout_${scoutKey}`);
 
-        const initial = stored ? { ...defaultDossier, ...stored } : defaultDossier;
+        let initial = stored ? { ...defaultDossier, ...stored } : defaultDossier;
         if (storedBadge) {
           initial.customBadgeUrl = storedBadge;
         }
+
+        // Fetch backend scout profile to sync official mobile contact number and organization
+        try {
+          const apiProfileRes = await scoutService.getProfile();
+          if (apiProfileRes?.data) {
+            initial = {
+              ...initial,
+              phoneNumber: apiProfileRes.data.phoneNumber || initial.phoneNumber || '',
+              organization: apiProfileRes.data.organization || initial.organization || ''
+            };
+          }
+        } catch (apiErr) {
+          console.warn('Backend scout profile not yet synced:', apiErr);
+        }
+
         setDossier(initial);
         setFormData(initial);
 
@@ -116,16 +132,33 @@ export default function ScoutProfile() {
     saveStoredClubBadge(`scout_${scoutKey}`, null);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    // Validate phone number if entered
+    if (formData.phoneNumber && formData.phoneNumber.trim()) {
+      const digitsOnly = formData.phoneNumber.replace(/[^0-9]/g, '');
+      if (digitsOnly.length < 7 || digitsOnly.length > 15) {
+        setError('Please enter a valid phone number (between 7 and 15 digits).');
+        return;
+      }
+    }
+
     setSaving(true);
+    setError(null);
     try {
+      // Save to backend database
+      await scoutService.updateProfile({
+        organization: formData.organization,
+        affiliation: formData.specialization || formData.affiliation,
+        phoneNumber: formData.phoneNumber
+      });
+
       saveStoredScoutDossier(scoutKey, formData);
       setDossier(formData);
       setIsEditing(false);
-      setSuccess('Scout dossier successfully updated.');
+      setSuccess('Scout dossier and contact details successfully saved.');
       setTimeout(() => setSuccess(null), 4000);
     } catch (e) {
-      setError('Failed to save scout dossier.');
+      setError(e?.response?.data?.message || 'Failed to save scout dossier.');
     } finally {
       setSaving(false);
     }
@@ -339,6 +372,13 @@ export default function ScoutProfile() {
 
             {/* Bottom Scouting Performance & Metrics Strip */}
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-1 text-xs">
+              <div className="flex items-center space-x-1.5 bg-black/30 backdrop-blur-md px-3 py-1 rounded-xl border border-white/10">
+                <Phone className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="text-slate-400 uppercase text-[10px] font-bold">Mobile Contact:</span>
+                <span className="font-mono font-bold text-white">
+                  {activeData.phoneNumber || <span className="text-amber-300 italic font-sans font-normal">Not saved (Required for contact requests)</span>}
+                </span>
+              </div>
               <div className="flex items-center space-x-1.5">
                 <Bookmark className="w-3.5 h-3.5 text-cyan-400" />
                 <span className="text-slate-400 uppercase text-[10px] font-bold">Shortlisted Prospects:</span>
@@ -465,8 +505,27 @@ export default function ScoutProfile() {
 
             {/* Column 2: Licensing & Field Territory */}
             <div className="space-y-4">
-              <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Licensing & Operations</h4>
+              <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Contact & Operations</h4>
               
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  Mobile Contact Number <span className="text-cyan-500 font-normal">(Shared with players in contact requests)</span>
+                </label>
+                <div className="relative">
+                  <Phone className="w-3.5 h-3.5 absolute left-3 top-3 text-slate-400" />
+                  <input 
+                    type="tel"
+                    value={formData.phoneNumber || ''}
+                    onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                    placeholder="e.g. +44 7911 123456 or 9876543210"
+                    className="w-full pl-9 pr-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 font-mono"
+                  />
+                </div>
+                <p className="text-[10px] text-slate-400 mt-1">
+                  Saved directly to your scout account. Used automatically when sending recruitment contact requests.
+                </p>
+              </div>
+
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Coaching / Scout License</label>
                 <input 

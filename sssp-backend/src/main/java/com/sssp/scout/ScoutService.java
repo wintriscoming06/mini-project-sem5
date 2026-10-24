@@ -2,8 +2,12 @@ package com.sssp.scout;
 
 import com.sssp.user.User;
 import com.sssp.user.UserRepository;
+import com.sssp.user.ScoutProfile;
+import com.sssp.user.ScoutProfileRepository;
 import com.sssp.common.enums.AlertTriggerType;
 import com.sssp.common.enums.ProfileVisibility;
+import com.sssp.common.enums.UserRole;
+import com.sssp.common.exception.BadRequestException;
 import com.sssp.common.exception.ResourceNotFoundException;
 import com.sssp.common.exception.UnauthorizedException;
 import com.sssp.gpi.GPIRecord;
@@ -46,8 +50,21 @@ public class ScoutService {
     private final ScoutFilterRepository scoutFilterRepository;
     private final MatchRepository matchRepository;
     private final PlayerMatchStatisticsRepository playerMatchStatisticsRepository;
+    private final ScoutProfileRepository scoutProfileRepository;
+    private final ScoutContactRequestRepository scoutContactRequestRepository;
 
-    public ScoutService(UserRepository userRepository, PlayerProfileRepository playerProfileRepository, GPIRecordRepository gpiRecordRepository, RankingRecordRepository rankingRecordRepository, ScoutShortlistRepository scoutShortlistRepository, ScoutNoteRepository scoutNoteRepository, ScoutObservationRepository scoutObservationRepository, ScoutFilterRepository scoutFilterRepository, MatchRepository matchRepository, PlayerMatchStatisticsRepository playerMatchStatisticsRepository) {
+    public ScoutService(UserRepository userRepository,
+                        PlayerProfileRepository playerProfileRepository,
+                        GPIRecordRepository gpiRecordRepository,
+                        RankingRecordRepository rankingRecordRepository,
+                        ScoutShortlistRepository scoutShortlistRepository,
+                        ScoutNoteRepository scoutNoteRepository,
+                        ScoutObservationRepository scoutObservationRepository,
+                        ScoutFilterRepository scoutFilterRepository,
+                        MatchRepository matchRepository,
+                        PlayerMatchStatisticsRepository playerMatchStatisticsRepository,
+                        ScoutProfileRepository scoutProfileRepository,
+                        ScoutContactRequestRepository scoutContactRequestRepository) {
         this.userRepository = userRepository;
         this.playerProfileRepository = playerProfileRepository;
         this.gpiRecordRepository = gpiRecordRepository;
@@ -58,6 +75,8 @@ public class ScoutService {
         this.scoutFilterRepository = scoutFilterRepository;
         this.matchRepository = matchRepository;
         this.playerMatchStatisticsRepository = playerMatchStatisticsRepository;
+        this.scoutProfileRepository = scoutProfileRepository;
+        this.scoutContactRequestRepository = scoutContactRequestRepository;
     }
 
     public List<PlayerSearchResponse> searchPlayers(PlayerSearchRequest request) {
@@ -354,5 +373,157 @@ public class ScoutService {
         r.setCriteriaJson(f.getCriteriaJson());
         r.setCreatedAt(f.getCreatedAt());
         return r;
+    }
+
+    // ==========================================
+    // Scout Profile & Contact Number Management
+    // ==========================================
+    public ScoutProfileDto getScoutProfile(String username) {
+        User scout = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Scout user not found: " + username));
+        ScoutProfile profile = scoutProfileRepository.findByUserId(scout.getId())
+                .orElseGet(() -> scoutProfileRepository.save(
+                        ScoutProfile.builder()
+                                .user(scout)
+                                .organization("Independent Scout")
+                                .affiliation("Pro Scouting Network")
+                                .build()
+                ));
+        return mapToScoutProfileDto(profile, scout);
+    }
+
+    public ScoutProfileDto updateScoutProfile(String username, ScoutProfileUpdateRequest request) {
+        User scout = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Scout user not found: " + username));
+        ScoutProfile profile = scoutProfileRepository.findByUserId(scout.getId())
+                .orElseGet(() -> ScoutProfile.builder().user(scout).build());
+
+        if (request.getOrganization() != null && !request.getOrganization().isBlank()) {
+            profile.setOrganization(request.getOrganization().trim());
+        }
+        if (request.getAffiliation() != null && !request.getAffiliation().isBlank()) {
+            profile.setAffiliation(request.getAffiliation().trim());
+        }
+        if (request.getPhoneNumber() != null) {
+            String trimmed = request.getPhoneNumber().trim();
+            if (!trimmed.isEmpty()) {
+                validatePhoneNumber(trimmed);
+                profile.setPhoneNumber(trimmed);
+            } else {
+                profile.setPhoneNumber(null);
+            }
+        }
+
+        return mapToScoutProfileDto(scoutProfileRepository.save(profile), scout);
+    }
+
+    // ==========================================
+    // Scout Contact Requests (Send & View)
+    // ==========================================
+    public ContactRequestResponse sendContactRequest(Long playerId, ContactRequestCreateRequest request, String scoutUsername) {
+        User scout = userRepository.findByUsername(scoutUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Scout not found"));
+        if (scout.getRole() != UserRole.SCOUT) {
+            throw new UnauthorizedException("Only scouts can send contact requests");
+        }
+
+        ScoutProfile scoutProfile = scoutProfileRepository.findByUserId(scout.getId())
+                .orElseThrow(() -> new BadRequestException("Please complete your scout profile with a valid mobile contact number before sending requests"));
+
+        String phone = scoutProfile.getPhoneNumber();
+        if (phone == null || phone.isBlank()) {
+            throw new BadRequestException("You must save a valid mobile contact number in your scout profile before sending contact requests to players");
+        }
+
+        User player = userRepository.findById(playerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Player not found with ID: " + playerId));
+        if (player.getRole() != UserRole.PLAYER) {
+            throw new BadRequestException("Target user is not a player");
+        }
+
+        String message = request != null && request.getMessage() != null ? request.getMessage().trim() : "";
+        if (message.isEmpty()) {
+            throw new BadRequestException("Please include a brief message explaining your scouting interest");
+        }
+        if (message.length() > 1000) {
+            throw new BadRequestException("Message cannot exceed 1000 characters");
+        }
+
+        // Prevent accidental duplicate pending requests from same scout to same player
+        if (scoutContactRequestRepository.existsByScoutIdAndPlayerIdAndStatus(scout.getId(), player.getId(), ContactRequestStatus.PENDING)) {
+            throw new BadRequestException("You already have an active pending contact request sent to this player");
+        }
+
+        ScoutContactRequest entity = ScoutContactRequest.builder()
+                .scout(scout)
+                .player(player)
+                .message(message)
+                .scoutContactNumber(phone)
+                .scoutOrganization(scoutProfile.getOrganization() != null ? scoutProfile.getOrganization() : "Independent Scouting")
+                .scoutName(scout.getUsername())
+                .status(ContactRequestStatus.PENDING)
+                .build();
+
+        return mapToContactRequestResponse(scoutContactRequestRepository.save(entity));
+    }
+
+    public List<ContactRequestResponse> getPlayerIncomingContactRequests(String playerUsername) {
+        User player = userRepository.findByUsername(playerUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Player user not found"));
+        if (player.getRole() != UserRole.PLAYER) {
+            throw new UnauthorizedException("Only players can access incoming scouting requests");
+        }
+        return scoutContactRequestRepository.findByPlayerIdOrderByCreatedAtDesc(player.getId()).stream()
+                .map(this::mapToContactRequestResponse)
+                .collect(Collectors.toList());
+    }
+
+    public ContactRequestResponse updateContactRequestStatus(Long requestId, ContactRequestStatus status, String playerUsername) {
+        User player = userRepository.findByUsername(playerUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Player user not found"));
+        ScoutContactRequest req = scoutContactRequestRepository.findByIdAndPlayerId(requestId, player.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Scouting request not found or does not belong to you"));
+
+        req.setStatus(status);
+        return mapToContactRequestResponse(scoutContactRequestRepository.save(req));
+    }
+
+    private void validatePhoneNumber(String number) {
+        // Support common formats: +1234567890, +91 9876543210, 0987654321, 98765-43210, etc. (min 7 digits, max 20)
+        String digitsOnly = number.replaceAll("[^0-9]", "");
+        if (digitsOnly.length() < 7 || digitsOnly.length() > 15) {
+            throw new BadRequestException("Please enter a valid phone/mobile number (between 7 and 15 digits)");
+        }
+        if (!number.matches("^[+]?[0-9\\s\\-\\(\\)]{7,25}$")) {
+            throw new BadRequestException("Phone number format is invalid");
+        }
+    }
+
+    private ScoutProfileDto mapToScoutProfileDto(ScoutProfile profile, User user) {
+        return ScoutProfileDto.builder()
+                .id(profile.getId())
+                .userId(user.getId())
+                .username(user.getUsername())
+                .organization(profile.getOrganization())
+                .affiliation(profile.getAffiliation())
+                .phoneNumber(profile.getPhoneNumber())
+                .verified(profile.isVerified())
+                .build();
+    }
+
+    private ContactRequestResponse mapToContactRequestResponse(ScoutContactRequest r) {
+        return ContactRequestResponse.builder()
+                .id(r.getId())
+                .scoutId(r.getScout().getId())
+                .scoutName(r.getScoutName() != null ? r.getScoutName() : r.getScout().getUsername())
+                .scoutUsername(r.getScout().getUsername())
+                .scoutOrganization(r.getScoutOrganization())
+                .scoutContactNumber(r.getScoutContactNumber())
+                .playerId(r.getPlayer().getId())
+                .playerName(displayName(r.getPlayer()))
+                .message(r.getMessage())
+                .status(r.getStatus())
+                .createdAt(r.getCreatedAt())
+                .build();
     }
 }

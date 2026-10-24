@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { LayoutDashboard, Users, Shield, Bell } from 'lucide-react';
+import { LayoutDashboard, Users, Shield, Bell, Mail } from 'lucide-react';
 import { TrophyIcon, StadiumIcon, WhistleIcon, FootballIcon, ScoutTargetIcon } from '../common/FootballIcons';
 
 const Sidebar = () => {
@@ -14,6 +14,7 @@ const Sidebar = () => {
         { path: '/dashboard', label: 'Match Dashboard', icon: LayoutDashboard },
         { path: '/tournaments', label: 'Tournaments', icon: TrophyIcon },
         { path: '/player/stats', label: 'Match Stats', icon: WhistleIcon },
+        { path: '/player/requests', label: 'Scouting Requests', icon: Mail },
         { path: '/player/card-studio', label: 'Card Studio', icon: FootballIcon },
       ];
     }

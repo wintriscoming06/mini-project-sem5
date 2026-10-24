@@ -11,6 +11,9 @@ import com.sssp.player.dto.PlayerProfileRequest;
 import com.sssp.player.dto.PlayerProfileResponse;
 import com.sssp.player.PlayerService;
 import com.sssp.ranking.RankingService;
+import com.sssp.scout.ContactRequestStatus;
+import com.sssp.scout.ScoutService;
+import com.sssp.scout.dto.ContactRequestResponse;
 import com.sssp.stats.StatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +44,9 @@ public class PlayerController {
 
     @Autowired(required = false)
     private MatchService matchService;
+
+    @Autowired(required = false)
+    private ScoutService scoutService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -202,5 +208,20 @@ public class PlayerController {
     @GetMapping("/{id}/match-stats")
     public ResponseEntity<?> getPlayerMatchStats(@PathVariable Long id) {
         return ResponseEntity.ok(statsService.getPlayerMatchStats(id));
+    }
+
+    @GetMapping("/me/scouting-requests")
+    @PreAuthorize("hasRole('PLAYER')")
+    public ResponseEntity<List<ContactRequestResponse>> getMyScoutingRequests(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(scoutService.getPlayerIncomingContactRequests(userDetails.getUsername()));
+    }
+
+    @PatchMapping("/me/scouting-requests/{requestId}/status")
+    @PreAuthorize("hasRole('PLAYER')")
+    public ResponseEntity<ContactRequestResponse> updateScoutingRequestStatus(
+            @PathVariable Long requestId,
+            @RequestParam ContactRequestStatus status,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(scoutService.updateContactRequestStatus(requestId, status, userDetails.getUsername()));
     }
 }

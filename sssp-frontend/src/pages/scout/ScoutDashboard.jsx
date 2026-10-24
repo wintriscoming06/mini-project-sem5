@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
-  Search, Star, Filter, ChevronRight, 
-  GitCompare
+  Search, Star, Filter, ChevronRight, Users
 } from 'lucide-react';
 import { scoutService } from '../../services/api';
 import { 
@@ -77,11 +76,11 @@ export default function ScoutDashboard() {
           <>
             <Button 
               variant="secondary" 
-              onClick={() => navigate('/compare')}
+              onClick={() => navigate('/shortlist')}
               className="bg-blue-950/80 text-blue-200 border-blue-500/50 hover:bg-blue-900"
-              icon={<GitCompare className="w-4 h-4" />}
+              icon={<Users className="w-4 h-4" />}
             >
-              Head-to-Head Arena
+              Scout Shortlist
             </Button>
             <Button 
               variant="primary" 
@@ -207,27 +206,27 @@ export default function ScoutDashboard() {
           </Card>
         </div>
 
-        {/* Quick Head-to-Head Banner */}
+        {/* Quick Shortlist Pipeline Banner */}
         <div>
           <div className="p-6 rounded-3xl border-2 border-blue-500/50 bg-gradient-to-br from-blue-950/90 to-slate-900 text-white shadow-xl relative overflow-hidden h-full flex flex-col justify-between">
             <div className="absolute right-0 bottom-0 opacity-15 pointer-events-none transform translate-x-4 translate-y-4">
               <ClassicSoccerBall className="w-40 h-40" />
             </div>
             <div className="relative z-10">
-              <div className="text-xs font-black uppercase tracking-wider text-blue-400 mb-2">Tactical Comparison</div>
-              <h4 className="text-xl font-black text-white">Compare Prospects Head-to-Head</h4>
+              <div className="text-xs font-black uppercase tracking-wider text-blue-400 mb-2">Talent Pipeline</div>
+              <h4 className="text-xl font-black text-white">Scouting Shortlist & Watchlist</h4>
               <p className="text-xs text-blue-200/80 mt-2 mb-6">
-                Analyze up to 4 footballers side-by-side with GPI radar overlays, match performance distribution, and physical metrics.
+                Review priority prospects, inspect match logs, track GPI performance attributes, and send direct contact requests.
               </p>
             </div>
             <div className="relative z-10">
               <Button 
                 variant="primary" 
                 size="md" 
-                onClick={() => navigate('/compare')}
+                onClick={() => navigate('/shortlist')}
                 className="w-full"
               >
-                Launch Comparison Arena
+                Open Scouting Shortlist
               </Button>
             </div>
           </div>

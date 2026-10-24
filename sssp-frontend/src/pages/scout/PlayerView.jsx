@@ -3,10 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { playerService, scoutService } from '../../services/api';
 import { 
   User, Activity, ClipboardList, 
-  Send, Edit, Bookmark, ArrowLeft, CheckCircle2, GitCompare,
-  Ruler, Scale, Shirt, Footprints, Globe, Trophy
+  Send, Edit, Bookmark, ArrowLeft, CheckCircle2,
+  Ruler, Scale, Shirt, Footprints, Globe, Trophy, Mail, Phone, AlertCircle
 } from 'lucide-react';
-import { LoadingSpinner, Alert, Button, StatusBadge, PitchMarkings } from '../../components/common';
+import { LoadingSpinner, Alert, Button, StatusBadge, PitchMarkings, Modal } from '../../components/common';
 import SVGRadarChart from '../../components/auth/SVGRadarChart';
 import { useAuth } from '../../context/AuthContext';
 import { 
@@ -30,6 +30,14 @@ export default function PlayerView() {
   const [obsForm, setObsForm] = useState({ matchId: '', tech: 4, tact: 4, phys: 4, psych: 4, comments: '' });
   const [submittingObs, setSubmittingObs] = useState(false);
   const [isShortlisted, setIsShortlisted] = useState(false);
+
+  // Contact Request State
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [contactMessage, setContactMessage] = useState('');
+  const [sendingContact, setSendingContact] = useState(false);
+  const [contactSuccess, setContactSuccess] = useState(null);
+  const [contactError, setContactError] = useState(null);
+  const [scoutProfileInfo, setScoutProfileInfo] = useState(null);
 
   useEffect(() => {
     if (!id || id === 'undefined' || id === 'null') {
@@ -110,6 +118,43 @@ export default function PlayerView() {
     }
   };
 
+  const handleOpenContactModal = async () => {
+    setContactError(null);
+    setContactSuccess(null);
+    try {
+      const res = await scoutService.getProfile();
+      setScoutProfileInfo(res.data);
+      if (!res.data?.phoneNumber || !res.data.phoneNumber.trim()) {
+        setContactError("You must save a valid mobile contact number in your Scout Dossier before you can send a contact request.");
+      }
+    } catch (e) {
+      setContactError("Failed to verify scout profile contact details.");
+    }
+    setIsContactModalOpen(true);
+  };
+
+  const handleSendContactRequest = async () => {
+    if (!contactMessage.trim()) {
+      setContactError("Please write a message explaining your scouting interest.");
+      return;
+    }
+    setSendingContact(true);
+    setContactError(null);
+    try {
+      await scoutService.sendContactRequest(id, { message: contactMessage.trim() });
+      setContactSuccess("Scouting contact request sent successfully! The player can now view your inquiry and mobile number.");
+      setContactMessage('');
+      setTimeout(() => {
+        setIsContactModalOpen(false);
+        setContactSuccess(null);
+      }, 2500);
+    } catch (err) {
+      setContactError(err?.response?.data?.message || "Failed to send contact request. Please try again.");
+    } finally {
+      setSendingContact(false);
+    }
+  };
+
   if (loading) return <div className="p-20 flex justify-center"><LoadingSpinner size="lg" text="Retrieving complete prospect dossier..." /></div>;
   if (error || !data.profile) {
     return (
@@ -160,12 +205,13 @@ export default function PlayerView() {
 
         <div className="flex items-center space-x-2">
           <Button 
-            variant="secondary" 
+            variant="primary" 
             size="sm"
-            onClick={() => navigate(`/compare?player1=${id}`)}
-            icon={GitCompare}
+            onClick={handleOpenContactModal}
+            icon={Mail}
+            className="shadow-sm bg-cyan-600 hover:bg-cyan-500 text-white"
           >
-            Compare Prospect
+            Request Contact
           </Button>
           <Button 
             variant={isShortlisted ? 'success' : 'outline'} 
@@ -613,6 +659,124 @@ export default function PlayerView() {
         </div>
 
       </div>
+
+      {/* ======================================================== */}
+      {/* SCOUT CONTACT REQUEST MODAL */}
+      {/* ======================================================== */}
+      {isContactModalOpen && (
+        <Modal 
+          title="Send Scouting Contact Request" 
+          onClose={() => {
+            setIsContactModalOpen(false);
+            setContactError(null);
+            setContactSuccess(null);
+          }}
+        >
+          <div className="space-y-4">
+            {contactSuccess && <Alert type="success" message={contactSuccess} />}
+            {contactError && <Alert type="error" message={contactError} />}
+
+            {/* Confirmation Banner for Target Prospect */}
+            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-800">
+              <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-0.5">
+                Target Prospect
+              </span>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-extrabold text-slate-900 dark:text-white">
+                    {p.fullName || p.username}
+                  </h4>
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                    @{p.username} • {primaryPos} • {clubTheme.name}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block">GPI Rating</span>
+                  <span className="text-sm font-black text-amber-500 stat-number">
+                    {g?.gpi != null ? Number(g.gpi).toFixed(1) : (p.overallRating || '—')}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Scout Saved Contact Number Snapshot Check */}
+            <div className="p-3 rounded-xl bg-cyan-500/5 dark:bg-cyan-500/10 border border-cyan-500/20 text-xs">
+              <div className="flex items-center space-x-2">
+                <Phone className="w-4 h-4 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <span className="text-[10px] font-bold uppercase text-slate-400 block leading-tight">
+                    Your Attached Mobile Number
+                  </span>
+                  {scoutProfileInfo?.phoneNumber ? (
+                    <span className="font-mono font-bold text-slate-900 dark:text-white">
+                      {scoutProfileInfo.phoneNumber}
+                    </span>
+                  ) : (
+                    <span className="text-rose-500 font-semibold block">
+                      No mobile number saved in your Scout Dossier yet!
+                    </span>
+                  )}
+                </div>
+              </div>
+              {!scoutProfileInfo?.phoneNumber && (
+                <div className="mt-2 pt-2 border-t border-cyan-500/20">
+                  <button
+                    type="button"
+                    onClick={() => navigate('/profile')}
+                    className="text-xs font-bold text-cyan-600 dark:text-cyan-400 hover:underline"
+                  >
+                    Go to Scout Dossier to add mobile number &rarr;
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Message Area */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Scouting Interest Message *
+              </label>
+              <textarea
+                rows={4}
+                value={contactMessage}
+                onChange={(e) => setContactMessage(e.target.value)}
+                placeholder="Explain why you are reaching out (e.g., inviting to an academy trial, tracking recent matches, discussing tactical fit)..."
+                disabled={sendingContact || !!contactSuccess}
+                className="w-full p-3 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:opacity-60"
+              />
+              <span className="text-[10px] text-slate-400 block text-right mt-1">
+                {contactMessage.length}/1000 characters
+              </span>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex justify-end space-x-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+              <Button 
+                variant="secondary" 
+                size="sm"
+                onClick={() => {
+                  setIsContactModalOpen(false);
+                  setContactError(null);
+                  setContactSuccess(null);
+                }}
+                disabled={sendingContact}
+              >
+                Cancel
+              </Button>
+              <Button 
+                variant="primary" 
+                size="sm"
+                onClick={handleSendContactRequest}
+                disabled={sendingContact || !scoutProfileInfo?.phoneNumber || !contactMessage.trim() || !!contactSuccess}
+                className="bg-cyan-600 hover:bg-cyan-500 text-white"
+              >
+                {sendingContact ? 'Sending Request...' : 'Send Request'}
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
     </div>
   );
 }

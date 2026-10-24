@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, Filter, Save, Star, ArrowUpDown, MapPin, CheckCircle, GitCompare } from 'lucide-react';
+import { Search, Filter, Save, Star, ArrowUpDown, MapPin, CheckCircle } from 'lucide-react';
 import { scoutService } from '../../services/api';
 import { LoadingSpinner, Alert, Modal, Button, EmptyState, PitchHero, PitchMarkings } from '../../components/common';
 import { 
@@ -20,7 +20,6 @@ export default function PlayerSearch() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [results, setResults] = useState([]);
-  const [selectedPlayers, setSelectedPlayers] = useState([]);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [filterName, setFilterName] = useState('');
 
@@ -93,18 +92,6 @@ export default function PlayerSearch() {
     }
   };
 
-  const togglePlayerSelection = (id) => {
-    setSelectedPlayers(prev => 
-      prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
-    );
-  };
-
-  const handleCompare = () => {
-    if (selectedPlayers.length > 1) {
-      navigate(`/compare?ids=${selectedPlayers.join(',')}`);
-    }
-  };
-
   const handleAddToShortlist = async (playerId) => {
     try {
       await scoutService.addToShortlist(playerId);
@@ -124,28 +111,17 @@ export default function PlayerSearch() {
         badgeText="TALENT DISCOVERY ENGINE • REGIONAL REGISTRY"
         stats={[
           { label: "FOUND", value: results.length },
-          { label: "SELECTED", value: selectedPlayers.length },
           { label: "FILTER", value: filters.positions.length ? filters.positions.join('/') : "ALL POS" },
           { label: "CONFIDENCE", value: filters.dataConfidence || "ANY" }
         ]}
         actionButtons={
-          selectedPlayers.length > 1 ? (
-            <Button 
-              variant="primary" 
-              onClick={handleCompare}
-              icon={<GitCompare className="w-4 h-4 mr-1" />}
-            >
-              Compare ({selectedPlayers.length}) Selected Prospects
-            </Button>
-          ) : (
-            <Button 
-              variant="secondary" 
-              onClick={() => navigate('/shortlist')}
-              className="bg-blue-950/80 text-blue-200 border-blue-500/50 hover:bg-blue-900"
-            >
-              View Active Shortlist
-            </Button>
-          )
+          <Button 
+            variant="secondary" 
+            onClick={() => navigate('/shortlist')}
+            className="bg-blue-950/80 text-blue-200 border-blue-500/50 hover:bg-blue-900"
+          >
+            Scouting Shortlist
+          </Button>
         }
       />
 
@@ -302,11 +278,6 @@ export default function PlayerSearch() {
           <div className="bg-white dark:bg-slate-900 px-5 py-3.5 rounded-xl shadow-sm border border-slate-200 dark:border-blue-900/30 flex flex-wrap justify-between items-center gap-3">
             <div className="flex items-center space-x-3 text-sm">
               <span className="font-bold text-slate-900 dark:text-white">{results.length} Prospects</span>
-              {selectedPlayers.length > 0 && (
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 border border-cyan-500/30">
-                  {selectedPlayers.length} Selected for Compare
-                </span>
-              )}
             </div>
             
             <div className="flex items-center space-x-2">
@@ -354,17 +325,12 @@ export default function PlayerSearch() {
                 const playerAge = player.age ? `${player.age} yrs` : (player.dateOfBirth ? `${calculateAge(player.dateOfBirth)} yrs` : null);
                 const clubTheme = getClubTheme(playerTeam);
                 const customBadgeUrl = getStoredClubBadge(playerId);
-                const isSelected = selectedPlayers.includes(playerId);
 
                 return (
                   <div 
                     key={playerId} 
                     style={{ animationDelay: `${Math.min(idx * 35, 240)}ms` }}
-                    className={`group bg-white dark:bg-slate-900 rounded-3xl shadow-md border transition-all duration-300 ease-out overflow-hidden flex flex-col justify-between card-elevate hover:shadow-2xl hover:-translate-y-[5px] animate-page-in ${
-                      isSelected 
-                        ? 'border-cyan-400 ring-2 ring-cyan-400/30 shadow-cyan-900/20' 
-                        : 'border-slate-200 dark:border-blue-900/30 hover:border-cyan-500/50'
-                    }`}
+                    className="group bg-white dark:bg-slate-900 rounded-3xl shadow-md border border-slate-200 dark:border-blue-900/30 hover:border-cyan-500/50 transition-all duration-300 ease-out overflow-hidden flex flex-col justify-between card-elevate hover:shadow-2xl hover:-translate-y-[5px] animate-page-in"
                   >
                     {/* AUTHENTIC MINI BANNER HEADER */}
                     <div 
@@ -395,30 +361,14 @@ export default function PlayerSearch() {
                         style={{ backgroundColor: clubTheme.accent }}
                       />
 
-                      {/* Top Bar: Checkbox + Club Badge Pill + GPI Pill */}
+                      {/* Top Bar: Club Badge Pill + GPI Pill */}
                       <div className="relative z-10 flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          {/* Selection Checkbox */}
-                          <label 
-                            onClick={(e) => e.stopPropagation()} 
-                            className="flex items-center justify-center p-1 rounded-xl bg-black/40 backdrop-blur-md border border-white/15 hover:bg-black/60 transition-colors cursor-pointer"
-                            title={isSelected ? "Deselect for comparison" : "Select for comparison"}
-                          >
-                            <input 
-                              type="checkbox" 
-                              checked={isSelected} 
-                              onChange={() => togglePlayerSelection(playerId)} 
-                              className="w-4 h-4 rounded text-cyan-500 border-white/40 focus:ring-cyan-400 cursor-pointer"
-                            />
-                          </label>
-
-                          {/* Club Badge Pill */}
-                          <div className="flex items-center space-x-1.5 bg-black/45 backdrop-blur-md px-2.5 py-1 rounded-xl border border-white/10 shadow-sm max-w-[155px]">
-                            <ClubCrest club={clubTheme} customBadgeUrl={customBadgeUrl} className="w-4 h-4 flex-shrink-0" />
-                            <span className="text-[10px] font-black uppercase tracking-wider text-white truncate">
-                              {clubTheme.name}
-                            </span>
-                          </div>
+                        {/* Club Badge Pill */}
+                        <div className="flex items-center space-x-1.5 bg-black/45 backdrop-blur-md px-2.5 py-1 rounded-xl border border-white/10 shadow-sm max-w-[170px]">
+                          <ClubCrest club={clubTheme} customBadgeUrl={customBadgeUrl} className="w-4 h-4 flex-shrink-0" />
+                          <span className="text-[10px] font-black uppercase tracking-wider text-white truncate">
+                            {clubTheme.name}
+                          </span>
                         </div>
 
                         {/* GPI Rating Pill */}

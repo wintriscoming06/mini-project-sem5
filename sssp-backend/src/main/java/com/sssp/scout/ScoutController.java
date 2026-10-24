@@ -93,4 +93,22 @@ public class ScoutController {
                              @AuthenticationPrincipal UserDetails userDetails) {
         scoutService.deleteFilter(filterId, userDetails.getUsername());
     }
+
+    @GetMapping("/profile")
+    public ScoutProfileDto getMyScoutProfile(@AuthenticationPrincipal UserDetails userDetails) {
+        return scoutService.getScoutProfile(userDetails.getUsername());
+    }
+
+    @PutMapping("/profile")
+    public ScoutProfileDto updateMyScoutProfile(@RequestBody ScoutProfileUpdateRequest request,
+                                                @AuthenticationPrincipal UserDetails userDetails) {
+        return scoutService.updateScoutProfile(userDetails.getUsername(), request);
+    }
+
+    @PostMapping("/players/{playerId}/contact-request")
+    public ContactRequestResponse sendContactRequest(@PathVariable Long playerId,
+                                                     @RequestBody ContactRequestCreateRequest request,
+                                                     @AuthenticationPrincipal UserDetails userDetails) {
+        return scoutService.sendContactRequest(playerId, request, userDetails.getUsername());
+    }
 }

@@ -16,6 +16,7 @@ import TournamentList from './pages/player/TournamentList';
 import TournamentDetail from './pages/player/TournamentDetail';
 import PlayerStats from './pages/player/PlayerStats';
 import CustomizeCard from './pages/player/CustomizeCard';
+import ScoutingRequests from './pages/player/ScoutingRequests';
 
 // Organizer Pages
 import OrganizerDashboard from './pages/organizer/OrganizerDashboard';
@@ -29,7 +30,6 @@ import ScoutProfile from './pages/scout/ScoutProfile';
 import PlayerSearch from './pages/scout/PlayerSearch';
 import Shortlist from './pages/scout/Shortlist';
 import PlayerView from './pages/scout/PlayerView';
-import PlayerComparison from './pages/scout/PlayerComparison';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -64,6 +64,8 @@ function App() {
         <Route path="/tournaments" element={<ProtectedRoute roles={['PLAYER']}><TournamentList /></ProtectedRoute>} />
         <Route path="/tournaments/:id" element={<ProtectedRoute roles={['PLAYER']}><TournamentDetail /></ProtectedRoute>} />
         <Route path="/player/stats" element={<ProtectedRoute roles={['PLAYER']}><PlayerStats /></ProtectedRoute>} />
+        <Route path="/player/requests" element={<ProtectedRoute roles={['PLAYER']}><ScoutingRequests /></ProtectedRoute>} />
+        <Route path="/player/scouting-requests" element={<Navigate to="/player/requests" replace />} />
         <Route path="/player/card-studio" element={<ProtectedRoute roles={['PLAYER']}><CustomizeCard /></ProtectedRoute>} />
         <Route path="/player/customize-card" element={<Navigate to="/player/card-studio" replace />} />
 
@@ -76,7 +78,6 @@ function App() {
         <Route path="/search" element={<ProtectedRoute roles={['SCOUT']}><PlayerSearch /></ProtectedRoute>} />
         <Route path="/shortlist" element={<ProtectedRoute roles={['SCOUT']}><Shortlist /></ProtectedRoute>} />
         <Route path="/players/:id" element={<ProtectedRoute roles={['SCOUT']}><PlayerView /></ProtectedRoute>} />
-        <Route path="/compare" element={<ProtectedRoute roles={['SCOUT']}><PlayerComparison /></ProtectedRoute>} />
 
         {/* ADMIN ROUTES */}
         <Route path="/users" element={<ProtectedRoute roles={['ADMIN']}><UserManagement /></ProtectedRoute>} />
@@ -91,7 +92,6 @@ function App() {
         <Route path="/player/tournaments/:id" element={<ProtectedRoute roles={['PLAYER']}><TournamentDetail /></ProtectedRoute>} />
         <Route path="/scout/search" element={<Navigate to="/search" replace />} />
         <Route path="/scout/shortlist" element={<Navigate to="/shortlist" replace />} />
-        <Route path="/scout/compare" element={<Navigate to="/compare" replace />} />
         <Route path="/scout/player/:id" element={<ProtectedRoute roles={['SCOUT']}><PlayerView /></ProtectedRoute>} />
         <Route path="/scout/players/:id" element={<ProtectedRoute roles={['SCOUT']}><PlayerView /></ProtectedRoute>} />
         <Route path="/organizer/tournaments/create" element={<Navigate to="/tournaments/create" replace />} />

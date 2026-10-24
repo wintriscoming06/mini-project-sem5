@@ -4,8 +4,8 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { 
   Sun, Moon, LogOut, Menu, X, ChevronDown, User,
-  LayoutDashboard, Search, Trophy, Shield, GitCompare,
-  BarChart2, Users, FilePlus, Calendar
+  LayoutDashboard, Search, Trophy, Shield,
+  BarChart2, Users, FilePlus, Calendar, Mail
 } from 'lucide-react';
 import { FootballIcon, ClassicSoccerBall } from '../common/FootballIcons';
 
@@ -28,6 +28,7 @@ const Navbar = () => {
         { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
         { path: '/tournaments', label: 'Tournaments', icon: Trophy },
         { path: '/player/stats', label: 'Match Stats', icon: BarChart2 },
+        { path: '/player/requests', label: 'Scouting Requests', icon: Mail },
         { path: '/player/card-studio', label: 'Card Studio', icon: FootballIcon },
         { path: '/profile', label: 'Profile', icon: User }
       ];
@@ -42,7 +43,6 @@ const Navbar = () => {
       return [
         { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
         { path: '/search', label: 'Player Search', icon: Search },
-        { path: '/compare', label: 'Comparison', icon: GitCompare },
         { path: '/shortlist', label: 'Shortlist', icon: Users },
         { path: '/profile', label: 'Scout Dossier', icon: User }
       ];
