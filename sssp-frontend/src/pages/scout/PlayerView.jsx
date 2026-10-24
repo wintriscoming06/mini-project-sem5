@@ -4,7 +4,7 @@ import { playerService, scoutService } from '../../services/api';
 import { 
   User, Activity, ClipboardList, 
   Send, Edit, Bookmark, ArrowLeft, CheckCircle2,
-  Ruler, Scale, Shirt, Footprints, Globe, Trophy, Mail, Phone, AlertCircle
+  Ruler, Scale, Shirt, Footprints, Globe, Trophy, Mail, Phone
 } from 'lucide-react';
 import { LoadingSpinner, Alert, Button, StatusBadge, PitchMarkings, Modal, MatchDetailModal } from '../../components/common';
 import SVGRadarChart from '../../components/auth/SVGRadarChart';

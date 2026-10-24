@@ -4,8 +4,8 @@ import { scoutService } from '../../services/api';
 import { 
   Shield, Award, MapPin, Calendar, Globe, Compass, 
   Edit2, CheckCircle2, Bookmark, 
-  Activity, Sparkles, Building, FileText,
-  Check, Phone
+  Activity, Building, FileText,
+  Phone
 } from 'lucide-react';
 import { Button, Alert, LoadingSpinner, PitchMarkings } from '../../components/common';
 import { 
@@ -179,7 +179,6 @@ export default function ScoutProfile() {
 
   const currentOrg = (isEditing ? formData.organization : dossier.organization) || 'Manchester City';
   const clubTheme = getClubTheme(currentOrg);
-  const activePhoto = isEditing ? formData.photoUrl : dossier.photoUrl;
   const activeBadge = isEditing ? formData.customBadgeUrl : dossier.customBadgeUrl;
   const activeData = isEditing ? formData : dossier;
 

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { tournamentService } from '../../services/api';
 import { 
-  ArrowLeft, Plus, Shield, Users, BarChart3, 
-  Trash2, Edit3, Calendar, MapPin, Search, CheckCircle2, Award
+  ArrowLeft, Plus, Shield, 
+  Trash2, Edit3, Search, CheckCircle2, Award
 } from 'lucide-react';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';

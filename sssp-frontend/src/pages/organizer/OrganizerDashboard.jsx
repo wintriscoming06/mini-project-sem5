@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
 import { tournamentService } from '../../services/api';
 import { 
-  Users, Plus, ArrowRight, Trophy, Shield 
+  Plus, ArrowRight, Trophy, Shield 
 } from 'lucide-react';
 import { 
   StatsCard, Card, StatusBadge, LoadingSpinner, Alert, 
@@ -11,7 +10,6 @@ import {
 } from '../../components/common';
 
 const OrganizerDashboard = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [tournaments, setTournaments] = useState([]);
   const [loading, setLoading] = useState(true);

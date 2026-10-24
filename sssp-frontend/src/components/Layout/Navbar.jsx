@@ -5,7 +5,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { 
   Sun, Moon, LogOut, Menu, X, ChevronDown, User,
   LayoutDashboard, Search, Trophy, Shield,
-  BarChart2, Users, FilePlus, Calendar, Mail
+  BarChart2, Users, FilePlus, Mail
 } from 'lucide-react';
 import { FootballIcon, ClassicSoccerBall } from '../common/FootballIcons';
 
