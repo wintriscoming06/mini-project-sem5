@@ -90,15 +90,4 @@ public class ScoutController {
                              @AuthenticationPrincipal UserDetails userDetails) {
         scoutService.deleteFilter(filterId, userDetails.getUsername());
     }
-
-    @GetMapping("/alerts")
-    public List<ScoutAlertResponse> getAlerts(@AuthenticationPrincipal UserDetails userDetails) {
-        return scoutService.getAlerts(userDetails.getUsername());
-    }
-
-    @PatchMapping("/alerts/{alertId}/read")
-    public void markAlertRead(@PathVariable Long alertId,
-                              @AuthenticationPrincipal UserDetails userDetails) {
-        scoutService.markAlertRead(alertId, userDetails.getUsername());
-    }
 }

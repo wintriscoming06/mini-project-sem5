@@ -44,7 +44,6 @@ const Navbar = () => {
         { path: '/search', label: 'Player Search', icon: Search },
         { path: '/compare', label: 'Comparison', icon: GitCompare },
         { path: '/shortlist', label: 'Shortlist', icon: Users },
-        { path: '/alerts', label: 'Alerts', icon: Shield },
         { path: '/profile', label: 'Scout Dossier', icon: User }
       ];
     }

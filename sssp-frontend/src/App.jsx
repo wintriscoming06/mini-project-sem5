@@ -28,7 +28,6 @@ import ScoutDashboard from './pages/scout/ScoutDashboard';
 import ScoutProfile from './pages/scout/ScoutProfile';
 import PlayerSearch from './pages/scout/PlayerSearch';
 import Shortlist from './pages/scout/Shortlist';
-import ScoutAlerts from './pages/scout/ScoutAlerts';
 import PlayerView from './pages/scout/PlayerView';
 import PlayerComparison from './pages/scout/PlayerComparison';
 
@@ -76,7 +75,6 @@ function App() {
         {/* SCOUT ROUTES */}
         <Route path="/search" element={<ProtectedRoute roles={['SCOUT']}><PlayerSearch /></ProtectedRoute>} />
         <Route path="/shortlist" element={<ProtectedRoute roles={['SCOUT']}><Shortlist /></ProtectedRoute>} />
-        <Route path="/alerts" element={<ProtectedRoute roles={['SCOUT']}><ScoutAlerts /></ProtectedRoute>} />
         <Route path="/players/:id" element={<ProtectedRoute roles={['SCOUT']}><PlayerView /></ProtectedRoute>} />
         <Route path="/compare" element={<ProtectedRoute roles={['SCOUT']}><PlayerComparison /></ProtectedRoute>} />
 
@@ -93,7 +91,6 @@ function App() {
         <Route path="/player/tournaments/:id" element={<ProtectedRoute roles={['PLAYER']}><TournamentDetail /></ProtectedRoute>} />
         <Route path="/scout/search" element={<Navigate to="/search" replace />} />
         <Route path="/scout/shortlist" element={<Navigate to="/shortlist" replace />} />
-        <Route path="/scout/alerts" element={<Navigate to="/alerts" replace />} />
         <Route path="/scout/compare" element={<Navigate to="/compare" replace />} />
         <Route path="/scout/player/:id" element={<ProtectedRoute roles={['SCOUT']}><PlayerView /></ProtectedRoute>} />
         <Route path="/scout/players/:id" element={<ProtectedRoute roles={['SCOUT']}><PlayerView /></ProtectedRoute>} />

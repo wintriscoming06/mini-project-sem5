@@ -1,7 +1,5 @@
 package com.sssp.scout;
 
-import com.sssp.alert.ScoutAlert;
-
 import com.sssp.user.User;
 import com.sssp.user.UserRepository;
 import com.sssp.common.enums.AlertTriggerType;
@@ -46,11 +44,10 @@ public class ScoutService {
     private final ScoutNoteRepository scoutNoteRepository;
     private final ScoutObservationRepository scoutObservationRepository;
     private final ScoutFilterRepository scoutFilterRepository;
-    private final ScoutAlertRepository scoutAlertRepository;
     private final MatchRepository matchRepository;
     private final PlayerMatchStatisticsRepository playerMatchStatisticsRepository;
 
-    public ScoutService(UserRepository userRepository, PlayerProfileRepository playerProfileRepository, GPIRecordRepository gpiRecordRepository, RankingRecordRepository rankingRecordRepository, ScoutShortlistRepository scoutShortlistRepository, ScoutNoteRepository scoutNoteRepository, ScoutObservationRepository scoutObservationRepository, ScoutFilterRepository scoutFilterRepository, ScoutAlertRepository scoutAlertRepository, MatchRepository matchRepository, PlayerMatchStatisticsRepository playerMatchStatisticsRepository) {
+    public ScoutService(UserRepository userRepository, PlayerProfileRepository playerProfileRepository, GPIRecordRepository gpiRecordRepository, RankingRecordRepository rankingRecordRepository, ScoutShortlistRepository scoutShortlistRepository, ScoutNoteRepository scoutNoteRepository, ScoutObservationRepository scoutObservationRepository, ScoutFilterRepository scoutFilterRepository, MatchRepository matchRepository, PlayerMatchStatisticsRepository playerMatchStatisticsRepository) {
         this.userRepository = userRepository;
         this.playerProfileRepository = playerProfileRepository;
         this.gpiRecordRepository = gpiRecordRepository;
@@ -59,7 +56,6 @@ public class ScoutService {
         this.scoutNoteRepository = scoutNoteRepository;
         this.scoutObservationRepository = scoutObservationRepository;
         this.scoutFilterRepository = scoutFilterRepository;
-        this.scoutAlertRepository = scoutAlertRepository;
         this.matchRepository = matchRepository;
         this.playerMatchStatisticsRepository = playerMatchStatisticsRepository;
     }
@@ -108,8 +104,10 @@ public class ScoutService {
                 return true;
             }).collect(Collectors.toList());
         }
-        if (request.getTeamAcademy() != null && !request.getTeamAcademy().isEmpty()) {
-            profiles = profiles.stream().filter(p -> p.getTeamAcademy() != null && p.getTeamAcademy().toLowerCase().contains(request.getTeamAcademy().toLowerCase())).collect(Collectors.toList());
+        String teamFilter = request.getTeam() != null && !request.getTeam().isEmpty()
+                ? request.getTeam() : request.getTeamAcademy();
+        if (teamFilter != null && !teamFilter.isEmpty()) {
+            profiles = profiles.stream().filter(p -> p.getTeamAcademy() != null && p.getTeamAcademy().toLowerCase().contains(teamFilter.toLowerCase())).collect(Collectors.toList());
         }
 
         // Players that have a GPI record; players without one are excluded by any GPI / match-count filter.
@@ -145,30 +143,36 @@ public class ScoutService {
             res.setAge(p.getDateOfBirth() != null ? Period.between(p.getDateOfBirth(), LocalDate.now()).getYears() : 0);
 
             GPIRecord gpi = latestGpiMap.get(playerId);
-            if (gpi != null) {
-                playersWithGpi.add(playerId);
-                res.setGpi(gpi.getGpi());
-                res.setVerifiedMatches(gpi.getMatchesConsidered());
-                res.setDataConfidence(gpi.getDataConfidence() != null ? gpi.getDataConfidence().name() : null);
-                res.setRecentForm(gpi.getRecentForm());
-                res.setRankingEligible(gpi.isRankingEligible());
-            }
+            double effectiveGpi = gpi != null ? gpi.getGpi() : (p.getCurrentGpi() != null ? p.getCurrentGpi() : (double) p.getOverallRating());
+            int matches = gpi != null ? gpi.getMatchesConsidered() : p.getCompetitiveMatches();
+            String confidence = gpi != null && gpi.getDataConfidence() != null ? gpi.getDataConfidence().name() : (matches < 2 ? "LOW" : (matches < 5 ? "MEDIUM" : "HIGH"));
+            double form = gpi != null ? gpi.getRecentForm() : 75.0;
+            boolean eligible = gpi != null ? gpi.isRankingEligible() : p.isGpiEligible();
+
+            res.setGpi(effectiveGpi);
+            res.setVerifiedMatches(matches);
+            res.setDataConfidence(confidence);
+            res.setRecentForm(form);
+            res.setRankingEligible(eligible);
+            playersWithGpi.add(playerId);
             responses.add(res);
         }
 
-        if (request.getMinGpi() != null) responses = responses.stream().filter(r -> playersWithGpi.contains(r.getPlayerId()) && r.getGpi() >= request.getMinGpi()).collect(Collectors.toList());
-        if (request.getMaxGpi() != null) responses = responses.stream().filter(r -> playersWithGpi.contains(r.getPlayerId()) && r.getGpi() <= request.getMaxGpi()).collect(Collectors.toList());
-        if (request.getMinMatches() != null) responses = responses.stream().filter(r -> playersWithGpi.contains(r.getPlayerId()) && r.getVerifiedMatches() >= request.getMinMatches()).collect(Collectors.toList());
+        if (request.getMinGpi() != null) responses = responses.stream().filter(r -> r.getGpi() >= request.getMinGpi()).collect(Collectors.toList());
+        if (request.getMaxGpi() != null) responses = responses.stream().filter(r -> r.getGpi() <= request.getMaxGpi()).collect(Collectors.toList());
+        if (request.getMinMatches() != null) responses = responses.stream().filter(r -> r.getVerifiedMatches() >= request.getMinMatches()).collect(Collectors.toList());
         if (request.getDataConfidence() != null && !request.getDataConfidence().isEmpty()) responses = responses.stream().filter(r -> request.getDataConfidence().equalsIgnoreCase(r.getDataConfidence())).collect(Collectors.toList());
 
         String sortBy = request.getSortBy() != null ? request.getSortBy() : "gpi";
         boolean asc = "asc".equalsIgnoreCase(request.getSortDir());
 
         Comparator<PlayerSearchResponse> comp;
-        switch (sortBy) {
-            case "recentForm": comp = Comparator.comparingDouble(PlayerSearchResponse::getRecentForm); break;
-            case "matches": comp = Comparator.comparingInt(PlayerSearchResponse::getVerifiedMatches); break;
-            default: comp = Comparator.comparingDouble(PlayerSearchResponse::getGpi); break;
+        if ("recent_form".equalsIgnoreCase(sortBy) || "recentForm".equalsIgnoreCase(sortBy)) {
+            comp = Comparator.comparingDouble(PlayerSearchResponse::getRecentForm);
+        } else if ("matches_played".equalsIgnoreCase(sortBy) || "matches".equalsIgnoreCase(sortBy)) {
+            comp = Comparator.comparingInt(PlayerSearchResponse::getVerifiedMatches);
+        } else {
+            comp = Comparator.comparingDouble(PlayerSearchResponse::getGpi);
         }
         if(!asc) comp = comp.reversed();
         responses.sort(comp);
@@ -280,23 +284,6 @@ public class ScoutService {
         scoutFilterRepository.delete(filter);
     }
 
-    public List<ScoutAlertResponse> getAlerts(String username) {
-        User scout = userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Scout not found"));
-        return scoutAlertRepository.findByScoutIdOrderByAlertCreatedAtDesc(scout.getId()).stream().map(this::mapToScoutAlertResponse).collect(Collectors.toList());
-    }
-
-    public void markAlertRead(Long alertId, String username) {
-        User scout = userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Scout not found"));
-        ScoutAlert alert = scoutAlertRepository.findById(alertId).orElseThrow(() -> new ResourceNotFoundException("Alert not found"));
-        if (!alert.getScout().getId().equals(scout.getId())) throw new UnauthorizedException("Not owner");
-        alert.setRead(true);
-        scoutAlertRepository.save(alert);
-    }
-
-    public void createAlertForPlayer(Long playerId, AlertTriggerType reason) {
-        // MVP logic: just create an alert for all scouts if it matches basic
-    }
-
     private String displayName(User user) {
         return playerProfileRepository.findByUserId(user.getId())
                 .map(PlayerProfile::getFullName)
@@ -352,22 +339,6 @@ public class ScoutService {
         r.setName(f.getName());
         r.setCriteriaJson(f.getCriteriaJson());
         r.setCreatedAt(f.getCreatedAt());
-        return r;
-    }
-
-    private ScoutAlertResponse mapToScoutAlertResponse(ScoutAlert a) {
-        ScoutAlertResponse r = new ScoutAlertResponse();
-        r.setId(a.getId());
-        r.setScoutId(a.getScout().getId());
-        if (a.getFilter() != null) {
-            r.setFilterId(a.getFilter().getId());
-            r.setFilterName(a.getFilter().getName());
-        }
-        r.setPlayerId(a.getPlayer().getId());
-        r.setPlayerName(displayName(a.getPlayer()));
-        r.setTriggerReason(a.getTriggerReason());
-        r.setAlertCreatedAt(a.getAlertCreatedAt());
-        r.setRead(a.isRead());
         return r;
     }
 }

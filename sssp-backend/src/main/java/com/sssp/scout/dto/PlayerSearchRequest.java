@@ -21,6 +21,7 @@ public class PlayerSearchRequest {
     private String recentForm;
     private String tournamentName;
     private String teamAcademy;
+    private String team;
     @Builder.Default
     private String sortBy = "gpi";
     @Builder.Default

@@ -85,7 +85,7 @@ export default function PlayerSearch() {
   const handleSaveFilter = async () => {
     if (!filterName.trim()) return;
     try {
-      await scoutService.saveFilter({ name: filterName, criteria: filters });
+      await scoutService.saveFilter({ name: filterName, criteriaJson: JSON.stringify(filters) });
       setIsFilterModalOpen(false);
       setFilterName('');
     } catch (err) {

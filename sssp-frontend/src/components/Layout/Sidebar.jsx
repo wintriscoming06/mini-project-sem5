@@ -28,7 +28,6 @@ const Sidebar = () => {
         { path: '/dashboard', label: 'Tactical Desk', icon: LayoutDashboard },
         { path: '/search', label: 'Scout Talent', icon: ScoutTargetIcon },
         { path: '/shortlist', label: 'Shortlist', icon: Users },
-        { path: '/alerts', label: 'Alerts Feed', icon: Bell },
       ];
     }
     if (hasRole('ADMIN')) {
