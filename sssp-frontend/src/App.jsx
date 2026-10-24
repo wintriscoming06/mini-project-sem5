@@ -22,9 +22,6 @@ import OrganizerDashboard from './pages/organizer/OrganizerDashboard';
 import OrganizerTournaments from './pages/organizer/OrganizerTournaments';
 import CreateTournament from './pages/organizer/CreateTournament';
 import ManageTournament from './pages/organizer/ManageTournament';
-import MatchList from './pages/organizer/MatchList';
-import MatchDetail from './pages/organizer/MatchDetail';
-import MatchScoring from './pages/organizer/MatchScoring';
 
 // Scout Pages
 import ScoutDashboard from './pages/scout/ScoutDashboard';
@@ -75,9 +72,6 @@ function App() {
         <Route path="/my-tournaments" element={<ProtectedRoute roles={['ORGANIZER']}><OrganizerTournaments /></ProtectedRoute>} />
         <Route path="/tournaments/create" element={<ProtectedRoute roles={['ORGANIZER']}><CreateTournament /></ProtectedRoute>} />
         <Route path="/tournaments/:id/manage" element={<ProtectedRoute roles={['ORGANIZER']}><ManageTournament /></ProtectedRoute>} />
-        <Route path="/matches" element={<ProtectedRoute roles={['ORGANIZER']}><MatchList /></ProtectedRoute>} />
-        <Route path="/matches/:id" element={<ProtectedRoute roles={['ORGANIZER']}><MatchDetail /></ProtectedRoute>} />
-        <Route path="/matches/:id/score" element={<ProtectedRoute roles={['ORGANIZER']}><MatchScoring /></ProtectedRoute>} />
 
         {/* SCOUT ROUTES */}
         <Route path="/search" element={<ProtectedRoute roles={['SCOUT']}><PlayerSearch /></ProtectedRoute>} />
@@ -106,10 +100,8 @@ function App() {
         <Route path="/organizer/tournaments/create" element={<Navigate to="/tournaments/create" replace />} />
         <Route path="/organizer/tournaments/:id" element={<ProtectedRoute roles={['ORGANIZER']}><ManageTournament /></ProtectedRoute>} />
         <Route path="/organizer/tournaments" element={<Navigate to="/my-tournaments" replace />} />
-        <Route path="/organizer/matches" element={<Navigate to="/matches" replace />} />
-        <Route path="/organizer/matches/:id" element={<ProtectedRoute roles={['ORGANIZER']}><MatchDetail /></ProtectedRoute>} />
-        <Route path="/organizer/matches/:id/scoring" element={<ProtectedRoute roles={['ORGANIZER']}><MatchScoring /></ProtectedRoute>} />
-        <Route path="/organizer/matches/:id/score" element={<ProtectedRoute roles={['ORGANIZER']}><MatchScoring /></ProtectedRoute>} />
+        <Route path="/organizer/matches" element={<Navigate to="/my-tournaments" replace />} />
+        <Route path="/matches" element={<Navigate to="/my-tournaments" replace />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />

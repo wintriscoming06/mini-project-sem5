@@ -74,14 +74,26 @@ export const tournamentService = {
   create: (data) => api.post('/tournaments', data),
   update: (id, data) => api.put(`/tournaments/${id}`, data),
   updateStatus: (id, status) => api.patch(`/tournaments/${id}/status`, { status }),
-  getApplications: (id) => api.get(`/tournaments/${id}/applications`),
-  apply: (id) => api.post(`/tournaments/${id}/applications`),
-  getMyApplications: () => api.get('/tournaments/my-applications'),
-  decideApplication: (appId, decision) => api.patch(`/applications/${appId}`, { decision }),
+  delete: (id) => api.delete(`/tournaments/${id}`),
+  
+  // Teams & Squads
   getTeams: (tournamentId) => api.get(`/tournaments/${tournamentId}/teams`),
-  createTeam: (tournamentId, data) => api.post('/teams', { ...data, tournamentId }),
+  createTeam: (tournamentId, data) => api.post(`/tournaments/${tournamentId}/teams`, data),
   addTeamMember: (tournamentId, teamId, playerId) => api.post(`/teams/${teamId}/members`, { playerId }),
-  removeTeamMember: (teamId, playerId) => api.delete(`/teams/${teamId}/members/${playerId}`)
+  removeTeamMember: (teamId, playerId) => api.delete(`/teams/${teamId}/members/${playerId}`),
+
+  // Matches & Lineups within Tournament
+  getTournamentMatches: (tournamentId) => api.get(`/tournaments/${tournamentId}/matches`),
+  createTournamentMatch: (tournamentId, data) => api.post(`/tournaments/${tournamentId}/matches`, data),
+  updateMatchScore: (tournamentId, matchId, data) => api.put(`/tournaments/${tournamentId}/matches/${matchId}/score`, data),
+
+  // Player Stats feed (GPI Input)
+  getTournamentStats: (tournamentId) => api.get(`/tournaments/${tournamentId}/stats`),
+  savePlayerStats: (tournamentId, data) => api.post(`/tournaments/${tournamentId}/stats`, data),
+  deletePlayerStats: (tournamentId, statsId) => api.delete(`/tournaments/${tournamentId}/stats/${statsId}`),
+
+  // Player Search for Organizers
+  searchPlayers: (query) => api.get('/organizer/players/search', { params: { query } })
 };
 
 export const matchService = {

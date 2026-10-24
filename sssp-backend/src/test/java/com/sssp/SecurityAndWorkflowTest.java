@@ -9,6 +9,7 @@ import com.sssp.application.TournamentApplicationRepository;
 import com.sssp.auth.AuthService;
 import com.sssp.auth.dto.RegisterRequest;
 import com.sssp.common.exception.BadRequestException;
+import com.sssp.common.exception.UnauthorizedException;
 import com.sssp.security.RateLimitingFilter;
 import com.sssp.user.User;
 import com.sssp.user.UserRepository;
@@ -65,52 +66,25 @@ public class SecurityAndWorkflowTest {
     }
 
     @Test
-    @DisplayName("Workflow: Prevent duplicate tournament registration")
-    void testPreventDuplicateTournamentApplication() {
+    @DisplayName("Workflow: Prevent unauthorized organizer tournament management")
+    void testUnauthorizedTournamentManagement() {
         Long tournamentId = 100L;
-        String playerUsername = "striker9";
+        String organizerUsername = "real_organizer";
+        String intruderUsername = "fake_organizer";
 
-        User player = new User();
-        player.setId(1L);
-        player.setUsername(playerUsername);
-        player.setRole(UserRole.PLAYER);
-
-        Tournament tournament = new Tournament();
-        tournament.setId(tournamentId);
-        tournament.setStatus(TournamentStatus.OPEN);
-
-        when(userRepository.findByUsername(playerUsername)).thenReturn(Optional.of(player));
-        when(tournamentRepository.findById(tournamentId)).thenReturn(Optional.of(tournament));
-        when(tournamentApplicationRepository.existsByPlayerIdAndTournamentId(player.getId(), tournamentId)).thenReturn(true);
-
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> 
-            tournamentService.applyToTournament(tournamentId, playerUsername)
-        );
-        assertEquals("Player has already applied", ex.getMessage());
-    }
-
-    @Test
-    @DisplayName("Workflow: Non-open tournament rejects application")
-    void testClosedTournamentRejectsApplication() {
-        Long tournamentId = 101L;
-        String playerUsername = "striker9";
-
-        User player = new User();
-        player.setId(1L);
-        player.setUsername(playerUsername);
-        player.setRole(UserRole.PLAYER);
+        User organizer = new User();
+        organizer.setId(1L);
+        organizer.setUsername(organizerUsername);
 
         Tournament tournament = new Tournament();
         tournament.setId(tournamentId);
-        tournament.setStatus(TournamentStatus.COMPLETED);
+        tournament.setOrganizer(organizer);
 
-        when(userRepository.findByUsername(playerUsername)).thenReturn(Optional.of(player));
         when(tournamentRepository.findById(tournamentId)).thenReturn(Optional.of(tournament));
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> 
-            tournamentService.applyToTournament(tournamentId, playerUsername)
+        assertThrows(UnauthorizedException.class, () -> 
+            tournamentService.deleteTournament(tournamentId, intruderUsername)
         );
-        assertEquals("Tournament is not open for registration", ex.getMessage());
     }
 
     @Test

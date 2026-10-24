@@ -1,19 +1,13 @@
 package com.sssp.tournament;
 
-import com.sssp.team.dto.TeamMemberResponse;
-
+import com.sssp.match.dto.MatchRequest;
+import com.sssp.match.dto.MatchResponse;
 import com.sssp.team.dto.TeamMemberRequest;
-
+import com.sssp.team.dto.TeamMemberResponse;
 import com.sssp.team.dto.TeamRequest;
-
 import com.sssp.team.dto.TeamResponse;
-
-import com.sssp.application.dto.ApplicationResponse;
-
-import com.sssp.common.enums.ApplicationStatus;
-import com.sssp.tournament.TournamentStatus;
 import com.sssp.tournament.dto.*;
-import com.sssp.tournament.TournamentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +24,8 @@ import java.util.Map;
 public class TournamentController {
 
     private final TournamentService tournamentService;
+
+    // ==================== TOURNAMENTS ====================
 
     @GetMapping("/tournaments")
     public ResponseEntity<List<TournamentResponse>> getAllTournaments() {
@@ -51,7 +47,7 @@ public class TournamentController {
     @PostMapping("/tournaments")
     @PreAuthorize("hasRole('ORGANIZER')")
     public ResponseEntity<TournamentResponse> createTournament(
-            @RequestBody TournamentRequest request,
+            @Valid @RequestBody TournamentRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(tournamentService.createTournament(request, userDetails.getUsername()));
     }
@@ -60,7 +56,7 @@ public class TournamentController {
     @PreAuthorize("hasRole('ORGANIZER')")
     public ResponseEntity<TournamentResponse> updateTournament(
             @PathVariable Long id,
-            @RequestBody TournamentRequest request,
+            @Valid @RequestBody TournamentRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(tournamentService.updateTournament(id, request, userDetails.getUsername()));
     }
@@ -75,47 +71,108 @@ public class TournamentController {
         return ResponseEntity.ok(tournamentService.updateTournamentStatus(id, status, userDetails.getUsername()));
     }
 
-    @PostMapping("/tournaments/{id}/applications")
-    @PreAuthorize("hasRole('PLAYER')")
-    public ResponseEntity<ApplicationResponse> applyToTournament(
-            @PathVariable Long id,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(tournamentService.applyToTournament(id, userDetails.getUsername()));
-    }
-
-    @GetMapping("/tournaments/{id}/applications")
+    @DeleteMapping("/tournaments/{id}")
     @PreAuthorize("hasRole('ORGANIZER')")
-    public ResponseEntity<List<ApplicationResponse>> getApplicationsForTournament(@PathVariable Long id) {
-        return ResponseEntity.ok(tournamentService.getApplicationsForTournament(id));
-    }
-
-    @GetMapping("/tournaments/my-applications")
-    @PreAuthorize("hasRole('PLAYER')")
-    public ResponseEntity<List<ApplicationResponse>> getPlayerApplications(
+    public ResponseEntity<Void> deleteTournament(
+            @PathVariable Long id,
             @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(tournamentService.getPlayerApplications(userDetails.getUsername()));
+        tournamentService.deleteTournament(id, userDetails.getUsername());
+        return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/applications/{id}")
+    // ==================== TEAMS & SQUADS ====================
+
+    @GetMapping("/tournaments/{id}/teams")
+    public ResponseEntity<List<TeamResponse>> getTeamsForTournament(@PathVariable Long id) {
+        return ResponseEntity.ok(tournamentService.getTeamsForTournament(id));
+    }
+
+    @PostMapping("/tournaments/{id}/teams")
     @PreAuthorize("hasRole('ORGANIZER')")
-    public ResponseEntity<ApplicationResponse> decideApplication(
+    public ResponseEntity<TeamResponse> createTeam(
             @PathVariable Long id,
-            @RequestBody Map<String, String> body,
+            @Valid @RequestBody TeamRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
-        ApplicationStatus decision = ApplicationStatus.valueOf(body.get("decision"));
-        return ResponseEntity.ok(tournamentService.decideApplication(id, decision, userDetails.getUsername()));
-    }
-    
-    @PatchMapping("/applications/{id}/withdraw")
-    @PreAuthorize("hasRole('PLAYER')")
-    public ResponseEntity<ApplicationResponse> withdrawApplication(
-            @PathVariable Long id,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(tournamentService.withdrawApplication(id, userDetails.getUsername()));
+        request.setTournamentId(id);
+        return ResponseEntity.ok(tournamentService.createTeam(request, userDetails.getUsername()));
     }
 
-    @GetMapping("/tournaments/{tournamentId}/teams")
-    public ResponseEntity<List<TeamResponse>> getTeamsForTournament(@PathVariable Long tournamentId) {
-        return ResponseEntity.ok(tournamentService.getTeamsForTournament(tournamentId));
+    @PostMapping("/teams/{teamId}/members")
+    @PreAuthorize("hasRole('ORGANIZER')")
+    public ResponseEntity<TeamMemberResponse> addTeamMember(
+            @PathVariable Long teamId,
+            @RequestBody TeamMemberRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(tournamentService.addTeamMember(teamId, request, userDetails.getUsername()));
+    }
+
+    @DeleteMapping("/teams/{teamId}/members/{playerId}")
+    @PreAuthorize("hasRole('ORGANIZER')")
+    public ResponseEntity<Void> removeTeamMember(
+            @PathVariable Long teamId,
+            @PathVariable Long playerId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        tournamentService.removeTeamMember(teamId, playerId, userDetails.getUsername());
+        return ResponseEntity.noContent().build();
+    }
+
+    // ==================== FIXTURES & SCORES ====================
+
+    @GetMapping("/tournaments/{id}/matches")
+    public ResponseEntity<List<MatchResponse>> getTournamentMatches(@PathVariable Long id) {
+        return ResponseEntity.ok(tournamentService.getTournamentMatches(id));
+    }
+
+    @PostMapping("/tournaments/{id}/matches")
+    @PreAuthorize("hasRole('ORGANIZER')")
+    public ResponseEntity<MatchResponse> createTournamentMatch(
+            @PathVariable Long id,
+            @RequestBody MatchRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(tournamentService.createTournamentMatch(id, request, userDetails.getUsername()));
+    }
+
+    @PutMapping("/tournaments/{id}/matches/{matchId}/score")
+    @PreAuthorize("hasRole('ORGANIZER')")
+    public ResponseEntity<MatchResponse> updateMatchScore(
+            @PathVariable Long id,
+            @PathVariable Long matchId,
+            @RequestBody TournamentMatchScoreRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(tournamentService.updateMatchScore(id, matchId, request, userDetails.getUsername()));
+    }
+
+    // ==================== PLAYER STATS (GPI INPUT FEED) ====================
+
+    @GetMapping("/tournaments/{id}/stats")
+    public ResponseEntity<List<TournamentPlayerStatsResponse>> getTournamentStats(@PathVariable Long id) {
+        return ResponseEntity.ok(tournamentService.getTournamentStats(id));
+    }
+
+    @PostMapping("/tournaments/{id}/stats")
+    @PreAuthorize("hasRole('ORGANIZER')")
+    public ResponseEntity<TournamentPlayerStatsResponse> addOrUpdateStats(
+            @PathVariable Long id,
+            @Valid @RequestBody TournamentPlayerStatsRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(tournamentService.addOrUpdateTournamentPlayerStats(id, request, userDetails.getUsername()));
+    }
+
+    @DeleteMapping("/tournaments/{id}/stats/{statsId}")
+    @PreAuthorize("hasRole('ORGANIZER')")
+    public ResponseEntity<Void> deleteStats(
+            @PathVariable Long id,
+            @PathVariable Long statsId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        tournamentService.deleteTournamentPlayerStats(id, statsId, userDetails.getUsername());
+        return ResponseEntity.noContent().build();
+    }
+
+    // ==================== PLAYER SEARCH ====================
+
+    @GetMapping("/organizer/players/search")
+    @PreAuthorize("hasRole('ORGANIZER')")
+    public ResponseEntity<List<Map<String, Object>>> searchPlayers(@RequestParam(required = false) String query) {
+        return ResponseEntity.ok(tournamentService.searchSignedUpPlayers(query));
     }
 }
