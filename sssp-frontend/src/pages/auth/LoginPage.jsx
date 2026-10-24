@@ -12,7 +12,11 @@ const ROLE_THEMES = {
     icon: '⚽',
     tunnelLabel: 'ATHLETE PERFORMANCE DOSSIER',
     subheading: 'Access verified match statistics, rankings & scouting cards',
+<<<<<<< HEAD
+    actionText: 'Sign In / Player Portal',
+=======
     actionText: 'Sign In / Access Dossier',
+>>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
     loadingText: 'Authenticating Athlete...',
     cardBorder: 'border-blue-500/30',
     cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
@@ -23,10 +27,40 @@ const ROLE_THEMES = {
     roleTag: 'bg-blue-800/40 text-blue-200 border-blue-500/30',
     inputRing: 'focus:ring-blue-500 focus:border-blue-500',
     focusGlow: 'shadow-blue-500/10',
+<<<<<<< HEAD
+  },
+  COACH: {
+    name: 'Coach',
+    icon: '📋',
+    tunnelLabel: 'TACTICAL MASTER & SQUAD COMMAND',
+    subheading: 'Access squad management, tactical boards & formation strategies',
+    actionText: 'Sign In / Coach Portal',
+    loadingText: 'Authenticating Coach Credentials...',
+    cardBorder: 'border-emerald-500/30',
+    cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
+    topTrim: 'bg-gradient-to-r from-emerald-500 via-teal-400 to-green-500',
+    buttonGrad: 'bg-emerald-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-500/30 text-white font-bold',
+    accentColor: 'text-emerald-400',
+    badgeBg: 'bg-emerald-900/60 border-emerald-400/40 text-emerald-300',
+    roleTag: 'bg-emerald-800/40 text-emerald-200 border-emerald-500/30',
+    inputRing: 'focus:ring-emerald-500 focus:border-emerald-500',
+    focusGlow: 'shadow-emerald-500/10',
+=======
+>>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
   },
   SCOUT: {
     name: 'Scout',
     icon: '🔎',
+<<<<<<< HEAD
+    tunnelLabel: 'TALENT RADAR & PROSPECT DOSSIER',
+    subheading: 'Access quantitative talent analytics, radar & prospect rankings',
+    actionText: 'Sign In / Scout Portal',
+    loadingText: 'Authenticating Scout Credentials...',
+    cardBorder: 'border-cyan-500/30',
+    cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
+    topTrim: 'bg-gradient-to-r from-cyan-500 via-sky-400 to-blue-500',
+    buttonGrad: 'bg-cyan-600 hover:from-cyan-500 hover:to-sky-500 shadow-cyan-500/30 text-white font-bold',
+=======
     tunnelLabel: 'TACTICAL RECRUITMENT DOSSIER',
     subheading: 'Access quantitative talent analytics, scout notes & prospect rankings',
     actionText: 'Sign In / Scout Portal',
@@ -35,6 +69,7 @@ const ROLE_THEMES = {
     cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
     topTrim: 'bg-blue-600',
     buttonGrad: 'bg-blue-600 hover:from-cyan-500 hover:to-sky-500 shadow-cyan-500/30 text-white',
+>>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
     accentColor: 'text-cyan-400',
     badgeBg: 'bg-cyan-900/60 border-cyan-400/40 text-cyan-300',
     roleTag: 'bg-cyan-800/40 text-cyan-200 border-cyan-500/30',
@@ -85,7 +120,7 @@ const LoginPage = () => {
 
     try {
       await Promise.all([
-        login(identifier, password),
+        login({ identifier, password, role: activeRole }),
         new Promise((resolve) => setTimeout(resolve, animationDelay))
       ]);
       navigate('/dashboard');
@@ -106,8 +141,13 @@ const LoginPage = () => {
         {/* Top Trim Highlight */}
         <div className={`h-2.5 ${currentTheme.topTrim} rounded-t-3xl -mx-6 -mt-6 sm:-mx-8 sm:-mt-8 mb-4 transition-all duration-500`} />
         
+<<<<<<< HEAD
+        {/* Tactical Grid watermark for Coach / Scout */}
+        {(activeRole === 'SCOUT' || activeRole === 'COACH') && (
+=======
         {/* Tactical Grid watermark for Scout */}
         {activeRole === 'SCOUT' && (
+>>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
           <div className="absolute inset-0 tactical-grid opacity-20 pointer-events-none" />
         )}
 
@@ -137,7 +177,17 @@ const LoginPage = () => {
           </div>
         )}
 
-        {/* 2. SCOUT: Referee Whistle Acoustic Resonance Pulse */}
+        {/* 2. COACH: Tactical Formation Clipboard Pulse */}
+        {motionActive === 'COACH' && (
+          <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden flex items-center justify-center bg-emerald-950/30 backdrop-blur-[2px]">
+            <div className="absolute w-32 h-32 rounded-full border-2 border-emerald-400/80 animate-ping" />
+            <div className="relative p-4 rounded-2xl bg-emerald-900/90 border border-emerald-400/70 shadow-2xl animate-bounce flex items-center justify-center">
+              <span className="text-4xl filter drop-shadow-[0_4px_12px_rgba(16,185,129,0.7)]">📋</span>
+            </div>
+          </div>
+        )}
+
+        {/* 3. SCOUT: Referee Whistle Acoustic Resonance Pulse */}
         {motionActive === 'SCOUT' && (
           <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden flex items-center justify-center bg-cyan-950/30 backdrop-blur-[2px]">
             {/* Acoustic Wave Rings */}
@@ -150,7 +200,7 @@ const LoginPage = () => {
           </div>
         )}
 
-        {/* 3. ORGANIZER: Stadium Matchday Floodlight Sweep */}
+        {/* 4. ORGANIZER: Stadium Matchday Floodlight Sweep */}
         {motionActive === 'ORGANIZER' && (
           <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden">
             {/* Beam Sweep */}
@@ -165,7 +215,7 @@ const LoginPage = () => {
 
         {/* In-Card Role Quick Selector Pills */}
         <div className="relative z-10 flex items-center justify-between p-1 mb-5 rounded-xl bg-black/45 border border-white/10 backdrop-blur-md">
-          {['PLAYER', 'SCOUT', 'ORGANIZER'].map((role) => {
+          {['PLAYER', 'COACH', 'SCOUT', 'ORGANIZER'].map((role) => {
             const isCur = activeRole === role;
             const rConf = ROLE_THEMES[role];
             return (
@@ -222,7 +272,15 @@ const LoginPage = () => {
                 type="text"
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                placeholder={activeRole === 'PLAYER' ? 'e.g. cr7@sssp.org or player username' : `e.g. ${activeRole.toLowerCase()}@sssp.org`}
+                placeholder={
+                  activeRole === 'PLAYER' 
+                    ? 'e.g. cr7@sssp.org or player username' 
+                    : activeRole === 'COACH'
+                    ? 'e.g. coach@sssp.org or coach username'
+                    : activeRole === 'SCOUT' 
+                    ? 'e.g. scout@sssp.org or scout username' 
+                    : 'e.g. organizer@sssp.org'
+                }
                 required
                 className={`w-full pl-10 pr-4 py-2.5 bg-black/40 border border-slate-700/60 rounded-xl text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 ${currentTheme.inputRing} transition-all duration-200`}
               />

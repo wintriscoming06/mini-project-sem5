@@ -19,17 +19,36 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  // Accepts either login({ identifier, password }) or login(identifier, password).
+  // Accepts either login({ identifier, password, role }) or login(identifier, password, role).
   // Backend returns a flat AuthResponse: { token, type, userId, username, email, role, evaluatorPermission }.
-  const login = async (identifierOrData, maybePassword) => {
-    const payload =
-      typeof identifierOrData === 'object' && identifierOrData !== null
-        ? identifierOrData
-        : { identifier: identifierOrData, password: maybePassword };
+  const login = async (identifierOrData, maybePassword, maybeRole) => {
+    let payload;
+    if (typeof identifierOrData === 'object' && identifierOrData !== null) {
+      payload = { ...identifierOrData };
+    } else {
+      payload = { identifier: identifierOrData, password: maybePassword };
+      if (maybeRole) payload.role = maybeRole;
+    }
+
+    if (!payload.role) {
+      throw new Error('Please select your login portal role (Player, Coach, Scout, or Organizer) before signing in.');
+    }
 
     const response = await authService.login(payload);
     const { token: jwt, type, ...userData } = response.data;
     const normalizedUser = { ...userData, id: userData.userId };
+
+    // Frontend strict role enforcement guard
+    const requestedRole = payload.role;
+    if (requestedRole && normalizedUser.role !== 'ADMIN' && normalizedUser.role !== requestedRole) {
+      const formatRole = (r) => {
+        if (!r) return 'another';
+        return r.charAt(0).toUpperCase() + r.slice(1).toLowerCase();
+      };
+      const portalLabel = formatRole(requestedRole);
+      const userRoleLabel = formatRole(normalizedUser.role);
+      throw new Error(`Access denied: You cannot log into the ${portalLabel} portal with a ${userRoleLabel} account. Please select the ${userRoleLabel} login portal.`);
+    }
 
     localStorage.setItem('sssp_token', jwt);
     localStorage.setItem('sssp_user', JSON.stringify(normalizedUser));

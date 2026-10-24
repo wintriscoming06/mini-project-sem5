@@ -8,6 +8,12 @@ const ROLE_OPTIONS = [
     subtitle: 'Verified GPI player card, match analytics & tournament entry',
   },
   {
+    value: 'COACH',
+    label: 'Coach',
+    icon: '📋',
+    subtitle: 'Tactical boards, squad management, formations & match strategy',
+  },
+  {
     value: 'SCOUT',
     label: 'Scout',
     icon: '🔎',

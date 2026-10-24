@@ -8,6 +8,7 @@ import {
 
 const ROLES = [
   { id: 'PLAYER', label: 'Player', icon: '⚽' },
+  { id: 'COACH', label: 'Coach', icon: '📋' },
   { id: 'SCOUT', label: 'Scout', icon: '🔎' },
   { id: 'ORGANIZER', label: 'Organizer', icon: '🏟' },
 ];
@@ -181,7 +182,7 @@ export default function AuthLayout({
         {/* ======================================================== */}
         {/* DYNAMIC COACH ATMOSPHERIC BACKGROUNDS */}
         {/* ======================================================== */}
-        {activeRole === 'SCOUT' && (
+        {(activeRole === 'SCOUT' || activeRole === 'COACH') && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-screen opacity-50">
             {/* 1. MOURINHO: Chelsea / Inter / Real Madrid Tactical Steel */}
             <div
@@ -437,7 +438,8 @@ export default function AuthLayout({
         {/* Center: Dynamic Role-Based Showcase */}
         <div className="relative z-20 flex-1 flex flex-col items-center justify-center py-2 sm:py-3 transition-all duration-500">
           {activeRole === 'PLAYER' && <PlayerShowcase onPlayerChange={setActivePlayerId} />}
-          {activeRole === 'SCOUT' && <ScoutShowcase onCoachChange={setActiveCoachId} />}
+          {activeRole === 'COACH' && <ScoutShowcase onCoachChange={setActiveCoachId} mode="COACH" />}
+          {activeRole === 'SCOUT' && <ScoutShowcase onCoachChange={setActiveCoachId} mode="SCOUT" />}
           {activeRole === 'ORGANIZER' && <OrganizerShowcase onTournamentChange={setActiveTournamentId} />}
 
           {/* Role Status Footers */}
@@ -455,6 +457,31 @@ export default function AuthLayout({
             </div>
           )}
 
+<<<<<<< HEAD
+          {activeRole === 'COACH' && (
+            <div className="w-full max-w-[480px] mt-3 flex items-center justify-between bg-emerald-950/95 border border-emerald-400/40 rounded-2xl p-2.5 px-4 shadow-xl backdrop-blur-md">
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-xs font-black uppercase tracking-wider text-emerald-300">
+                  Tactical Command • Squad Strategy & Formations
+                </span>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/40">
+                TACTICAL BOARD
+              </span>
+            </div>
+          )}
+
+          {activeRole === 'SCOUT' && (
+            <div className="w-full max-w-[480px] mt-3 flex items-center justify-between bg-cyan-950/95 border border-cyan-400/40 rounded-2xl p-2.5 px-4 shadow-xl backdrop-blur-md">
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                <span className="text-xs font-black uppercase tracking-wider text-cyan-300">
+                  Talent Discovery • Verified Prospects & Radar
+                </span>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-cyan-300 bg-cyan-500/20 px-2 py-0.5 rounded border border-cyan-500/40">
+=======
           {activeRole === 'SCOUT' && (
             <div className="w-full max-w-[480px] mt-3 flex items-center justify-between bg-blue-950/95 border border-blue-400/40 rounded-2xl p-2.5 px-4 shadow-xl backdrop-blur-md">
               <div className="flex items-center space-x-2">
@@ -464,6 +491,7 @@ export default function AuthLayout({
                 </span>
               </div>
               <span className="text-[10px] font-mono font-bold text-blue-300 bg-blue-500/20 px-2 py-0.5 rounded border border-blue-500/40">
+>>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
                 4-PILLAR RATING
               </span>
             </div>

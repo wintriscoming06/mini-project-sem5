@@ -56,8 +56,14 @@ export default function UserManagement() {
   const getRoleBadge = (role) => {
     const styles = {
       ADMIN: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20',
+<<<<<<< HEAD
+      COACH: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
+      SCOUT: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20',
+      ORGANIZER: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
+=======
       SCOUT: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
       ORGANIZER: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20',
+>>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
       PLAYER: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20'
     };
     return (
@@ -100,8 +106,9 @@ export default function UserManagement() {
           >
             <option value="ALL">All Roles</option>
             <option value="PLAYER">Players</option>
-            <option value="ORGANIZER">Organizers</option>
+            <option value="COACH">Coaches</option>
             <option value="SCOUT">Scouts</option>
+            <option value="ORGANIZER">Organizers</option>
             <option value="ADMIN">Admins</option>
           </select>
         </div>
@@ -159,8 +166,9 @@ export default function UserManagement() {
                           className="text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-lg py-1 px-2 focus:ring-blue-500"
                         >
                           <option value="PLAYER">Player</option>
-                          <option value="ORGANIZER">Organizer</option>
+                          <option value="COACH">Coach</option>
                           <option value="SCOUT">Scout</option>
+                          <option value="ORGANIZER">Organizer</option>
                           <option value="ADMIN">Admin</option>
                         </select>
                         

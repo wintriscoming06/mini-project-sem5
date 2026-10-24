@@ -115,7 +115,7 @@ const ACADEMIES = [
   { name: 'Sporting CP Academy', club: 'Sporting CP', focus: 'Elite Ball-Carrying & Development' },
 ];
 
-export default function ScoutShowcase({ onCoachChange }) {
+export default function ScoutShowcase({ onCoachChange, mode = 'SCOUT' }) {
   const [coachIndex, setCoachIndex] = useState(0);
   const [pipelineStep, setPipelineStep] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -170,9 +170,11 @@ export default function ScoutShowcase({ onCoachChange }) {
     >
       {/* Top Header Badge */}
       <div className="flex items-center gap-2 mb-3">
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 shadow-sm">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping mr-2" />
-          SCOUTING INTELLIGENCE & TACTICAL ANALYSIS
+        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider ${
+          mode === 'COACH' ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30'
+        } shadow-sm`}>
+          <span className={`w-2 h-2 rounded-full ${mode === 'COACH' ? 'bg-emerald-400' : 'bg-cyan-400'} animate-ping mr-2`} />
+          {mode === 'COACH' ? 'TACTICAL SQUAD & FORMATION STRATEGY' : 'SCOUTING INTELLIGENCE & TALENT RADAR'}
         </span>
       </div>
 
@@ -208,8 +210,8 @@ export default function ScoutShowcase({ onCoachChange }) {
             </div>
 
             <div>
-              <p className="text-[10px] font-black tracking-widest uppercase text-cyan-400">
-                SCOUTING MIND
+              <p className={`text-[10px] font-black tracking-widest uppercase ${mode === 'COACH' ? 'text-emerald-400' : 'text-cyan-400'}`}>
+                {mode === 'COACH' ? 'TACTICAL MIND' : 'SCOUTING MIND'}
               </p>
               <h3 className="text-lg sm:text-xl font-black uppercase tracking-wider text-white">
                 {coach.name}
