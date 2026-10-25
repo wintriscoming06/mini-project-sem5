@@ -47,8 +47,7 @@ export default function UserManagement() {
   };
 
   const filteredUsers = users.filter(u => {
-    const matchesSearch = (u.username?.toLowerCase().includes(searchTerm.toLowerCase())) || 
-                          (u.email?.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesSearch = (u.username?.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesRole = roleFilter === 'ALL' || u.role === roleFilter;
     return matchesSearch && matchesRole;
   });
@@ -56,14 +55,8 @@ export default function UserManagement() {
   const getRoleBadge = (role) => {
     const styles = {
       ADMIN: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20',
-<<<<<<< HEAD
-      COACH: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
       SCOUT: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20',
       ORGANIZER: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
-=======
-      SCOUT: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
-      ORGANIZER: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20',
->>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
       PLAYER: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20'
     };
     return (
@@ -91,7 +84,7 @@ export default function UserManagement() {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
           <input 
             type="text" 
-            placeholder="Search by username or email..." 
+            placeholder="Search by username..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -106,7 +99,6 @@ export default function UserManagement() {
           >
             <option value="ALL">All Roles</option>
             <option value="PLAYER">Players</option>
-            <option value="COACH">Coaches</option>
             <option value="SCOUT">Scouts</option>
             <option value="ORGANIZER">Organizers</option>
             <option value="ADMIN">Admins</option>
@@ -139,7 +131,6 @@ export default function UserManagement() {
                         </div>
                         <div className="ml-3">
                           <div className="font-bold text-slate-900 dark:text-white">{user.username}</div>
-                          <div className="text-xs text-slate-400">{user.email}</div>
                         </div>
                       </div>
                     </td>
@@ -166,7 +157,6 @@ export default function UserManagement() {
                           className="text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-lg py-1 px-2 focus:ring-blue-500"
                         >
                           <option value="PLAYER">Player</option>
-                          <option value="COACH">Coach</option>
                           <option value="SCOUT">Scout</option>
                           <option value="ORGANIZER">Organizer</option>
                           <option value="ADMIN">Admin</option>

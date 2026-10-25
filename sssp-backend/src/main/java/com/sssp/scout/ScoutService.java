@@ -1,11 +1,13 @@
 package com.sssp.scout;
 
-import com.sssp.alert.ScoutAlert;
-
 import com.sssp.user.User;
 import com.sssp.user.UserRepository;
+import com.sssp.user.ScoutProfile;
+import com.sssp.user.ScoutProfileRepository;
 import com.sssp.common.enums.AlertTriggerType;
 import com.sssp.common.enums.ProfileVisibility;
+import com.sssp.common.enums.UserRole;
+import com.sssp.common.exception.BadRequestException;
 import com.sssp.common.exception.ResourceNotFoundException;
 import com.sssp.common.exception.UnauthorizedException;
 import com.sssp.gpi.GPIRecord;
@@ -27,8 +29,10 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -44,11 +48,23 @@ public class ScoutService {
     private final ScoutNoteRepository scoutNoteRepository;
     private final ScoutObservationRepository scoutObservationRepository;
     private final ScoutFilterRepository scoutFilterRepository;
-    private final ScoutAlertRepository scoutAlertRepository;
     private final MatchRepository matchRepository;
     private final PlayerMatchStatisticsRepository playerMatchStatisticsRepository;
+    private final ScoutProfileRepository scoutProfileRepository;
+    private final ScoutContactRequestRepository scoutContactRequestRepository;
 
-    public ScoutService(UserRepository userRepository, PlayerProfileRepository playerProfileRepository, GPIRecordRepository gpiRecordRepository, RankingRecordRepository rankingRecordRepository, ScoutShortlistRepository scoutShortlistRepository, ScoutNoteRepository scoutNoteRepository, ScoutObservationRepository scoutObservationRepository, ScoutFilterRepository scoutFilterRepository, ScoutAlertRepository scoutAlertRepository, MatchRepository matchRepository, PlayerMatchStatisticsRepository playerMatchStatisticsRepository) {
+    public ScoutService(UserRepository userRepository,
+                        PlayerProfileRepository playerProfileRepository,
+                        GPIRecordRepository gpiRecordRepository,
+                        RankingRecordRepository rankingRecordRepository,
+                        ScoutShortlistRepository scoutShortlistRepository,
+                        ScoutNoteRepository scoutNoteRepository,
+                        ScoutObservationRepository scoutObservationRepository,
+                        ScoutFilterRepository scoutFilterRepository,
+                        MatchRepository matchRepository,
+                        PlayerMatchStatisticsRepository playerMatchStatisticsRepository,
+                        ScoutProfileRepository scoutProfileRepository,
+                        ScoutContactRequestRepository scoutContactRequestRepository) {
         this.userRepository = userRepository;
         this.playerProfileRepository = playerProfileRepository;
         this.gpiRecordRepository = gpiRecordRepository;
@@ -57,9 +73,10 @@ public class ScoutService {
         this.scoutNoteRepository = scoutNoteRepository;
         this.scoutObservationRepository = scoutObservationRepository;
         this.scoutFilterRepository = scoutFilterRepository;
-        this.scoutAlertRepository = scoutAlertRepository;
         this.matchRepository = matchRepository;
         this.playerMatchStatisticsRepository = playerMatchStatisticsRepository;
+        this.scoutProfileRepository = scoutProfileRepository;
+        this.scoutContactRequestRepository = scoutContactRequestRepository;
     }
 
     public List<PlayerSearchResponse> searchPlayers(PlayerSearchRequest request) {
@@ -80,12 +97,20 @@ public class ScoutService {
         if (request.getPosition() != null && !request.getPosition().isEmpty()) {
             String[] posTokens = request.getPosition().split(",");
             profiles = profiles.stream().filter(p -> {
+                String playerPos = p.getPrimaryPosition() != null ? p.getPrimaryPosition().trim() : "";
                 for (String pos : posTokens) {
                     String clean = pos.trim();
-                    if (clean.equalsIgnoreCase(p.getPrimaryPosition()) || 
-                       (p.getPositionCategory() != null && clean.equalsIgnoreCase(p.getPositionCategory().name()))) {
-                        return true;
-                    }
+                    if (clean.equalsIgnoreCase(playerPos)) return true;
+                    if (p.getPositionCategory() != null && clean.equalsIgnoreCase(p.getPositionCategory().name())) return true;
+                    // Tactical role alias equivalence: DM <-> CDM, AM <-> CAM, ST <-> CF
+                    if ("DM".equalsIgnoreCase(clean) && "CDM".equalsIgnoreCase(playerPos)) return true;
+                    if ("CDM".equalsIgnoreCase(clean) && "DM".equalsIgnoreCase(playerPos)) return true;
+                    if ("AM".equalsIgnoreCase(clean) && "CAM".equalsIgnoreCase(playerPos)) return true;
+                    if ("CAM".equalsIgnoreCase(clean) && "AM".equalsIgnoreCase(playerPos)) return true;
+                    if ("ST".equalsIgnoreCase(clean) && "CF".equalsIgnoreCase(playerPos)) return true;
+                    if ("CF".equalsIgnoreCase(clean) && "ST".equalsIgnoreCase(playerPos)) return true;
+                    // Midfield wide equivalences if queried as MID
+                    if ("MID".equalsIgnoreCase(clean) && ("LM".equalsIgnoreCase(playerPos) || "RM".equalsIgnoreCase(playerPos) || "CM".equalsIgnoreCase(playerPos) || "DM".equalsIgnoreCase(playerPos) || "AM".equalsIgnoreCase(playerPos))) return true;
                 }
                 return false;
             }).collect(Collectors.toList());
@@ -106,11 +131,25 @@ public class ScoutService {
                 return true;
             }).collect(Collectors.toList());
         }
-        if (request.getTeamAcademy() != null && !request.getTeamAcademy().isEmpty()) {
-            profiles = profiles.stream().filter(p -> p.getTeamAcademy() != null && p.getTeamAcademy().toLowerCase().contains(request.getTeamAcademy().toLowerCase())).collect(Collectors.toList());
+        String teamFilter = request.getTeam() != null && !request.getTeam().isEmpty()
+                ? request.getTeam() : request.getTeamAcademy();
+        if (teamFilter != null && !teamFilter.isEmpty()) {
+            profiles = profiles.stream().filter(p -> p.getTeamAcademy() != null && p.getTeamAcademy().toLowerCase().contains(teamFilter.toLowerCase())).collect(Collectors.toList());
         }
 
         // Players that have a GPI record; players without one are excluded by any GPI / match-count filter.
+        // Optimization: Batch fetch latest GPI records for all candidates in one round-trip (O(M) lookup, eliminating N+1 queries).
+        List<Long> playerIds = profiles.stream().map(p -> p.getUser().getId()).collect(Collectors.toList());
+        Map<Long, GPIRecord> latestGpiMap = new HashMap<>();
+        if (!playerIds.isEmpty()) {
+            List<GPIRecord> batchRecords = gpiRecordRepository.findLatestByPlayerIds(playerIds);
+            for (GPIRecord rec : batchRecords) {
+                if (rec.getPlayer() != null) {
+                    latestGpiMap.put(rec.getPlayer().getId(), rec);
+                }
+            }
+        }
+
         Set<Long> playersWithGpi = new HashSet<>();
         List<PlayerSearchResponse> responses = new ArrayList<>();
         for (PlayerProfile p : profiles) {
@@ -130,31 +169,37 @@ public class ScoutService {
             res.setPhotoUrl(p.getPhotoUrl());
             res.setAge(p.getDateOfBirth() != null ? Period.between(p.getDateOfBirth(), LocalDate.now()).getYears() : 0);
 
-            GPIRecord gpi = gpiRecordRepository.findTopByPlayerIdOrderByComputedAtDesc(playerId).orElse(null);
-            if (gpi != null) {
-                playersWithGpi.add(playerId);
-                res.setGpi(gpi.getGpi());
-                res.setVerifiedMatches(gpi.getMatchesConsidered());
-                res.setDataConfidence(gpi.getDataConfidence() != null ? gpi.getDataConfidence().name() : null);
-                res.setRecentForm(gpi.getRecentForm());
-                res.setRankingEligible(gpi.isRankingEligible());
-            }
+            GPIRecord gpi = latestGpiMap.get(playerId);
+            double effectiveGpi = gpi != null ? gpi.getGpi() : (p.getCurrentGpi() != null ? p.getCurrentGpi() : (double) p.getOverallRating());
+            int matches = gpi != null ? gpi.getMatchesConsidered() : p.getCompetitiveMatches();
+            String confidence = gpi != null && gpi.getDataConfidence() != null ? gpi.getDataConfidence().name() : (matches < 2 ? "LOW" : (matches < 5 ? "MEDIUM" : "HIGH"));
+            double form = gpi != null ? gpi.getRecentForm() : 75.0;
+            boolean eligible = gpi != null ? gpi.isRankingEligible() : p.isGpiEligible();
+
+            res.setGpi(effectiveGpi);
+            res.setVerifiedMatches(matches);
+            res.setDataConfidence(confidence);
+            res.setRecentForm(form);
+            res.setRankingEligible(eligible);
+            playersWithGpi.add(playerId);
             responses.add(res);
         }
 
-        if (request.getMinGpi() != null) responses = responses.stream().filter(r -> playersWithGpi.contains(r.getPlayerId()) && r.getGpi() >= request.getMinGpi()).collect(Collectors.toList());
-        if (request.getMaxGpi() != null) responses = responses.stream().filter(r -> playersWithGpi.contains(r.getPlayerId()) && r.getGpi() <= request.getMaxGpi()).collect(Collectors.toList());
-        if (request.getMinMatches() != null) responses = responses.stream().filter(r -> playersWithGpi.contains(r.getPlayerId()) && r.getVerifiedMatches() >= request.getMinMatches()).collect(Collectors.toList());
+        if (request.getMinGpi() != null) responses = responses.stream().filter(r -> r.getGpi() >= request.getMinGpi()).collect(Collectors.toList());
+        if (request.getMaxGpi() != null) responses = responses.stream().filter(r -> r.getGpi() <= request.getMaxGpi()).collect(Collectors.toList());
+        if (request.getMinMatches() != null) responses = responses.stream().filter(r -> r.getVerifiedMatches() >= request.getMinMatches()).collect(Collectors.toList());
         if (request.getDataConfidence() != null && !request.getDataConfidence().isEmpty()) responses = responses.stream().filter(r -> request.getDataConfidence().equalsIgnoreCase(r.getDataConfidence())).collect(Collectors.toList());
 
         String sortBy = request.getSortBy() != null ? request.getSortBy() : "gpi";
         boolean asc = "asc".equalsIgnoreCase(request.getSortDir());
 
         Comparator<PlayerSearchResponse> comp;
-        switch (sortBy) {
-            case "recentForm": comp = Comparator.comparingDouble(PlayerSearchResponse::getRecentForm); break;
-            case "matches": comp = Comparator.comparingInt(PlayerSearchResponse::getVerifiedMatches); break;
-            default: comp = Comparator.comparingDouble(PlayerSearchResponse::getGpi); break;
+        if ("recent_form".equalsIgnoreCase(sortBy) || "recentForm".equalsIgnoreCase(sortBy)) {
+            comp = Comparator.comparingDouble(PlayerSearchResponse::getRecentForm);
+        } else if ("matches_played".equalsIgnoreCase(sortBy) || "matches".equalsIgnoreCase(sortBy)) {
+            comp = Comparator.comparingInt(PlayerSearchResponse::getVerifiedMatches);
+        } else {
+            comp = Comparator.comparingDouble(PlayerSearchResponse::getGpi);
         }
         if(!asc) comp = comp.reversed();
         responses.sort(comp);
@@ -205,6 +250,12 @@ public class ScoutService {
         note.setPlayer(player);
         note.setNote(request.getNote());
         note.setNotedAt(LocalDateTime.now());
+
+        // Also update the note on the scout's shortlist entry if present
+        scoutShortlistRepository.findByScoutIdAndPlayerId(scout.getId(), playerId).ifPresent(sl -> {
+            sl.setNote(request.getNote());
+            scoutShortlistRepository.save(sl);
+        });
         
         return mapToScoutNoteResponse(scoutNoteRepository.save(note));
     }
@@ -266,23 +317,6 @@ public class ScoutService {
         scoutFilterRepository.delete(filter);
     }
 
-    public List<ScoutAlertResponse> getAlerts(String username) {
-        User scout = userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Scout not found"));
-        return scoutAlertRepository.findByScoutIdOrderByAlertCreatedAtDesc(scout.getId()).stream().map(this::mapToScoutAlertResponse).collect(Collectors.toList());
-    }
-
-    public void markAlertRead(Long alertId, String username) {
-        User scout = userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Scout not found"));
-        ScoutAlert alert = scoutAlertRepository.findById(alertId).orElseThrow(() -> new ResourceNotFoundException("Alert not found"));
-        if (!alert.getScout().getId().equals(scout.getId())) throw new UnauthorizedException("Not owner");
-        alert.setRead(true);
-        scoutAlertRepository.save(alert);
-    }
-
-    public void createAlertForPlayer(Long playerId, AlertTriggerType reason) {
-        // MVP logic: just create an alert for all scouts if it matches basic
-    }
-
     private String displayName(User user) {
         return playerProfileRepository.findByUserId(user.getId())
                 .map(PlayerProfile::getFullName)
@@ -341,19 +375,166 @@ public class ScoutService {
         return r;
     }
 
-    private ScoutAlertResponse mapToScoutAlertResponse(ScoutAlert a) {
-        ScoutAlertResponse r = new ScoutAlertResponse();
-        r.setId(a.getId());
-        r.setScoutId(a.getScout().getId());
-        if (a.getFilter() != null) {
-            r.setFilterId(a.getFilter().getId());
-            r.setFilterName(a.getFilter().getName());
+    // ==========================================
+    // Scout Profile & Contact Number Management
+    // ==========================================
+    public ScoutProfileDto getScoutProfile(String username) {
+        User scout = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Scout user not found: " + username));
+        ScoutProfile profile = scoutProfileRepository.findByUserId(scout.getId())
+                .orElseGet(() -> scoutProfileRepository.save(
+                        ScoutProfile.builder()
+                                .user(scout)
+                                .organization("Independent Scout")
+                                .affiliation("Pro Scouting Network")
+                                .build()
+                ));
+        return mapToScoutProfileDto(profile, scout);
+    }
+
+    public ScoutProfileDto updateScoutProfile(String username, ScoutProfileUpdateRequest request) {
+        User scout = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Scout user not found: " + username));
+        ScoutProfile profile = scoutProfileRepository.findByUserId(scout.getId())
+                .orElseGet(() -> ScoutProfile.builder().user(scout).build());
+
+        if (request.getOrganization() != null && !request.getOrganization().isBlank()) {
+            profile.setOrganization(request.getOrganization().trim());
         }
-        r.setPlayerId(a.getPlayer().getId());
-        r.setPlayerName(displayName(a.getPlayer()));
-        r.setTriggerReason(a.getTriggerReason());
-        r.setAlertCreatedAt(a.getAlertCreatedAt());
-        r.setRead(a.isRead());
-        return r;
+        if (request.getAffiliation() != null && !request.getAffiliation().isBlank()) {
+            profile.setAffiliation(request.getAffiliation().trim());
+        }
+        if (request.getPhoneNumber() != null) {
+            String trimmed = request.getPhoneNumber().trim();
+            if (!trimmed.isEmpty()) {
+                validatePhoneNumber(trimmed);
+                profile.setPhoneNumber(trimmed);
+            } else {
+                profile.setPhoneNumber(null);
+            }
+        }
+
+        return mapToScoutProfileDto(scoutProfileRepository.save(profile), scout);
+    }
+
+    // ==========================================
+    // Scout Contact Requests (Send & View)
+    // ==========================================
+    public ContactRequestResponse sendContactRequest(Long playerId, ContactRequestCreateRequest request, String scoutUsername) {
+        User scout = userRepository.findByUsername(scoutUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Scout not found"));
+        if (scout.getRole() != UserRole.SCOUT) {
+            throw new UnauthorizedException("Only scouts can send contact requests");
+        }
+
+        ScoutProfile scoutProfile = scoutProfileRepository.findByUserId(scout.getId())
+                .orElseGet(() -> scoutProfileRepository.save(
+                        ScoutProfile.builder()
+                                .user(scout)
+                                .organization("Independent Scout")
+                                .affiliation("Pro Scouting Network")
+                                .build()
+                ));
+
+        String phone = scoutProfile.getPhoneNumber();
+        if (phone == null || phone.isBlank()) {
+            throw new BadRequestException("You must save a valid mobile contact number in your scout profile before sending contact requests to players");
+        }
+
+        User player = userRepository.findById(playerId)
+                .or(() -> playerProfileRepository.findById(playerId).map(PlayerProfile::getUser))
+                .orElseThrow(() -> new ResourceNotFoundException("Player not found with ID: " + playerId));
+        if (player.getRole() != UserRole.PLAYER) {
+            throw new BadRequestException("Target user is not a player");
+        }
+
+        String message = request != null && request.getMessage() != null ? request.getMessage().trim() : "";
+        if (message.isEmpty()) {
+            throw new BadRequestException("Please include a brief message explaining your scouting interest");
+        }
+        if (message.length() > 1000) {
+            throw new BadRequestException("Message cannot exceed 1000 characters");
+        }
+
+        // Prevent accidental duplicate pending requests from same scout to same player
+        if (scoutContactRequestRepository.existsByScoutIdAndPlayerIdAndStatus(scout.getId(), player.getId(), ContactRequestStatus.PENDING)) {
+            throw new BadRequestException("You already have an active pending contact request sent to this player");
+        }
+
+        String scoutFullName = request != null && request.getScoutName() != null && !request.getScoutName().isBlank()
+                ? request.getScoutName().trim()
+                : scout.getUsername();
+
+        ScoutContactRequest entity = ScoutContactRequest.builder()
+                .scout(scout)
+                .player(player)
+                .message(message)
+                .scoutContactNumber(phone)
+                .scoutOrganization(scoutProfile.getOrganization() != null ? scoutProfile.getOrganization() : "Independent Scouting")
+                .scoutName(scoutFullName)
+                .status(ContactRequestStatus.PENDING)
+                .build();
+
+        return mapToContactRequestResponse(scoutContactRequestRepository.save(entity));
+    }
+
+    public List<ContactRequestResponse> getPlayerIncomingContactRequests(String playerUsername) {
+        User player = userRepository.findByUsername(playerUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Player user not found"));
+        if (player.getRole() != UserRole.PLAYER) {
+            throw new UnauthorizedException("Only players can access incoming scouting requests");
+        }
+        return scoutContactRequestRepository.findByPlayerIdOrderByCreatedAtDesc(player.getId()).stream()
+                .map(this::mapToContactRequestResponse)
+                .collect(Collectors.toList());
+    }
+
+    public ContactRequestResponse updateContactRequestStatus(Long requestId, ContactRequestStatus status, String playerUsername) {
+        User player = userRepository.findByUsername(playerUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Player user not found"));
+        ScoutContactRequest req = scoutContactRequestRepository.findByIdAndPlayerId(requestId, player.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Scouting request not found or does not belong to you"));
+
+        req.setStatus(status);
+        return mapToContactRequestResponse(scoutContactRequestRepository.save(req));
+    }
+
+    private void validatePhoneNumber(String number) {
+        // Support common formats: +1234567890, +91 9876543210, 0987654321, 98765-43210, etc. (min 7 digits, max 20)
+        String digitsOnly = number.replaceAll("[^0-9]", "");
+        if (digitsOnly.length() < 7 || digitsOnly.length() > 15) {
+            throw new BadRequestException("Please enter a valid phone/mobile number (between 7 and 15 digits)");
+        }
+        if (!number.matches("^[+]?[0-9\\s\\-\\(\\)]{7,25}$")) {
+            throw new BadRequestException("Phone number format is invalid");
+        }
+    }
+
+    private ScoutProfileDto mapToScoutProfileDto(ScoutProfile profile, User user) {
+        return ScoutProfileDto.builder()
+                .id(profile.getId())
+                .userId(user.getId())
+                .username(user.getUsername())
+                .organization(profile.getOrganization())
+                .affiliation(profile.getAffiliation())
+                .phoneNumber(profile.getPhoneNumber())
+                .verified(profile.isVerified())
+                .build();
+    }
+
+    private ContactRequestResponse mapToContactRequestResponse(ScoutContactRequest r) {
+        return ContactRequestResponse.builder()
+                .id(r.getId())
+                .scoutId(r.getScout().getId())
+                .scoutName(r.getScoutName() != null ? r.getScoutName() : r.getScout().getUsername())
+                .scoutUsername(r.getScout().getUsername())
+                .scoutOrganization(r.getScoutOrganization())
+                .scoutContactNumber(r.getScoutContactNumber())
+                .playerId(r.getPlayer().getId())
+                .playerName(displayName(r.getPlayer()))
+                .message(r.getMessage())
+                .status(r.getStatus())
+                .createdAt(r.getCreatedAt())
+                .build();
     }
 }

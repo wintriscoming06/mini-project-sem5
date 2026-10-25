@@ -18,6 +18,5 @@ public interface MatchStatsInput {
     int getYellowCards();
     int getRedCards();
     String getPosition();
-    String getMatchKind();
     Integer getStars();
 }

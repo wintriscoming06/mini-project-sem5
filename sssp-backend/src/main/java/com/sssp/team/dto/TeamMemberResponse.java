@@ -15,5 +15,6 @@ public class TeamMemberResponse {
     private Long teamId;
     private Long playerId;
     private String playerName;
+    private String name;
     private LocalDateTime joinedAt;
 }

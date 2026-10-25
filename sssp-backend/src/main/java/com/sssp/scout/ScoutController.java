@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/scouts")
-@PreAuthorize("hasRole('SCOUT') or hasRole('COACH')")
+@PreAuthorize("hasRole('SCOUT')")
 public class ScoutController {
 
     private final ScoutService scoutService;
@@ -33,8 +33,11 @@ public class ScoutController {
 
     @PostMapping("/players/{playerId}/shortlist")
     public ShortlistResponse addToShortlist(@PathVariable Long playerId,
-                                            @RequestBody ShortlistRequest request,
+                                            @RequestBody(required = false) ShortlistRequest request,
                                             @AuthenticationPrincipal UserDetails userDetails) {
+        if (request == null) {
+            request = new ShortlistRequest();
+        }
         return scoutService.addToShortlist(playerId, request, userDetails.getUsername());
     }
 
@@ -91,14 +94,21 @@ public class ScoutController {
         scoutService.deleteFilter(filterId, userDetails.getUsername());
     }
 
-    @GetMapping("/alerts")
-    public List<ScoutAlertResponse> getAlerts(@AuthenticationPrincipal UserDetails userDetails) {
-        return scoutService.getAlerts(userDetails.getUsername());
+    @GetMapping("/profile")
+    public ScoutProfileDto getMyScoutProfile(@AuthenticationPrincipal UserDetails userDetails) {
+        return scoutService.getScoutProfile(userDetails.getUsername());
     }
 
-    @PatchMapping("/alerts/{alertId}/read")
-    public void markAlertRead(@PathVariable Long alertId,
-                              @AuthenticationPrincipal UserDetails userDetails) {
-        scoutService.markAlertRead(alertId, userDetails.getUsername());
+    @PutMapping("/profile")
+    public ScoutProfileDto updateMyScoutProfile(@RequestBody ScoutProfileUpdateRequest request,
+                                                @AuthenticationPrincipal UserDetails userDetails) {
+        return scoutService.updateScoutProfile(userDetails.getUsername(), request);
+    }
+
+    @PostMapping("/players/{playerId}/contact-request")
+    public ContactRequestResponse sendContactRequest(@PathVariable Long playerId,
+                                                     @RequestBody ContactRequestCreateRequest request,
+                                                     @AuthenticationPrincipal UserDetails userDetails) {
+        return scoutService.sendContactRequest(playerId, request, userDetails.getUsername());
     }
 }

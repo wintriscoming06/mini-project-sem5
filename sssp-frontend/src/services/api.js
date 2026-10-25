@@ -53,6 +53,7 @@ export const authService = {
 const playerPath = (id) => (!id || id === 'undefined' || id === 'null' ? '/players/me' : `/players/${id}`);
 
 export const playerService = {
+  getAll: (params) => api.get('/players', { params }),
   getProfile: (id) => api.get(playerPath(id)),
   updateProfile: (data, id) => api.put(playerPath(id), data),
   updateCard: (data, id) => api.put(`${playerPath(id)}/card`, data),
@@ -64,22 +65,38 @@ export const playerService = {
   getMatches: (id) => api.get(`${playerPath(id)}/matches`),
   logMatch: (data, id) => id ? api.post(`/matches/player/${id}`, data) : api.post('/matches', data),
   deleteMatch: (matchId) => api.delete(`/matches/${matchId}`),
+  getScoutingRequests: () => api.get('/players/me/scouting-requests'),
+  updateScoutingRequestStatus: (requestId, status) => api.patch(`/players/me/scouting-requests/${requestId}/status`, null, { params: { status } }),
 };
 
 export const tournamentService = {
   getAll: () => api.get('/tournaments'),
+  getMyTournaments: () => api.get('/tournaments/my'),
   getById: (id) => api.get(`/tournaments/${id}`),
   create: (data) => api.post('/tournaments', data),
   update: (id, data) => api.put(`/tournaments/${id}`, data),
   updateStatus: (id, status) => api.patch(`/tournaments/${id}/status`, { status }),
-  getApplications: (id) => api.get(`/tournaments/${id}/applications`),
-  apply: (id) => api.post(`/tournaments/${id}/applications`),
-  getMyApplications: () => api.get('/tournaments/my-applications'),
-  decideApplication: (appId, decision) => api.patch(`/applications/${appId}`, { decision }),
+  delete: (id) => api.delete(`/tournaments/${id}`),
+  
+  // Teams & Squads
   getTeams: (tournamentId) => api.get(`/tournaments/${tournamentId}/teams`),
-  createTeam: (data) => api.post('/teams', data),
-  addTeamMember: (teamId, data) => api.post(`/teams/${teamId}/members`, data),
-  removeTeamMember: (teamId, playerId) => api.delete(`/teams/${teamId}/members/${playerId}`)
+  createTeam: (tournamentId, data) => api.post(`/tournaments/${tournamentId}/teams`, data),
+  addTeamMember: (tournamentId, teamId, playerId) => api.post(`/teams/${teamId}/members`, { playerId }),
+  removeTeamMember: (teamId, playerId) => api.delete(`/teams/${teamId}/members/${playerId}`),
+
+  // Matches & Lineups within Tournament
+  getTournamentMatches: (tournamentId) => api.get(`/tournaments/${tournamentId}/matches`),
+  createTournamentMatch: (tournamentId, data) => api.post(`/tournaments/${tournamentId}/matches`, data),
+  updateMatchScore: (tournamentId, matchId, data) => api.put(`/tournaments/${tournamentId}/matches/${matchId}/score`, data),
+  certifyMatch: (tournamentId, matchId) => api.post(`/tournaments/${tournamentId}/matches/${matchId}/certify`),
+
+  // Player Stats feed (GPI Input)
+  getTournamentStats: (tournamentId) => api.get(`/tournaments/${tournamentId}/stats`),
+  savePlayerStats: (tournamentId, data) => api.post(`/tournaments/${tournamentId}/stats`, data),
+  deletePlayerStats: (tournamentId, statsId) => api.delete(`/tournaments/${tournamentId}/stats/${statsId}`),
+
+  // Player Search for Organizers
+  searchPlayers: (query) => api.get('/organizer/players/search', { params: { query } })
 };
 
 export const matchService = {
@@ -99,10 +116,8 @@ export const matchService = {
 export const scoutService = {
   searchPlayers: (params) => api.get('/scouts/players/search', { params }),
   getShortlist: () => api.get('/scouts/shortlist'),
-  addToShortlist: (playerId, data) => api.post(`/scouts/players/${playerId}/shortlist`, data),
+  addToShortlist: (playerId, data = {}) => api.post(`/scouts/players/${playerId}/shortlist`, data),
   removeFromShortlist: (playerId) => api.delete(`/scouts/players/${playerId}/shortlist`),
-  getAlerts: () => api.get('/scouts/alerts'),
-  markAlertRead: (id) => api.patch(`/scouts/alerts/${id}/read`),
   saveFilter: (data) => api.post('/scouts/filters', data),
   getFilters: () => api.get('/scouts/filters'),
   deleteFilter: (id) => api.delete(`/scouts/filters/${id}`),
@@ -110,7 +125,10 @@ export const scoutService = {
   getObservations: (playerId) => api.get(`/scouts/players/${playerId}/observations`),
   getMyObservations: () => api.get("/scouts/observations/my"),
   addNote: (playerId, data) => api.post(`/scouts/players/${playerId}/notes`, data),
-  getNotes: (playerId) => api.get(`/scouts/players/${playerId}/notes`)
+  getNotes: (playerId) => api.get(`/scouts/players/${playerId}/notes`),
+  getProfile: () => api.get('/scouts/profile'),
+  updateProfile: (data) => api.put('/scouts/profile', data),
+  sendContactRequest: (playerId, data) => api.post(`/scouts/players/${playerId}/contact-request`, data),
 };
 
 export const adminService = {

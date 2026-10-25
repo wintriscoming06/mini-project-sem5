@@ -4,14 +4,14 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { 
   Sun, Moon, LogOut, Menu, X, ChevronDown, User,
-  LayoutDashboard, Search, Trophy, Shield, GitCompare,
-  BarChart2, Users, FilePlus, Calendar
+  LayoutDashboard, Search, Trophy, Shield,
+  BarChart2, Users, FilePlus, Mail
 } from 'lucide-react';
 import { FootballIcon, ClassicSoccerBall } from '../common/FootballIcons';
 
 const Navbar = () => {
   const { user, logout, hasRole } = useAuth();
-  const { theme, toggleTheme, isDark } = useTheme();
+  const { toggleTheme, isDark } = useTheme();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -27,28 +27,24 @@ const Navbar = () => {
       return [
         { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
         { path: '/tournaments', label: 'Tournaments', icon: Trophy },
-        { path: '/my-applications', label: 'Applications', icon: Users },
         { path: '/player/stats', label: 'Match Stats', icon: BarChart2 },
+        { path: '/player/requests', label: 'Scouting Requests', icon: Mail },
         { path: '/player/card-studio', label: 'Card Studio', icon: FootballIcon },
-        { path: '/profile', label: 'GPI Profile', icon: User }
+        { path: '/profile', label: 'Profile', icon: User }
       ];
     }
     if (hasRole('ORGANIZER')) {
       return [
         { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-        { path: '/my-tournaments', label: 'Tournaments', icon: Trophy },
-        { path: '/tournaments/create', label: 'New Tournament', icon: FilePlus },
-        { path: '/matches', label: 'Matches & Scoring', icon: Calendar }
+        { path: '/my-tournaments', label: 'Tournaments', icon: Trophy }
       ];
     }
-    if (hasRole('SCOUT') || hasRole('COACH')) {
+    if (hasRole('SCOUT')) {
       return [
         { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-        { path: '/search', label: hasRole('COACH') ? 'Player Scouting' : 'Player Search', icon: Search },
-        { path: '/compare', label: 'Comparison', icon: GitCompare },
+        { path: '/search', label: 'Player Search', icon: Search },
         { path: '/shortlist', label: 'Shortlist', icon: Users },
-        { path: '/alerts', label: 'Alerts', icon: Shield },
-        { path: '/profile', label: hasRole('COACH') ? 'Coach Dossier' : 'Scout Dossier', icon: User }
+        { path: '/profile', label: 'Scout Dossier', icon: User }
       ];
     }
     if (hasRole('ADMIN')) {
@@ -69,11 +65,6 @@ const Navbar = () => {
     switch (role) {
       case 'PLAYER':
         return 'bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30';
-<<<<<<< HEAD
-      case 'COACH':
-        return 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30';
-=======
->>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
       case 'SCOUT':
         return 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border-cyan-500/30';
       case 'ORGANIZER':
@@ -178,13 +169,13 @@ const Navbar = () => {
                         <p className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">{user.username}</p>
                       </div>
 
-                      {(hasRole('PLAYER') || hasRole('SCOUT') || hasRole('COACH')) && (
+                      {(hasRole('PLAYER') || hasRole('SCOUT')) && (
                         <Link 
                           to="/profile" 
                           onClick={() => setDropdownOpen(false)}
                           className="flex items-center px-4 py-2 text-sm hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors"
                         >
-                          <User className="w-4 h-4 mr-2.5 text-slate-400" /> {hasRole('COACH') ? 'Coach Dossier' : hasRole('SCOUT') ? 'Scout Dossier' : 'My Profile'}
+                          <User className="w-4 h-4 mr-2.5 text-slate-400" /> {hasRole('SCOUT') ? 'Scout Dossier' : 'My Profile'}
                         </Link>
                       )}
 

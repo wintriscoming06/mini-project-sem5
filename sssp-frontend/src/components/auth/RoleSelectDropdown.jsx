@@ -8,12 +8,6 @@ const ROLE_OPTIONS = [
     subtitle: 'Verified GPI player card, match analytics & tournament entry',
   },
   {
-    value: 'COACH',
-    label: 'Coach',
-    icon: '📋',
-    subtitle: 'Tactical boards, squad management, formations & match strategy',
-  },
-  {
     value: 'SCOUT',
     label: 'Scout',
     icon: '🔎',
@@ -106,11 +100,11 @@ export default function RoleSelectDropdown({
       {/* Hidden native input for form compatibility */}
       <input type="hidden" name={name} value={value} />
 
-      {/* Animated Dropdown Menu */}
+      {/* Animated Dropdown Menu (flows in-document so it naturally pushes buttons/links below without overlapping) */}
       {isOpen && (
         <div
           role="listbox"
-          className="absolute z-[100] left-0 right-0 mt-1.5 p-1 rounded-xl bg-slate-900 border border-slate-700 shadow-2xl transition-all duration-200"
+          className="relative z-20 mt-2 p-1.5 rounded-xl bg-slate-900 border border-slate-700 shadow-xl transition-all duration-200 space-y-1"
         >
           {ROLE_OPTIONS.map((opt) => {
             const isSelected = opt.value === value;

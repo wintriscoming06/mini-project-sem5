@@ -80,8 +80,7 @@ public class GPIService {
 
         List<PlayerMatchStatistics> allMatches = playerMatchStatisticsRepository.findByPlayerId(playerId);
         List<PlayerMatchStatistics> competitiveMatches = allMatches.stream()
-                .filter(m -> "OFFICIAL".equalsIgnoreCase(m.getMatchKind())
-                        || (m.getMatch() != null && m.getMatch().getStatus() == MatchStatus.COMPLETED))
+                .filter(m -> m.getMatch() != null ? m.getMatch().getStatus() == MatchStatus.COMPLETED : true)
                 .collect(Collectors.toList());
 
         int competitiveCount = competitiveMatches.size();
@@ -149,8 +148,7 @@ public class GPIService {
         List<PlayerMatchStatistics> allMatches = playerMatchStatisticsRepository.findByPlayerId(playerId);
         int totalMatches = allMatches.size();
         int competitiveCount = (int) allMatches.stream()
-                .filter(m -> "OFFICIAL".equalsIgnoreCase(m.getMatchKind())
-                        || (m.getMatch() != null && m.getMatch().getStatus() == MatchStatus.COMPLETED))
+                .filter(m -> m.getMatch() != null ? m.getMatch().getStatus() == MatchStatus.COMPLETED : true)
                 .count();
 
         boolean eligible = competitiveCount >= GPIPositionWeights.MIN_COMPETITIVE_MATCHES;

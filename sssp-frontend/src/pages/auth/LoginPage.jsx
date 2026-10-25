@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
+import { User, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { getErrorMessage } from '../../services/api';
 import { Alert, ClassicSoccerBall } from '../../components/common';
@@ -12,11 +12,7 @@ const ROLE_THEMES = {
     icon: '⚽',
     tunnelLabel: 'ATHLETE PERFORMANCE DOSSIER',
     subheading: 'Access verified match statistics, rankings & scouting cards',
-<<<<<<< HEAD
     actionText: 'Sign In / Player Portal',
-=======
-    actionText: 'Sign In / Access Dossier',
->>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
     loadingText: 'Authenticating Athlete...',
     cardBorder: 'border-blue-500/30',
     cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
@@ -27,31 +23,10 @@ const ROLE_THEMES = {
     roleTag: 'bg-blue-800/40 text-blue-200 border-blue-500/30',
     inputRing: 'focus:ring-blue-500 focus:border-blue-500',
     focusGlow: 'shadow-blue-500/10',
-<<<<<<< HEAD
-  },
-  COACH: {
-    name: 'Coach',
-    icon: '📋',
-    tunnelLabel: 'TACTICAL MASTER & SQUAD COMMAND',
-    subheading: 'Access squad management, tactical boards & formation strategies',
-    actionText: 'Sign In / Coach Portal',
-    loadingText: 'Authenticating Coach Credentials...',
-    cardBorder: 'border-emerald-500/30',
-    cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
-    topTrim: 'bg-gradient-to-r from-emerald-500 via-teal-400 to-green-500',
-    buttonGrad: 'bg-emerald-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-500/30 text-white font-bold',
-    accentColor: 'text-emerald-400',
-    badgeBg: 'bg-emerald-900/60 border-emerald-400/40 text-emerald-300',
-    roleTag: 'bg-emerald-800/40 text-emerald-200 border-emerald-500/30',
-    inputRing: 'focus:ring-emerald-500 focus:border-emerald-500',
-    focusGlow: 'shadow-emerald-500/10',
-=======
->>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
   },
   SCOUT: {
     name: 'Scout',
     icon: '🔎',
-<<<<<<< HEAD
     tunnelLabel: 'TALENT RADAR & PROSPECT DOSSIER',
     subheading: 'Access quantitative talent analytics, radar & prospect rankings',
     actionText: 'Sign In / Scout Portal',
@@ -60,16 +35,6 @@ const ROLE_THEMES = {
     cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
     topTrim: 'bg-gradient-to-r from-cyan-500 via-sky-400 to-blue-500',
     buttonGrad: 'bg-cyan-600 hover:from-cyan-500 hover:to-sky-500 shadow-cyan-500/30 text-white font-bold',
-=======
-    tunnelLabel: 'TACTICAL RECRUITMENT DOSSIER',
-    subheading: 'Access quantitative talent analytics, scout notes & prospect rankings',
-    actionText: 'Sign In / Scout Portal',
-    loadingText: 'Consulting Tactical Board...',
-    cardBorder: 'border-cyan-500/30',
-    cardBg: 'bg-slate-900/95 dark:bg-slate-900/95',
-    topTrim: 'bg-blue-600',
-    buttonGrad: 'bg-blue-600 hover:from-cyan-500 hover:to-sky-500 shadow-cyan-500/30 text-white',
->>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
     accentColor: 'text-cyan-400',
     badgeBg: 'bg-cyan-900/60 border-cyan-400/40 text-cyan-300',
     roleTag: 'bg-cyan-800/40 text-cyan-200 border-cyan-500/30',
@@ -119,7 +84,7 @@ const LoginPage = () => {
     const animationDelay = isReduced ? 0 : 480;
 
     try {
-      const [loginRes] = await Promise.all([
+      await Promise.all([
         login({ identifier, password, role: activeRole }),
         new Promise((resolve) => setTimeout(resolve, animationDelay))
       ]);
@@ -141,13 +106,8 @@ const LoginPage = () => {
         {/* Top Trim Highlight */}
         <div className={`h-2.5 ${currentTheme.topTrim} rounded-t-3xl -mx-6 -mt-6 sm:-mx-8 sm:-mt-8 mb-4 transition-all duration-500`} />
         
-<<<<<<< HEAD
-        {/* Tactical Grid watermark for Coach / Scout */}
-        {(activeRole === 'SCOUT' || activeRole === 'COACH') && (
-=======
         {/* Tactical Grid watermark for Scout */}
         {activeRole === 'SCOUT' && (
->>>>>>> 58fdbde63dca8b2cff201ba17a55a51755f9f73d
           <div className="absolute inset-0 tactical-grid opacity-20 pointer-events-none" />
         )}
 
@@ -174,16 +134,6 @@ const LoginPage = () => {
             </div>
             {/* Target Area Goal Flare */}
             <div className="absolute top-12 right-12 w-28 h-28 rounded-full bg-blue-400/25 blur-xl animate-pulse" />
-          </div>
-        )}
-
-        {/* 2. COACH: Tactical Formation Clipboard Pulse */}
-        {motionActive === 'COACH' && (
-          <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden flex items-center justify-center bg-emerald-950/30 backdrop-blur-[2px]">
-            <div className="absolute w-32 h-32 rounded-full border-2 border-emerald-400/80 animate-ping" />
-            <div className="relative p-4 rounded-2xl bg-emerald-900/90 border border-emerald-400/70 shadow-2xl animate-bounce flex items-center justify-center">
-              <span className="text-4xl filter drop-shadow-[0_4px_12px_rgba(16,185,129,0.7)]">📋</span>
-            </div>
           </div>
         )}
 
@@ -215,7 +165,7 @@ const LoginPage = () => {
 
         {/* In-Card Role Quick Selector Pills */}
         <div className="relative z-10 flex items-center justify-between p-1 mb-5 rounded-xl bg-black/45 border border-white/10 backdrop-blur-md">
-          {['PLAYER', 'COACH', 'SCOUT', 'ORGANIZER'].map((role) => {
+          {['PLAYER', 'SCOUT', 'ORGANIZER'].map((role) => {
             const isCur = activeRole === role;
             const rConf = ROLE_THEMES[role];
             return (
@@ -258,15 +208,15 @@ const LoginPage = () => {
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
-          {/* Email or Username */}
+          {/* Username */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-200 mb-1.5 flex items-center justify-between">
-              <span>{activeRole === 'PLAYER' ? 'Player ID / Email or Username' : `${currentTheme.name} ID / Email or Username`}</span>
+              <span>{activeRole === 'PLAYER' ? 'Player Username' : `${currentTheme.name} Username`}</span>
               <span className={currentTheme.accentColor}>*</span>
             </label>
             <div className="relative">
               <div className={`absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none ${currentTheme.accentColor}`}>
-                <Mail className="w-4 h-4" />
+                <User className="w-4 h-4" />
               </div>
               <input
                 type="text"
@@ -274,12 +224,10 @@ const LoginPage = () => {
                 onChange={(e) => setIdentifier(e.target.value)}
                 placeholder={
                   activeRole === 'PLAYER' 
-                    ? 'e.g. cr7@sssp.org or player username' 
-                    : activeRole === 'COACH'
-                    ? 'e.g. coach@sssp.org or coach username'
+                    ? 'Enter your player username' 
                     : activeRole === 'SCOUT' 
-                    ? 'e.g. scout@sssp.org or scout username' 
-                    : 'e.g. organizer@sssp.org'
+                    ? 'Enter your scout username' 
+                    : 'Enter your organizer username'
                 }
                 required
                 className={`w-full pl-10 pr-4 py-2.5 bg-black/40 border border-slate-700/60 rounded-xl text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 ${currentTheme.inputRing} transition-all duration-200`}
@@ -293,16 +241,6 @@ const LoginPage = () => {
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-200">
                 Password <span className={currentTheme.accentColor}>*</span>
               </label>
-              <a
-                href="#forgot"
-                onClick={(e) => {
-                  e.preventDefault();
-                  alert('Tactical password reset link has been dispatched to your email.');
-                }}
-                className={`text-xs ${currentTheme.accentColor} hover:underline font-semibold transition-colors`}
-              >
-                Forgot password?
-              </a>
             </div>
             <div className="relative">
               <div className={`absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none ${currentTheme.accentColor}`}>

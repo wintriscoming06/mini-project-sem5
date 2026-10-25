@@ -3,7 +3,7 @@ import { Target, Calendar, Clock } from 'lucide-react';
 import { playerService } from '../../services/api';
 import { 
   LoadingSpinner, Alert, Card, StatsCard, StatusBadge, 
-  ClassicSoccerBall, PitchHero 
+  ClassicSoccerBall, PitchHero, MatchDetailModal 
 } from '../../components/common';
 import useCountUp from '../../hooks/useCountUp';
 
@@ -42,6 +42,7 @@ const PlayerStats = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('OVERVIEW');
+  const [selectedMatchDetail, setSelectedMatchDetail] = useState(null);
 
   useEffect(() => {
     fetchStats();
@@ -65,20 +66,33 @@ const PlayerStats = () => {
       const positional = rankings.find((r) => (r.context || '').startsWith('POSITION:'));
 
       // Harmonize logged matches and tournament participations
-      const loggedMatches = (Array.isArray(playerMatchesRes?.data) ? playerMatchesRes.data : []).map(m => ({
-        matchDescription: m.opponent ? `vs ${m.opponent} (${m.competition || m.matchKind || 'Match'})` : (m.matchDescription || `Match #${m.id}`),
+      const rawLogged = Array.isArray(playerMatchesRes?.data) ? playerMatchesRes.data : (playerMatchesRes?.data?.matches || []);
+      const loggedMatches = rawLogged.map(m => ({
+        id: m.id,
+        matchId: m.matchId || m.id,
+        matchDescription: m.opponent ? `vs ${m.opponent} (${m.competition || 'Match'})` : (m.matchDescription || `Match #${m.id}`),
         date: m.matchDate || m.date,
         minutesPlayed: m.minutesPlayed,
         goals: m.goals,
         assists: m.assists,
+        shots: m.shots,
+        shotsOnTarget: m.shotsOnTarget,
         yellowCards: m.yellowCards,
         redCards: m.redCards,
-        matchKind: m.matchKind,
         performanceScore: m.performanceScore
       }));
 
       const tournamentStats = (Array.isArray(matchRes?.data) ? matchRes.data : []);
-      const combinedMatches = [...loggedMatches, ...tournamentStats];
+      // De-duplicate matches if they refer to the same record ID
+      const seenIds = new Set();
+      const combinedMatches = [];
+      [...tournamentStats, ...loggedMatches].forEach(m => {
+        const key = m.id ? String(m.id) : `${m.matchId}-${m.date}`;
+        if (!seenIds.has(key)) {
+          seenIds.add(key);
+          combinedMatches.push(m);
+        }
+      });
 
       setData({
         gpi: gpiRes.data,
@@ -261,9 +275,17 @@ const PlayerStats = () => {
                 </thead>
                 <tbody className="divide-y divide-blue-50 dark:divide-blue-950/40">
                   {matchStats.map((m, idx) => (
-                    <tr key={idx} className="hover:bg-blue-500/10 dark:hover:bg-slate-900/60 transition-colors">
-                      <td className="px-4 py-3.5 font-bold text-slate-900 dark:text-white">
-                        {m.matchDescription || `Fixture #${m.matchId || idx + 1}`}
+                    <tr 
+                      key={idx} 
+                      onClick={() => setSelectedMatchDetail(m)}
+                      className="hover:bg-blue-500/10 dark:hover:bg-slate-900/60 cursor-pointer transition-colors group"
+                      title="Click to view full matchday performance recorded by organiser"
+                    >
+                      <td className="px-4 py-3.5 font-bold text-slate-900 dark:text-white group-hover:text-blue-500 transition-colors">
+                        <div className="flex items-center space-x-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-500 opacity-60 group-hover:scale-125 transition-transform" />
+                          <span>{m.matchDescription || `Fixture #${m.matchId || idx + 1}`}</span>
+                        </div>
                       </td>
                       <td className="px-4 py-3.5 text-center text-xs text-slate-400">
                         {m.date ? new Date(m.date).toLocaleDateString() : '-'}
@@ -284,7 +306,10 @@ const PlayerStats = () => {
                           {!m.yellowCards && !m.redCards && <span className="text-slate-400 text-xs">-</span>}
                         </div>
                       </td>
-                      <td className="px-4 py-3.5 text-right">
+                      <td className="px-4 py-3.5 text-right whitespace-nowrap">
+                        <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400 group-hover:underline mr-2">
+                          View Data →
+                        </span>
                         <StatusBadge status="COMPLETED" label="Certified" />
                       </td>
                     </tr>
@@ -301,6 +326,13 @@ const PlayerStats = () => {
           )}
         </Card>
       )}
+
+      {/* Verified Match Performance Detail Modal */}
+      <MatchDetailModal
+        isOpen={!!selectedMatchDetail}
+        onClose={() => setSelectedMatchDetail(null)}
+        match={selectedMatchDetail}
+      />
 
     </div>
   );

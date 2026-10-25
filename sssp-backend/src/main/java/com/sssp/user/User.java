@@ -15,9 +15,6 @@ import lombok.*;
 public class User extends BaseEntity {
 
     @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)

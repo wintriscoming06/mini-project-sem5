@@ -4,6 +4,8 @@ import com.sssp.user.User;
 import com.sssp.common.entity.BaseEntity;
 import com.sssp.gpi.MatchStatsInput;
 import com.sssp.match.Match;
+import com.sssp.tournament.Tournament;
+import com.sssp.team.Team;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -23,15 +25,19 @@ public class PlayerMatchStatistics extends BaseEntity implements MatchStatsInput
     @ManyToOne(fetch = FetchType.LAZY)
     private Match match;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Tournament tournament;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Team team;
+
     private LocalDate matchDate;
     private String opponent;
     private String competition;
     private String position;
 
-    @Builder.Default
-    private String matchKind = "OFFICIAL"; // FRIENDLY or OFFICIAL
+    private Integer stars; // 1 to 5
 
-    private Integer stars; // 1 to 5 for OFFICIAL
 
     @Builder.Default
     private Integer minutesPlayed = 0;

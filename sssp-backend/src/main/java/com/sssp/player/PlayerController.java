@@ -11,6 +11,9 @@ import com.sssp.player.dto.PlayerProfileRequest;
 import com.sssp.player.dto.PlayerProfileResponse;
 import com.sssp.player.PlayerService;
 import com.sssp.ranking.RankingService;
+import com.sssp.scout.ContactRequestStatus;
+import com.sssp.scout.ScoutService;
+import com.sssp.scout.dto.ContactRequestResponse;
 import com.sssp.stats.StatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +44,9 @@ public class PlayerController {
 
     @Autowired(required = false)
     private MatchService matchService;
+
+    @Autowired(required = false)
+    private ScoutService scoutService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -125,12 +131,12 @@ public class PlayerController {
 
     @GetMapping("/me/matches")
     @PreAuthorize("hasRole('PLAYER')")
-    public ResponseEntity<Map<String, Object>> getMyMatches(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<MatchPlayerRecordResponse>> getMyMatches(@AuthenticationPrincipal UserDetails userDetails) {
         Long playerId = playerService.getUserIdForUsername(userDetails.getUsername());
         List<MatchPlayerRecordResponse> matches = matchService != null
                 ? matchService.getPlayerMatches(playerId, userDetails.getUsername())
                 : List.of();
-        return ResponseEntity.ok(Map.of("matches", matches));
+        return ResponseEntity.ok(matches);
     }
 
     @GetMapping("/me/performance")
@@ -164,7 +170,7 @@ public class PlayerController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('PLAYER') or hasRole('COACH') or hasRole('SCOUT') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('PLAYER') or hasRole('SCOUT') or hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> updateProfile(
             @PathVariable Long id,
             @RequestBody PlayerProfileRequest request,
@@ -174,14 +180,14 @@ public class PlayerController {
     }
 
     @GetMapping("/{id}/matches")
-    public ResponseEntity<Map<String, Object>> getPlayerMatches(
+    public ResponseEntity<List<MatchPlayerRecordResponse>> getPlayerMatches(
             @PathVariable Long id,
             @AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails != null ? userDetails.getUsername() : null;
         List<MatchPlayerRecordResponse> matches = matchService != null
                 ? matchService.getPlayerMatches(id, username != null ? username : "")
                 : List.of();
-        return ResponseEntity.ok(Map.of("matches", matches));
+        return ResponseEntity.ok(matches);
     }
 
     @GetMapping("/{id}/performance")
@@ -202,5 +208,20 @@ public class PlayerController {
     @GetMapping("/{id}/match-stats")
     public ResponseEntity<?> getPlayerMatchStats(@PathVariable Long id) {
         return ResponseEntity.ok(statsService.getPlayerMatchStats(id));
+    }
+
+    @GetMapping("/me/scouting-requests")
+    @PreAuthorize("hasRole('PLAYER')")
+    public ResponseEntity<List<ContactRequestResponse>> getMyScoutingRequests(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(scoutService.getPlayerIncomingContactRequests(userDetails.getUsername()));
+    }
+
+    @PatchMapping("/me/scouting-requests/{requestId}/status")
+    @PreAuthorize("hasRole('PLAYER')")
+    public ResponseEntity<ContactRequestResponse> updateScoutingRequestStatus(
+            @PathVariable Long requestId,
+            @RequestParam ContactRequestStatus status,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(scoutService.updateContactRequestStatus(requestId, status, userDetails.getUsername()));
     }
 }

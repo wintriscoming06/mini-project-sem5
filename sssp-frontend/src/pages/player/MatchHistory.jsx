@@ -39,20 +39,33 @@ const PlayerStats = () => {
       const positional = rankings.find((r) => (r.context || '').startsWith('POSITION:'));
 
       // Harmonize logged matches and tournament participations
-      const loggedMatches = (Array.isArray(playerMatchesRes?.data) ? playerMatchesRes.data : []).map(m => ({
-        matchDescription: m.opponent ? `vs ${m.opponent} (${m.competition || m.matchKind || 'Match'})` : (m.matchDescription || `Match #${m.id}`),
+      const rawLogged = Array.isArray(playerMatchesRes?.data) ? playerMatchesRes.data : (playerMatchesRes?.data?.matches || []);
+      const loggedMatches = rawLogged.map(m => ({
+        id: m.id,
+        matchId: m.matchId || m.id,
+        matchDescription: m.opponent ? `vs ${m.opponent} (${m.competition || 'Match'})` : (m.matchDescription || `Match #${m.id}`),
         date: m.matchDate || m.date,
         minutesPlayed: m.minutesPlayed,
         goals: m.goals,
         assists: m.assists,
+        shots: m.shots,
+        shotsOnTarget: m.shotsOnTarget,
         yellowCards: m.yellowCards,
         redCards: m.redCards,
-        matchKind: m.matchKind,
         performanceScore: m.performanceScore
       }));
 
       const tournamentStats = (Array.isArray(matchRes?.data) ? matchRes.data : []);
-      const combinedMatches = [...loggedMatches, ...tournamentStats];
+      // De-duplicate matches if they refer to the same record ID
+      const seenIds = new Set();
+      const combinedMatches = [];
+      [...tournamentStats, ...loggedMatches].forEach(m => {
+        const key = m.id ? String(m.id) : `${m.matchId}-${m.date}`;
+        if (!seenIds.has(key)) {
+          seenIds.add(key);
+          combinedMatches.push(m);
+        }
+      });
 
       setData({
         gpi: gpiRes.data,

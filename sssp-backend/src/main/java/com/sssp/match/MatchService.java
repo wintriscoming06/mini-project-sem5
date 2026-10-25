@@ -225,7 +225,6 @@ public class MatchService {
             stats.setMatchDate(match.getMatchDateTime() != null ? match.getMatchDateTime().toLocalDate() : LocalDate.now());
             PlayerProfile pProfile = playerProfileRepository.findByUserId(p.getPlayer().getId()).orElse(null);
             stats.setPosition(pProfile != null && pProfile.getPrimaryPosition() != null ? pProfile.getPrimaryPosition() : "CM");
-            stats.setMatchKind("OFFICIAL");
             stats.setStars(3);
             stats.setMinutesPlayed(p.getMinutesPlayed() != null ? p.getMinutesPlayed() : 0);
 
@@ -297,8 +296,7 @@ public class MatchService {
         stat.setOpponent(request.getOpponent());
         stat.setCompetition(request.getCompetition());
         stat.setPosition(position);
-        stat.setMatchKind(request.getMatchKind() != null ? request.getMatchKind().toUpperCase() : "OFFICIAL");
-        stat.setStars("OFFICIAL".equalsIgnoreCase(stat.getMatchKind()) ? (request.getStars() != null ? request.getStars() : 3) : null);
+        stat.setStars(request.getStars() != null ? request.getStars() : 3);
         stat.setMinutesPlayed(request.getMinutesPlayed() != null ? request.getMinutesPlayed() : 0);
         stat.setGoals(request.getGoals());
         stat.setAssists(request.getAssists());
@@ -376,7 +374,6 @@ public class MatchService {
                 .opponent(row.getOpponent())
                 .competition(row.getCompetition())
                 .position(row.getPosition())
-                .matchKind(row.getMatchKind())
                 .stars(row.getStars())
                 .minutesPlayed(row.getMinutesPlayed())
                 .goals(row.getGoals())
@@ -431,13 +428,8 @@ public class MatchService {
         if (b.getMatchDate() == null) {
             errors.add("matchDate is required.");
         }
-        if (b.getMatchKind() == null || (!"FRIENDLY".equalsIgnoreCase(b.getMatchKind()) && !"OFFICIAL".equalsIgnoreCase(b.getMatchKind()))) {
-            errors.add("matchKind must be FRIENDLY or OFFICIAL.");
-        }
-        if ("OFFICIAL".equalsIgnoreCase(b.getMatchKind())) {
-            if (b.getStars() == null || b.getStars() < 1 || b.getStars() > 5) {
-                errors.add("stars must be 1-5 for official matches.");
-            }
+        if (b.getStars() != null && (b.getStars() < 1 || b.getStars() > 5)) {
+            errors.add("stars must be 1-5.");
         }
         if (b.getYellowCards() < 0 || b.getYellowCards() > 2) {
             errors.add("yellowCards cannot exceed 2.");

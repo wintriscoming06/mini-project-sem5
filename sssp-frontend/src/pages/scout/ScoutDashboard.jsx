@@ -1,24 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
-  Search, Star, Bell, Eye, Filter, UserCheck, ChevronRight, 
-  AlertCircle, GitCompare, Shield, Target, Compass
+  Search, Star, Filter, ChevronRight, Users
 } from 'lucide-react';
 import { scoutService } from '../../services/api';
-import { useAuth } from '../../context/AuthContext';
 import { 
-  LoadingSpinner, Alert, StatsCard, Card, StatusBadge, Button, 
+  LoadingSpinner, Alert, StatsCard, Card, Button, 
   ScoutTargetIcon, ClassicSoccerBall, PitchHero 
 } from '../../components/common';
 
 export default function ScoutDashboard() {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [data, setData] = useState({
     shortlist: [],
-    alerts: [],
     filters: [],
     observations: []
   });
@@ -28,15 +24,13 @@ export default function ScoutDashboard() {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const [shortlistRes, alertsRes, filtersRes] = await Promise.all([
+        const [shortlistRes, filtersRes] = await Promise.all([
           scoutService.getShortlist().catch(() => ({ data: [] })),
-          scoutService.getAlerts().catch(() => ({ data: [] })),
           scoutService.getFilters().catch(() => ({ data: [] }))
         ]);
         
         setData({
           shortlist: shortlistRes.data || [],
-          alerts: alertsRes.data || [],
           filters: filtersRes.data || [],
           observations: []
         });
@@ -61,7 +55,6 @@ export default function ScoutDashboard() {
 
   if (loading) return <div className="flex h-96 items-center justify-center"><LoadingSpinner size="lg" text="Loading tactical scouting board..." /></div>;
 
-  const unreadAlerts = data.alerts.filter(a => !a.read);
   const topShortlist = [...data.shortlist].sort((a, b) => (a.priority || 99) - (b.priority || 99)).slice(0, 5);
 
   return (
@@ -75,19 +68,19 @@ export default function ScoutDashboard() {
         badgeText="TACTICAL DESK • LIVE SCOUTING FEED"
         stats={[
           { label: "SHORTLIST", value: data.shortlist.length },
-          { label: "NEW ALERTS", value: unreadAlerts.length },
           { label: "FILTERS", value: data.filters.length },
+          { label: "COVERAGE", value: "STATEWIDE" },
           { label: "STATUS", value: "ACTIVE" }
         ]}
         actionButtons={
           <>
             <Button 
               variant="secondary" 
-              onClick={() => navigate('/compare')}
+              onClick={() => navigate('/shortlist')}
               className="bg-blue-950/80 text-blue-200 border-blue-500/50 hover:bg-blue-900"
-              icon={<GitCompare className="w-4 h-4" />}
+              icon={<Users className="w-4 h-4" />}
             >
-              Head-to-Head Arena
+              Scout Shortlist
             </Button>
             <Button 
               variant="primary" 
@@ -121,7 +114,7 @@ export default function ScoutDashboard() {
       {error && <Alert type="error" message={error} />}
 
       {/* 2. STATS ROW */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 stagger-2">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 stagger-2">
         <StatsCard 
           title="Shortlisted Prospects" 
           value={data.shortlist.length} 
@@ -133,12 +126,6 @@ export default function ScoutDashboard() {
           value={data.filters.length} 
           icon={<Filter className="w-6 h-6 text-sky-400" />} 
           color="blue"
-        />
-        <StatsCard 
-          title="Unread Match Alerts" 
-          value={unreadAlerts.length} 
-          icon={<Bell className="w-6 h-6 text-blue-400" />} 
-          color={unreadAlerts.length > 0 ? "amber" : "emerald"}
         />
         <StatsCard 
           title="Scouting Coverage" 
@@ -219,59 +206,27 @@ export default function ScoutDashboard() {
           </Card>
         </div>
 
-        {/* Intelligence Feeds */}
-        <div className="space-y-6">
-          <Card 
-            title="Scouting Alerts Feed" 
-            subtitle="Triggered by tactical parameter filters"
-            showMatchBall={true}
-            headerAction={
-              <Link to="/alerts" className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
-                View All
-              </Link>
-            }
-          >
-            {data.alerts.length > 0 ? (
-              <div className="divide-y divide-blue-100 dark:divide-blue-950/60">
-                {data.alerts.slice(0, 4).map(alert => (
-                  <div key={alert.id} className="py-3 text-xs hover:bg-blue-500/5 rounded-xl px-2 transition-colors">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                        <ClassicSoccerBall className="w-3.5 h-3.5 text-blue-500" />
-                        {alert.title || 'Talent Match'}
-                      </span>
-                      <span className="text-[10px] text-slate-400">{alert.createdAt ? new Date(alert.createdAt).toLocaleDateString() : 'Today'}</span>
-                    </div>
-                    <p className="text-slate-600 dark:text-blue-200/70">{alert.message || 'Prospect matched your positional KPI criteria.'}</p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-slate-400">
-                <ClassicSoccerBall className="w-8 h-8 mx-auto text-blue-500/50 mb-2" />
-                <p className="text-xs font-semibold">No active trigger alerts</p>
-                <p className="text-[10px] text-slate-500 mt-1">Set up custom search filters to receive automated prospect notifications.</p>
-              </div>
-            )}
-          </Card>
-
-          {/* Quick Head-to-Head Banner */}
-          <div className="p-5 rounded-2xl border-2 border-blue-500/50 bg-gradient-to-br from-blue-950/90 to-slate-900 text-white shadow-xl relative overflow-hidden">
+        {/* Quick Shortlist Pipeline Banner */}
+        <div>
+          <div className="p-6 rounded-3xl border-2 border-blue-500/50 bg-gradient-to-br from-blue-950/90 to-slate-900 text-white shadow-xl relative overflow-hidden h-full flex flex-col justify-between">
             <div className="absolute right-0 bottom-0 opacity-15 pointer-events-none transform translate-x-4 translate-y-4">
-              <ClassicSoccerBall className="w-32 h-32" />
+              <ClassicSoccerBall className="w-40 h-40" />
             </div>
             <div className="relative z-10">
-              <div className="text-xs font-black uppercase tracking-wider text-blue-400 mb-1">Tactical Comparison</div>
-              <h4 className="text-lg font-black text-white">Compare Prospects Head-to-Head</h4>
-              <p className="text-xs text-blue-200/80 mt-1 mb-4">
-                Analyze up to 4 footballers side-by-side with GPI radar overlays and physical metrics.
+              <div className="text-xs font-black uppercase tracking-wider text-blue-400 mb-2">Talent Pipeline</div>
+              <h4 className="text-xl font-black text-white">Scouting Shortlist & Watchlist</h4>
+              <p className="text-xs text-blue-200/80 mt-2 mb-6">
+                Review priority prospects, inspect match logs, track GPI performance attributes, and send direct contact requests.
               </p>
+            </div>
+            <div className="relative z-10">
               <Button 
                 variant="primary" 
-                size="sm" 
-                onClick={() => navigate('/compare')}
+                size="md" 
+                onClick={() => navigate('/shortlist')}
+                className="w-full"
               >
-                Launch Comparison Arena
+                Open Scouting Shortlist
               </Button>
             </div>
           </div>

@@ -95,6 +95,7 @@ export default function CustomizeCard() {
                   <button
                     key={name}
                     type="button"
+                    disabled={saving}
                     onClick={() => selectAndSaveDesign(name)}
                     className={`group relative rounded-xl p-3 text-left transition-all duration-300 ease-out border-2 overflow-hidden flex flex-col justify-between cursor-pointer card-elevate hover:-translate-y-1.5 hover:shadow-lg ${
                       isSelected

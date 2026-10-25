@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { MapPin, Calendar, Users, Trophy, ChevronLeft, Clock, Shield, CheckCircle } from 'lucide-react';
+import { MapPin, Calendar, Users, ChevronLeft, Clock, Shield } from 'lucide-react';
 import { tournamentService } from '../../services/api';
-import { LoadingSpinner, Alert, Card, Button, StatusBadge, TrophyIcon } from '../../components/common';
+import { LoadingSpinner, Alert, Card, StatusBadge, TrophyIcon } from '../../components/common';
 import { PitchMarkings } from '../../components/common/FootballIcons';
 
 const TournamentDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [tournament, setTournament] = useState(null);
-  const [applicationStatus, setApplicationStatus] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [applying, setApplying] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -21,31 +19,12 @@ const TournamentDetail = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [tournRes, appsRes] = await Promise.all([
-        tournamentService.getById(id),
-        tournamentService.getMyApplications().catch(() => ({ data: [] }))
-      ]);
+      const tournRes = await tournamentService.getById(id);
       setTournament(tournRes.data);
-      
-      const app = (appsRes.data || []).find(a => String(a.tournamentId) === String(id));
-      if (app) setApplicationStatus(app.status);
     } catch (err) {
       setError('Failed to load tournament details.');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleApply = async () => {
-    try {
-      setApplying(true);
-      setError(null);
-      await tournamentService.apply(id);
-      setApplicationStatus('PENDING');
-    } catch (err) {
-      setError(err?.response?.data?.message || err.message || 'Failed to apply for tournament.');
-    } finally {
-      setApplying(false);
     }
   };
 
@@ -76,8 +55,8 @@ const TournamentDetail = () => {
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-2">
                 <StatusBadge 
-                  status={tournament.status === 'OPEN' ? 'ACTIVE' : tournament.status === 'ONGOING' ? 'LIVE' : 'COMPLETED'} 
-                  label={tournament.status} 
+                  status={tournament.status} 
+                  label={tournament.status === 'REGISTRATION_CLOSED' ? 'REGISTRATION CLOSED' : tournament.status} 
                 />
                 <span className="text-xs text-slate-300 bg-black/40 px-2.5 py-0.5 rounded-full border border-white/10">
                   Organizer: <strong className="text-white">{tournament.organizerName || 'Certified SSSP Organizer'}</strong>
@@ -88,25 +67,10 @@ const TournamentDetail = () => {
           </div>
 
           <div className="flex items-center">
-            {applicationStatus ? (
-              <div className="flex items-center space-x-2 bg-white/10 border border-white/10 px-4 py-2.5 rounded-xl shadow-lg">
-                <CheckCircle className="w-5 h-5 text-blue-400" />
-                <span className="text-sm font-bold text-slate-200">Application {applicationStatus}</span>
-              </div>
-            ) : tournament.status === 'OPEN' ? (
-              <Button 
-                variant="primary" 
-                size="lg" 
-                onClick={handleApply} 
-                disabled={applying}
-                icon={Trophy}
-              >
-                {applying ? 'Submitting Application...' : 'Apply for Tournament'}
-              </Button>
-
-            ) : (
-              <span className="text-sm text-slate-300 bg-black/40 border border-white/10 px-4 py-2 rounded-xl">Registrations Closed</span>
-            )}
+            <div className="bg-black/40 border border-white/10 px-4 py-3 rounded-2xl text-xs text-slate-300">
+              <span className="text-amber-400 font-bold block text-sm">Offline Registration</span>
+              <span>Contact tournament organizer directly to enter tournament squad.</span>
+            </div>
           </div>
         </div>
 

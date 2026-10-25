@@ -19,6 +19,7 @@ public class ScoutProfile extends BaseEntity {
 
     private String affiliation;
     private String organization;
+    private String phoneNumber;
 
     @Builder.Default
     private boolean verified = false;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { LayoutDashboard, Users, Shield, Bell } from 'lucide-react';
+import { LayoutDashboard, Users, Shield, Bell, Mail } from 'lucide-react';
 import { TrophyIcon, StadiumIcon, WhistleIcon, FootballIcon, ScoutTargetIcon } from '../common/FootballIcons';
 
 const Sidebar = () => {
@@ -13,24 +13,22 @@ const Sidebar = () => {
       return [
         { path: '/dashboard', label: 'Match Dashboard', icon: LayoutDashboard },
         { path: '/tournaments', label: 'Tournaments', icon: TrophyIcon },
-        { path: '/my-applications', label: 'My Applications', icon: Users },
         { path: '/player/stats', label: 'Match Stats', icon: WhistleIcon },
+        { path: '/player/requests', label: 'Scouting Requests', icon: Mail },
         { path: '/player/card-studio', label: 'Card Studio', icon: FootballIcon },
       ];
     }
     if (hasRole('ORGANIZER')) {
       return [
         { path: '/dashboard', label: 'Match Operations', icon: LayoutDashboard },
-        { path: '/my-tournaments', label: 'Competitions', icon: TrophyIcon },
-        { path: '/matches', label: 'Fixtures & Scores', icon: StadiumIcon },
+        { path: '/my-tournaments', label: 'Competitions', icon: TrophyIcon }
       ];
     }
-    if (hasRole('SCOUT') || hasRole('COACH')) {
+    if (hasRole('SCOUT')) {
       return [
-        { path: '/dashboard', label: hasRole('COACH') ? 'Squad & Tactics' : 'Tactical Desk', icon: LayoutDashboard },
-        { path: '/search', label: hasRole('COACH') ? 'Player Scouting' : 'Scout Talent', icon: ScoutTargetIcon },
+        { path: '/dashboard', label: 'Tactical Desk', icon: LayoutDashboard },
+        { path: '/search', label: 'Scout Talent', icon: ScoutTargetIcon },
         { path: '/shortlist', label: 'Shortlist', icon: Users },
-        { path: '/alerts', label: 'Alerts Feed', icon: Bell },
       ];
     }
     if (hasRole('ADMIN')) {

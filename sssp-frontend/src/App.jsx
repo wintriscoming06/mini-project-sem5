@@ -14,27 +14,22 @@ import PlayerDashboard from './pages/player/PlayerDashboard';
 import PlayerProfile from './pages/player/PlayerProfile';
 import TournamentList from './pages/player/TournamentList';
 import TournamentDetail from './pages/player/TournamentDetail';
-import MyApplications from './pages/player/MyApplications';
 import PlayerStats from './pages/player/PlayerStats';
 import CustomizeCard from './pages/player/CustomizeCard';
+import ScoutingRequests from './pages/player/ScoutingRequests';
 
 // Organizer Pages
 import OrganizerDashboard from './pages/organizer/OrganizerDashboard';
 import OrganizerTournaments from './pages/organizer/OrganizerTournaments';
 import CreateTournament from './pages/organizer/CreateTournament';
 import ManageTournament from './pages/organizer/ManageTournament';
-import MatchList from './pages/organizer/MatchList';
-import MatchDetail from './pages/organizer/MatchDetail';
-import MatchScoring from './pages/organizer/MatchScoring';
 
 // Scout Pages
 import ScoutDashboard from './pages/scout/ScoutDashboard';
 import ScoutProfile from './pages/scout/ScoutProfile';
 import PlayerSearch from './pages/scout/PlayerSearch';
 import Shortlist from './pages/scout/Shortlist';
-import ScoutAlerts from './pages/scout/ScoutAlerts';
 import PlayerView from './pages/scout/PlayerView';
-import PlayerComparison from './pages/scout/PlayerComparison';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -63,13 +58,14 @@ function App() {
         } />
 
         {/* SHARED / ROLE-AWARE PROFILE ROUTE */}
-        <Route path="/profile" element={<ProtectedRoute roles={['PLAYER', 'SCOUT', 'COACH']}><ProfileRouter /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute roles={['PLAYER', 'SCOUT']}><ProfileRouter /></ProtectedRoute>} />
 
         {/* PLAYER ROUTES */}
         <Route path="/tournaments" element={<ProtectedRoute roles={['PLAYER']}><TournamentList /></ProtectedRoute>} />
         <Route path="/tournaments/:id" element={<ProtectedRoute roles={['PLAYER']}><TournamentDetail /></ProtectedRoute>} />
-        <Route path="/my-applications" element={<ProtectedRoute roles={['PLAYER']}><MyApplications /></ProtectedRoute>} />
         <Route path="/player/stats" element={<ProtectedRoute roles={['PLAYER']}><PlayerStats /></ProtectedRoute>} />
+        <Route path="/player/requests" element={<ProtectedRoute roles={['PLAYER']}><ScoutingRequests /></ProtectedRoute>} />
+        <Route path="/player/scouting-requests" element={<Navigate to="/player/requests" replace />} />
         <Route path="/player/card-studio" element={<ProtectedRoute roles={['PLAYER']}><CustomizeCard /></ProtectedRoute>} />
         <Route path="/player/customize-card" element={<Navigate to="/player/card-studio" replace />} />
 
@@ -77,16 +73,11 @@ function App() {
         <Route path="/my-tournaments" element={<ProtectedRoute roles={['ORGANIZER']}><OrganizerTournaments /></ProtectedRoute>} />
         <Route path="/tournaments/create" element={<ProtectedRoute roles={['ORGANIZER']}><CreateTournament /></ProtectedRoute>} />
         <Route path="/tournaments/:id/manage" element={<ProtectedRoute roles={['ORGANIZER']}><ManageTournament /></ProtectedRoute>} />
-        <Route path="/matches" element={<ProtectedRoute roles={['ORGANIZER']}><MatchList /></ProtectedRoute>} />
-        <Route path="/matches/:id" element={<ProtectedRoute roles={['ORGANIZER']}><MatchDetail /></ProtectedRoute>} />
-        <Route path="/matches/:id/score" element={<ProtectedRoute roles={['ORGANIZER']}><MatchScoring /></ProtectedRoute>} />
 
-        {/* SCOUT & COACH ROUTES */}
-        <Route path="/search" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><PlayerSearch /></ProtectedRoute>} />
-        <Route path="/shortlist" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><Shortlist /></ProtectedRoute>} />
-        <Route path="/alerts" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><ScoutAlerts /></ProtectedRoute>} />
-        <Route path="/players/:id" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><PlayerView /></ProtectedRoute>} />
-        <Route path="/compare" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><PlayerComparison /></ProtectedRoute>} />
+        {/* SCOUT ROUTES */}
+        <Route path="/search" element={<ProtectedRoute roles={['SCOUT']}><PlayerSearch /></ProtectedRoute>} />
+        <Route path="/shortlist" element={<ProtectedRoute roles={['SCOUT']}><Shortlist /></ProtectedRoute>} />
+        <Route path="/players/:id" element={<ProtectedRoute roles={['SCOUT']}><PlayerView /></ProtectedRoute>} />
 
         {/* ADMIN ROUTES */}
         <Route path="/users" element={<ProtectedRoute roles={['ADMIN']}><UserManagement /></ProtectedRoute>} />
@@ -101,24 +92,13 @@ function App() {
         <Route path="/player/tournaments/:id" element={<ProtectedRoute roles={['PLAYER']}><TournamentDetail /></ProtectedRoute>} />
         <Route path="/scout/search" element={<Navigate to="/search" replace />} />
         <Route path="/scout/shortlist" element={<Navigate to="/shortlist" replace />} />
-        <Route path="/scout/alerts" element={<Navigate to="/alerts" replace />} />
-        <Route path="/scout/compare" element={<Navigate to="/compare" replace />} />
-        <Route path="/scout/player/:id" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><PlayerView /></ProtectedRoute>} />
-        <Route path="/scout/players/:id" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><PlayerView /></ProtectedRoute>} />
-        <Route path="/coach/profile" element={<Navigate to="/profile" replace />} />
-        <Route path="/coach/search" element={<Navigate to="/search" replace />} />
-        <Route path="/coach/shortlist" element={<Navigate to="/shortlist" replace />} />
-        <Route path="/coach/alerts" element={<Navigate to="/alerts" replace />} />
-        <Route path="/coach/compare" element={<Navigate to="/compare" replace />} />
-        <Route path="/coach/player/:id" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><PlayerView /></ProtectedRoute>} />
-        <Route path="/coach/players/:id" element={<ProtectedRoute roles={['SCOUT', 'COACH']}><PlayerView /></ProtectedRoute>} />
+        <Route path="/scout/player/:id" element={<ProtectedRoute roles={['SCOUT']}><PlayerView /></ProtectedRoute>} />
+        <Route path="/scout/players/:id" element={<ProtectedRoute roles={['SCOUT']}><PlayerView /></ProtectedRoute>} />
         <Route path="/organizer/tournaments/create" element={<Navigate to="/tournaments/create" replace />} />
         <Route path="/organizer/tournaments/:id" element={<ProtectedRoute roles={['ORGANIZER']}><ManageTournament /></ProtectedRoute>} />
         <Route path="/organizer/tournaments" element={<Navigate to="/my-tournaments" replace />} />
-        <Route path="/organizer/matches" element={<Navigate to="/matches" replace />} />
-        <Route path="/organizer/matches/:id" element={<ProtectedRoute roles={['ORGANIZER']}><MatchDetail /></ProtectedRoute>} />
-        <Route path="/organizer/matches/:id/scoring" element={<ProtectedRoute roles={['ORGANIZER']}><MatchScoring /></ProtectedRoute>} />
-        <Route path="/organizer/matches/:id/score" element={<ProtectedRoute roles={['ORGANIZER']}><MatchScoring /></ProtectedRoute>} />
+        <Route path="/organizer/matches" element={<Navigate to="/my-tournaments" replace />} />
+        <Route path="/matches" element={<Navigate to="/my-tournaments" replace />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
@@ -130,7 +110,7 @@ function App() {
 // Helper to route to correct profile dossier based on role
 function ProfileRouter() {
   const { user } = useAuth();
-  if (user?.role === 'SCOUT' || user?.role === 'COACH') {
+  if (user?.role === 'SCOUT') {
     return <ScoutProfile />;
   }
   return <PlayerProfile />;
@@ -142,8 +122,7 @@ function DashboardRouter() {
   switch (user?.role) {
     case 'PLAYER': return <PlayerDashboard />;
     case 'ORGANIZER': return <OrganizerDashboard />;
-    case 'SCOUT':
-    case 'COACH': return <ScoutDashboard />;
+    case 'SCOUT': return <ScoutDashboard />;
     case 'ADMIN': return <AdminDashboard />;
     default: return <Navigate to="/login" replace />;
   }

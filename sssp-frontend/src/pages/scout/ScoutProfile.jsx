@@ -2,19 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { scoutService } from '../../services/api';
 import { 
-  User, Shield, Award, MapPin, Calendar, Globe, Compass, 
-  Edit2, Camera, RefreshCw, CheckCircle2, Bookmark, Eye, 
-  Activity, Save, X, Sparkles, Building, Briefcase, FileText,
-  Search, Check
+  Shield, Award, MapPin, Calendar, Globe, Compass, 
+  Edit2, CheckCircle2, Bookmark, 
+  Activity, Building, FileText,
+  Phone
 } from 'lucide-react';
 import { Button, Alert, LoadingSpinner, PitchMarkings } from '../../components/common';
 import { 
-  getClubTheme, ClubCrest, ClubWatermark, CoachSilhouette, 
-  PRESET_COACHES, PRESET_CLUBS, 
+  getClubTheme, ClubCrest, ClubWatermark, 
+  PRESET_CLUBS, 
   getStoredScoutDossier, saveStoredScoutDossier, 
   getStoredClubBadge, saveStoredClubBadge 
 } from '../../utils/clubTheme';
-import { removeBackground } from '../../utils/backgroundRemoval';
 import useCountUp from '../../hooks/useCountUp';
 
 const AnimatedStat = ({ value, decimals = 0, duration = 800 }) => {
@@ -24,7 +23,6 @@ const AnimatedStat = ({ value, decimals = 0, duration = 800 }) => {
 
 export default function ScoutProfile() {
   const { user } = useAuth();
-  const fileInputRef = useRef(null);
   const badgeInputRef = useRef(null);
 
   const scoutKey = user?.id || user?.userId || user?.username || 'current_scout';
@@ -34,12 +32,12 @@ export default function ScoutProfile() {
     name: user?.name || user?.username || 'Senior Scout',
     title: 'Chief Technical Scout & Recruiter',
     organization: 'Manchester City FC Academy',
+    phoneNumber: '',
     license: 'UEFA Pro License',
     territory: 'Global Elite & European U21s',
     specialization: 'Positional Play & Overloads',
     experience: '12 Seasons Pro Scouting',
     location: 'Manchester, England',
-    photoUrl: '/assets/coaches/pep_guardiola.png',
     customBadgeUrl: null,
     bio: 'Dedicated football recruitment specialist focusing on positional intelligence, high-press sustainability, and elite passing vision. Oversees European prospect tracking and quantitative GPI data verification.',
     methodology: 'Tri-pillar scouting framework: 1. Video & spatial pattern audit, 2. Live in-stadium physical endurance check, 3. Algorithmic GPI performance validation.',
@@ -50,8 +48,6 @@ export default function ScoutProfile() {
   const [dossier, setDossier] = useState(defaultDossier);
   const [formData, setFormData] = useState(defaultDossier);
   const [isEditing, setIsEditing] = useState(false);
-  const [isRemovingBg, setIsRemovingBg] = useState(false);
-  const [bgRemovalProgress, setBgRemovalProgress] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
@@ -66,10 +62,25 @@ export default function ScoutProfile() {
         const stored = getStoredScoutDossier(scoutKey);
         const storedBadge = getStoredClubBadge(`scout_${scoutKey}`);
 
-        const initial = stored ? { ...defaultDossier, ...stored } : defaultDossier;
+        let initial = stored ? { ...defaultDossier, ...stored } : defaultDossier;
         if (storedBadge) {
           initial.customBadgeUrl = storedBadge;
         }
+
+        // Fetch backend scout profile to sync official mobile contact number and organization
+        try {
+          const apiProfileRes = await scoutService.getProfile();
+          if (apiProfileRes?.data) {
+            initial = {
+              ...initial,
+              phoneNumber: apiProfileRes.data.phoneNumber || initial.phoneNumber || '',
+              organization: apiProfileRes.data.organization || initial.organization || ''
+            };
+          }
+        } catch (apiErr) {
+          console.warn('Backend scout profile not yet synced:', apiErr);
+        }
+
         setDossier(initial);
         setFormData(initial);
 
@@ -96,76 +107,6 @@ export default function ScoutProfile() {
     loadData();
   }, [scoutKey]);
 
-  // Handle Preset Coach Persona Selection
-  const applyPresetCoach = (preset) => {
-    const updated = {
-      ...formData,
-      name: preset.name,
-      title: preset.title,
-      organization: preset.club,
-      photoUrl: preset.photo,
-      license: preset.license,
-      territory: preset.territory,
-      specialization: preset.specialization,
-      experience: preset.experience,
-      location: preset.location
-    };
-    setFormData(updated);
-    if (!isEditing) {
-      setDossier(updated);
-      saveStoredScoutDossier(scoutKey, updated);
-      setSuccess(`Applied ${preset.name} scout persona.`);
-      setTimeout(() => setSuccess(null), 3000);
-    }
-  };
-
-  // Photo Cutout Upload with Auto Background Removal
-  const handlePhotoUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      setError('Please upload a valid image file (PNG, JPG, WebP).');
-      return;
-    }
-
-    try {
-      setIsRemovingBg(true);
-      setError(null);
-      setBgRemovalProgress('10%');
-
-      const result = await removeBackground(file, (pct) => {
-        setBgRemovalProgress(`${pct}%`);
-      });
-
-      const finalUrl = result.dataUrl;
-      setFormData(prev => ({ ...prev, photoUrl: finalUrl }));
-      if (!isEditing) {
-        const updated = { ...dossier, photoUrl: finalUrl };
-        setDossier(updated);
-        saveStoredScoutDossier(scoutKey, updated);
-      }
-      setSuccess('Coach portrait extracted with transparent background!');
-    } catch (err) {
-      console.warn('AI Cutout failed, loading original photo:', err);
-      const reader = new FileReader();
-      reader.onload = (loadEvent) => {
-        const originalUrl = loadEvent.target.result;
-        setFormData(prev => ({ ...prev, photoUrl: originalUrl }));
-        if (!isEditing) {
-          const updated = { ...dossier, photoUrl: originalUrl };
-          setDossier(updated);
-          saveStoredScoutDossier(scoutKey, updated);
-        }
-      };
-      reader.readAsDataURL(file);
-    } finally {
-      setIsRemovingBg(false);
-      setBgRemovalProgress(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    }
-  };
-
   // Custom Club Badge Upload
   const handleBadgeUpload = (e) => {
     const file = e.target.files?.[0];
@@ -191,16 +132,33 @@ export default function ScoutProfile() {
     saveStoredClubBadge(`scout_${scoutKey}`, null);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    // Validate phone number if entered
+    if (formData.phoneNumber && formData.phoneNumber.trim()) {
+      const digitsOnly = formData.phoneNumber.replace(/[^0-9]/g, '');
+      if (digitsOnly.length < 7 || digitsOnly.length > 15) {
+        setError('Please enter a valid phone number (between 7 and 15 digits).');
+        return;
+      }
+    }
+
     setSaving(true);
+    setError(null);
     try {
+      // Save to backend database
+      await scoutService.updateProfile({
+        organization: formData.organization,
+        affiliation: formData.specialization || formData.affiliation,
+        phoneNumber: formData.phoneNumber
+      });
+
       saveStoredScoutDossier(scoutKey, formData);
       setDossier(formData);
       setIsEditing(false);
-      setSuccess('Scout dossier successfully updated.');
+      setSuccess('Scout dossier and contact details successfully saved.');
       setTimeout(() => setSuccess(null), 4000);
     } catch (e) {
-      setError('Failed to save scout dossier.');
+      setError(e?.response?.data?.message || 'Failed to save scout dossier.');
     } finally {
       setSaving(false);
     }
@@ -221,7 +179,6 @@ export default function ScoutProfile() {
 
   const currentOrg = (isEditing ? formData.organization : dossier.organization) || 'Manchester City';
   const clubTheme = getClubTheme(currentOrg);
-  const activePhoto = isEditing ? formData.photoUrl : dossier.photoUrl;
   const activeBadge = isEditing ? formData.customBadgeUrl : dossier.customBadgeUrl;
   const activeData = isEditing ? formData : dossier;
 
@@ -286,10 +243,10 @@ export default function ScoutProfile() {
               </Button>
             ) : (
               <div className="flex gap-2">
-                <Button type="button" size="sm" variant="secondary" onClick={handleCancel} disabled={saving || isRemovingBg}>
+                <Button type="button" size="sm" variant="secondary" onClick={handleCancel} disabled={saving}>
                   Cancel
                 </Button>
-                <Button type="button" size="sm" variant="primary" onClick={handleSave} disabled={saving || isRemovingBg}>
+                <Button type="button" size="sm" variant="primary" onClick={handleSave} disabled={saving}>
                   {saving ? 'Saving...' : 'Save Dossier'}
                 </Button>
               </div>
@@ -297,52 +254,13 @@ export default function ScoutProfile() {
           </div>
         </div>
 
-        {/* Main Showcase Body: Coach Cutout + Compact Scout Info Layout */}
+        {/* Main Showcase Body: Scout Info Layout */}
         <div 
-          key={activeData.name || activeData.photoUrl} 
-          className="relative z-10 px-6 pt-2 pb-5 flex flex-col md:flex-row items-center md:items-end gap-6 lg:gap-8 animate-persona-fade"
+          key={activeData.name} 
+          className="relative z-10 px-6 py-4 flex flex-col md:flex-row items-center md:items-start gap-6 lg:gap-8 animate-persona-fade"
         >
-          
-          {/* LEFT: Unconstrained Transparent Coach Cutout */}
-          <div className="relative flex items-end justify-center flex-shrink-0 w-44 sm:w-52 lg:w-60 h-60 sm:h-72 lg:h-80 -mb-2 group select-none">
-            
-            {activePhoto ? (
-              <img 
-                src={activePhoto} 
-                alt={activeData.name || 'Coach Cutout'} 
-                className="h-full w-full object-contain object-bottom filter drop-shadow-[0_16px_28px_rgba(0,0,0,0.7)] transition-transform duration-300 group-hover:scale-105" 
-              />
-            ) : (
-              <div className="h-full w-full flex items-end justify-center pb-2">
-                <CoachSilhouette className="h-full w-48 text-cyan-400 drop-shadow-[0_12px_24px_rgba(0,0,0,0.6)]" />
-              </div>
-            )}
-
-            {/* In-banner Photo Upload Trigger */}
-            {isEditing && (
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="absolute top-2 right-2 p-2.5 rounded-full bg-black/75 hover:bg-black text-white border border-white/20 shadow-xl transition-all duration-200 hover:scale-110 cursor-pointer"
-                title="Upload portrait photo (auto background cutout)"
-              >
-                <Camera className="w-4 h-4" />
-              </button>
-            )}
-
-            {/* Cutout Processing Indicator */}
-            {isRemovingBg && (
-              <div className="absolute inset-0 bg-black/70 rounded-2xl flex flex-col items-center justify-center p-3 z-30 backdrop-blur-sm">
-                <RefreshCw className="w-8 h-8 text-cyan-400 animate-spin mb-2" />
-                <span className="text-xs font-black text-cyan-300 uppercase tracking-wider text-center">
-                  Extracting Cutout... {bgRemovalProgress ? `${bgRemovalProgress}` : ''}
-                </span>
-              </div>
-            )}
-          </div>
-
-          {/* RIGHT: Compact Scout Dossier Details */}
-          <div className="flex-1 w-full space-y-3 text-center md:text-left">
+          {/* Scout Dossier Details */}
+          <div className="flex-1 w-full space-y-4 text-center md:text-left">
             
             {/* Scout Name & Verification Badge */}
             <div>
@@ -453,6 +371,13 @@ export default function ScoutProfile() {
 
             {/* Bottom Scouting Performance & Metrics Strip */}
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-1 text-xs">
+              <div className="flex items-center space-x-1.5 bg-black/30 backdrop-blur-md px-3 py-1 rounded-xl border border-white/10">
+                <Phone className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="text-slate-400 uppercase text-[10px] font-bold">Mobile Contact:</span>
+                <span className="font-mono font-bold text-white">
+                  {activeData.phoneNumber || <span className="text-amber-300 italic font-sans font-normal">Not saved (Required for contact requests)</span>}
+                </span>
+              </div>
               <div className="flex items-center space-x-1.5">
                 <Bookmark className="w-3.5 h-3.5 text-cyan-400" />
                 <span className="text-slate-400 uppercase text-[10px] font-bold">Shortlisted Prospects:</span>
@@ -482,14 +407,7 @@ export default function ScoutProfile() {
 
       </div>
 
-      {/* Hidden File Inputs */}
-      <input 
-        ref={fileInputRef} 
-        type="file" 
-        accept="image/*" 
-        className="hidden" 
-        onChange={handlePhotoUpload} 
-      />
+      {/* Hidden File Input for Club Crest */}
       <input 
         ref={badgeInputRef} 
         type="file" 
@@ -497,58 +415,6 @@ export default function ScoutProfile() {
         className="hidden" 
         onChange={handleBadgeUpload} 
       />
-
-      {/* ======================================================== */}
-      {/* 2. LEGENDARY COACH / SCOUT PERSONA PRESETS BAR */}
-      {/* ======================================================== */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-blue-950/40 shadow-sm">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center space-x-2">
-            <Sparkles className="w-4 h-4 text-amber-500" />
-            <h3 className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-200">
-              Quick Coach / Scout Personas
-            </h3>
-          </div>
-          <span className="text-[11px] text-slate-400">
-            Click to preview professional coaching identities
-          </span>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-          {PRESET_COACHES.map(preset => {
-            const isSelected = activeData.photoUrl === preset.photo;
-            return (
-              <button
-                key={preset.id}
-                type="button"
-                onClick={() => applyPresetCoach(preset)}
-                className={`relative flex items-center p-2.5 rounded-xl border text-left card-elevate hover:-translate-y-1 hover:shadow-md transition-all duration-200 ease-out ${
-                  isSelected 
-                    ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-950/40 ring-2 ring-cyan-500/20' 
-                    : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 hover:border-slate-300 dark:hover:border-slate-700'
-                }`}
-              >
-                <div className="w-10 h-10 rounded-lg overflow-hidden bg-slate-800 flex-shrink-0 mr-2.5 border border-white/10">
-                  <img src={preset.photo} alt={preset.name} className="w-full h-full object-cover object-top" />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-xs font-black text-slate-900 dark:text-white truncate">
-                    {preset.name}
-                  </div>
-                  <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                    {preset.club}
-                  </div>
-                </div>
-                {isSelected && (
-                  <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-cyan-500 text-white flex items-center justify-center">
-                    <Check className="w-2.5 h-2.5 stroke-[3]" />
-                  </div>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
 
       {/* ======================================================== */}
       {/* 3. EDIT DOSSIER FORM (WHEN EDITING) */}
@@ -609,18 +475,8 @@ export default function ScoutProfile() {
                 </select>
               </div>
 
-              {/* Photo & Badge Upload Buttons */}
+              {/* Badge Upload Buttons */}
               <div className="pt-2 space-y-2">
-                <Button 
-                  type="button" 
-                  size="sm" 
-                  variant="outline" 
-                  className="w-full justify-center"
-                  onClick={() => fileInputRef.current?.click()}
-                  icon={Camera}
-                >
-                  Upload Portrait (AI Cutout)
-                </Button>
                 <div className="flex gap-2">
                   <Button 
                     type="button" 
@@ -648,8 +504,27 @@ export default function ScoutProfile() {
 
             {/* Column 2: Licensing & Field Territory */}
             <div className="space-y-4">
-              <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Licensing & Operations</h4>
+              <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Contact & Operations</h4>
               
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  Mobile Contact Number <span className="text-cyan-500 font-normal">(Shared with players in contact requests)</span>
+                </label>
+                <div className="relative">
+                  <Phone className="w-3.5 h-3.5 absolute left-3 top-3 text-slate-400" />
+                  <input 
+                    type="tel"
+                    value={formData.phoneNumber || ''}
+                    onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                    placeholder="e.g. +44 7911 123456 or 9876543210"
+                    className="w-full pl-9 pr-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 font-mono"
+                  />
+                </div>
+                <p className="text-[10px] text-slate-400 mt-1">
+                  Saved directly to your scout account. Used automatically when sending recruitment contact requests.
+                </p>
+              </div>
+
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Coaching / Scout License</label>
                 <input 

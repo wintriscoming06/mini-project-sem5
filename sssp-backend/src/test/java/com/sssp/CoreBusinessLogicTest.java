@@ -5,6 +5,9 @@ import com.sssp.stats.PlayerMatchStatistics;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CoreBusinessLogicTest {
@@ -51,5 +54,49 @@ public class CoreBusinessLogicTest {
         double penalizedScore = GPIEngine.matchPerformanceScore(penalizedStats);
 
         assertTrue(penalizedScore < cleanScore, "Penalized stats should have lower performance score than clean stats");
+    }
+
+    @Test
+    @DisplayName("GPI aggregate calculation returns expected weighted average")
+    void testAggregateGPICalculation() {
+        PlayerMatchStatistics match1 = new PlayerMatchStatistics();
+        match1.setMinutesPlayed(90);
+        match1.setGoals(2);
+        match1.setPosition("FW");
+        match1.setStars(4);
+
+        PlayerMatchStatistics match2 = new PlayerMatchStatistics();
+        match2.setMinutesPlayed(90);
+        match2.setGoals(0);
+        match2.setPosition("FW");
+        match2.setStars(2);
+
+        Double gpi = GPIEngine.computeGPI(List.of(match1, match2));
+        assertNotNull(gpi, "GPI should not be null for valid matches");
+        assertTrue(gpi >= 0.0 && gpi <= 100.0, "GPI should be between 0 and 100");
+    }
+
+    @Test
+    @DisplayName("Performance attributes PAC, SHO, PAS, DRI, DEF, PHY scale within [40, 99]")
+    void testPerformanceAttributesBounds() {
+        PlayerMatchStatistics match = new PlayerMatchStatistics();
+        match.setMinutesPlayed(90);
+        match.setGoals(3);
+        match.setAssists(2);
+        match.setPassesAttempted(60);
+        match.setPassesCompleted(58);
+        match.setTackles(5);
+        match.setPosition("FW");
+        match.setStars(5);
+
+        Map<String, Integer> attrs = GPIEngine.computePerformanceAttributes(List.of(match));
+        assertNotNull(attrs);
+        assertEquals(6, attrs.size());
+
+        for (String attrKey : List.of("PAC", "SHO", "PAS", "DRI", "DEF", "PHY")) {
+            assertTrue(attrs.containsKey(attrKey), "Missing attribute " + attrKey);
+            int val = attrs.get(attrKey);
+            assertTrue(val >= 40 && val <= 99, "Attribute " + attrKey + " out of [40, 99] bounds: " + val);
+        }
     }
 }

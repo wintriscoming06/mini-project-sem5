@@ -39,7 +39,7 @@ public final class GPIEngine {
         double denominator = 0.0;
         for (MatchStatsInput m : matches) {
             double pM = matchPerformanceScore(m);
-            double mM = GPIPositionWeights.getMultiplier(m.getMatchKind(), m.getStars());
+            double mM = GPIPositionWeights.getMultiplier(m.getStars());
             numerator += pM * mM;
             denominator += mM;
         }
@@ -69,7 +69,7 @@ public final class GPIEngine {
 
         for (MatchStatsInput m : matches) {
             Map<String, Double> norm = GPINormalization.normalizeMatchStats(m);
-            double mult = GPIPositionWeights.getMultiplier(m.getMatchKind(), m.getStars());
+            double mult = GPIPositionWeights.getMultiplier(m.getStars());
 
             double pac = 0.45 * norm.getOrDefault("dribblesCompletedVol", 0.0)
                     + 0.30 * norm.getOrDefault("dribbleSuccess", 0.0)

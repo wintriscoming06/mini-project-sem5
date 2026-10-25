@@ -225,13 +225,45 @@ public class StatsService {
     private PlayerMatchStatsResponse mapToStatsResponse(PlayerMatchStatistics s) {
         PlayerMatchStatsResponse r = new PlayerMatchStatsResponse();
         r.setId(s.getId());
-        r.setPlayerId(s.getPlayer().getId());
-        r.setMatchId(s.getMatch().getId());
+        r.setPlayerId(s.getPlayer() != null ? s.getPlayer().getId() : null);
+        r.setPlayerName(s.getPlayer() != null ? s.getPlayer().getUsername() : null);
+        r.setMatchId(s.getMatch() != null ? s.getMatch().getId() : null);
+        
+        String desc = null;
+        if (s.getMatch() != null && s.getMatch().getHomeTeam() != null && s.getMatch().getAwayTeam() != null) {
+            desc = s.getMatch().getHomeTeam().getName() + " vs " + s.getMatch().getAwayTeam().getName();
+        } else if (s.getOpponent() != null && !s.getOpponent().isBlank()) {
+            desc = s.getCompetition() != null ? "vs " + s.getOpponent() + " (" + s.getCompetition() + ")" : "vs " + s.getOpponent();
+        } else {
+            desc = s.getCompetition() != null ? s.getCompetition() : "Match #" + (s.getMatch() != null ? s.getMatch().getId() : s.getId());
+        }
+        r.setMatchDescription(desc);
+        r.setDate(s.getMatchDate() != null ? s.getMatchDate().toString() : (s.getCreatedAt() != null ? s.getCreatedAt().toLocalDate().toString() : null));
+        r.setPosition(s.getPosition());
+        r.setTournamentName(s.getTournament() != null ? s.getTournament().getName() : s.getCompetition());
+        r.setTeamName(s.getTeam() != null ? s.getTeam().getName() : null);
+        r.setOpponent(s.getOpponent());
+        r.setPerformanceScore(s.getPerformanceScore());
+
         r.setGoals(s.getGoals());
         r.setAssists(s.getAssists());
+        r.setShots(s.getShots());
+        r.setShotsOnTarget(s.getShotsOnTarget());
         r.setYellowCards(s.getYellowCards());
         r.setRedCards(s.getRedCards());
         r.setMinutesPlayed(s.getMinutesPlayed());
+
+        r.setPassesAttempted(s.getPassesAttempted());
+        r.setPassesCompleted(s.getPassesCompleted());
+        r.setKeyPasses(s.getKeyPasses());
+        r.setDribblesAttempted(s.getDribblesAttempted());
+        r.setDribblesCompleted(s.getDribblesCompleted());
+        r.setTackles(s.getTackles());
+        r.setInterceptions(s.getInterceptions());
+        r.setClearances(s.getClearances());
+        r.setDuelsWon(s.getDuelsWon());
+        r.setGoalsRecorded(s.isGoalsRecorded());
+        r.setAssistsRecorded(s.isAssistsRecorded());
         return r;
     }
 

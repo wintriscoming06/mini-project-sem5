@@ -25,7 +25,10 @@ public class MatchController {
     private final ObjectMapper objectMapper;
 
     @GetMapping({"", "/"})
-    public ResponseEntity<List<MatchResponse>> getAllMatches() {
+    public ResponseEntity<List<MatchResponse>> getAllMatches(@RequestParam(required = false) Long tournamentId) {
+        if (tournamentId != null) {
+            return ResponseEntity.ok(matchService.getMatchesByTournament(tournamentId));
+        }
         return ResponseEntity.ok(matchService.getAllMatches());
     }
 
