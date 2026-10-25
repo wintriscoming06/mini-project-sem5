@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { tournamentService } from '../../services/api';
 import { 
   ArrowLeft, Plus, Shield, 
-  Trash2, Edit3, Search, CheckCircle2, Award
+  Trash2, Edit3, Search, CheckCircle2, Award, Calendar
 } from 'lucide-react';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
@@ -319,6 +319,14 @@ const ManageTournament = () => {
   };
 
   const openEditStats = (item) => {
+    // Synchronize selectedMatch with the match of this specific stats item
+    if (item.matchId) {
+      const parentMatch = matches.find(m => String(m.id) === String(item.matchId));
+      if (parentMatch) {
+        setSelectedMatch(parentMatch);
+      }
+    }
+
     setStatsForm({
       id: item.id,
       matchId: item.matchId || selectedMatch?.id,
@@ -610,7 +618,7 @@ const ManageTournament = () => {
                 <table className="w-full text-xs text-left">
                   <thead className="bg-slate-50 dark:bg-slate-800 text-slate-400 text-[10px] uppercase font-bold tracking-wider border-b border-slate-100 dark:border-slate-800">
                     <tr>
-                      <th className="px-4 py-3">Fixture</th>
+                      <th className="px-4 py-3">Fixture & Match Date</th>
                       <th className="px-4 py-3">Player (Username)</th>
                       <th className="px-4 py-3">Team</th>
                       <th className="px-4 py-3">Pos</th>
@@ -632,13 +640,27 @@ const ManageTournament = () => {
                       const fixtureLabel = matchForStat 
                         ? `${matchForStat.homeTeamName} vs ${matchForStat.awayTeamName}` 
                         : (s.matchId ? `Fixture #${s.matchId}` : 'Tournament Wide');
+                      const matchDateFormatted = matchForStat?.matchDateTime 
+                        ? new Date(matchForStat.matchDateTime).toLocaleString(undefined, { 
+                            month: 'numeric', day: 'numeric', year: 'numeric', 
+                            hour: 'numeric', minute: '2-digit' 
+                          })
+                        : (s.matchDate ? new Date(s.matchDate).toLocaleDateString() : null);
 
                       return (
                         <tr key={s.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
                           <td className="px-4 py-3">
-                            <span className="font-semibold text-slate-700 dark:text-slate-300 text-[11px] block truncate max-w-[150px]">
+                            <span className="font-bold text-slate-800 dark:text-slate-200 text-xs block truncate max-w-[190px]">
                               {fixtureLabel}
                             </span>
+                            {matchDateFormatted ? (
+                              <span className="inline-flex items-center text-[10px] font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-1.5 py-0.5 rounded mt-0.5">
+                                <Calendar className="w-3 h-3 mr-1" />
+                                {matchDateFormatted}
+                              </span>
+                            ) : (
+                              <span className="text-[10px] text-slate-400 block mt-0.5">Date TBA</span>
+                            )}
                           </td>
                           <td className="px-4 py-3 font-bold text-slate-900 dark:text-white">
                             {s.playerUsername || s.playerName}
@@ -984,6 +1006,31 @@ const ManageTournament = () => {
         title={statsForm.id ? "Edit Player Performance Data" : "Add Player Performance Data"}
       >
         <form onSubmit={handleSaveStats} className="space-y-4 max-h-[75vh] overflow-y-auto pr-1">
+          {/* Match & Fixture Context Banner */}
+          {selectedMatch && (
+            <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/60 flex items-center justify-between text-xs">
+              <div className="space-y-0.5">
+                <span className="text-[10px] uppercase font-black text-blue-600 dark:text-blue-400 tracking-wider block">
+                  Matchday Fixture
+                </span>
+                <span className="font-extrabold text-slate-900 dark:text-white">
+                  {selectedMatch.homeTeamName || 'Home'} vs {selectedMatch.awayTeamName || 'Away'}
+                </span>
+              </div>
+              {selectedMatch.matchDateTime && (
+                <div className="flex items-center space-x-1.5 text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+                  <Calendar className="w-3.5 h-3.5 text-blue-500" />
+                  <span>
+                    {new Date(selectedMatch.matchDateTime).toLocaleString(undefined, { 
+                      month: 'short', day: 'numeric', year: 'numeric', 
+                      hour: 'numeric', minute: '2-digit' 
+                    })}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-[11px] font-bold text-slate-400 mb-1">Player Username *</label>
