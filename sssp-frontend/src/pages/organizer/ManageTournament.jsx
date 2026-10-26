@@ -485,7 +485,13 @@ const ManageTournament = () => {
                     <Button 
                       size="xs" 
                       variant="outline" 
-                      onClick={() => { setSelectedTeamId(team.id); setShowAddMemberModal(true); }}
+                      onClick={() => { 
+                        setSelectedTeamId(team.id); 
+                        setSelectedPlayerId('');
+                        setPlayerSearchQuery('');
+                        loadRegisteredPlayers('');
+                        setShowAddMemberModal(true); 
+                      }}
                     >
                       + Add Player
                     </Button>
@@ -758,34 +764,57 @@ const ManageTournament = () => {
         <form onSubmit={handleAddTeamMember} className="space-y-4">
           <div>
             <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Search Registered Players by Username
+              Search Registered Players by Username or Full Name
             </label>
             <div className="relative mb-2">
               <Search className="w-3.5 h-3.5 absolute left-3 top-3 text-slate-400" />
               <input
                 type="text"
-                placeholder="Type username to search..."
+                placeholder="Type username or name to search..."
                 value={playerSearchQuery}
                 onChange={(e) => {
-                  setPlayerSearchQuery(e.target.value);
-                  loadRegisteredPlayers(e.target.value);
+                  const val = e.target.value;
+                  setPlayerSearchQuery(val);
+                  loadRegisteredPlayers(val);
                 }}
                 className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900"
               />
             </div>
-            <select
-              value={selectedPlayerId}
-              onChange={(e) => setSelectedPlayerId(e.target.value)}
-              className="w-full p-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 font-semibold"
-              required
-            >
-              <option value="">Select player by username...</option>
-              {allRegisteredPlayers.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.username}
-                </option>
-              ))}
-            </select>
+
+            {/* Live Filtered Player Dropdown List */}
+            {(() => {
+              const q = (playerSearchQuery || '').trim().toLowerCase();
+              const filtered = allRegisteredPlayers.filter(p => 
+                !q || 
+                (p.username && p.username.toLowerCase().includes(q)) || 
+                (p.name && p.name.toLowerCase().includes(q))
+              );
+
+              return (
+                <div className="space-y-1">
+                  <select
+                    value={selectedPlayerId}
+                    onChange={(e) => setSelectedPlayerId(e.target.value)}
+                    className="w-full p-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 font-semibold"
+                    required
+                  >
+                    <option value="">
+                      {filtered.length === 0 ? "No players match your search..." : "Select player by username..."}
+                    </option>
+                    {filtered.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.username} {p.name && p.name !== p.username ? `(${p.name})` : ''} {p.position ? `• ${p.position}` : ''}
+                      </option>
+                    ))}
+                  </select>
+
+                  <div className="text-[11px] text-slate-400 mt-1 flex justify-between">
+                    <span>{filtered.length} player{filtered.length === 1 ? '' : 's'} available</span>
+                    {q && <span className="text-blue-500 font-semibold">Filtering for "{q}"</span>}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
           <div className="flex justify-end space-x-2 pt-2">
             <Button variant="ghost" type="button" onClick={() => setShowAddMemberModal(false)}>Cancel</Button>
